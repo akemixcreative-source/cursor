@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Lottie Animation Demo</title>
+    <link rel="preconnect" href="https://cdn.jsdelivr.net" />
+    <style>
+        :root { --size: 320px; }
+        html, body {
+            height: 100%;
+            margin: 0;
+            font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+            background: #0f172a;
+            color: #e2e8f0;
+        }
+        .main {
+            min-height: 100%;
+            display: grid;
+            place-items: center;
+            padding: 2rem;
+        }
+        .card {
+            background: #111827;
+            border: 1px solid #1f2937;
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: 0 10px 30px rgba(0,0,0,.4);
+            max-width: 720px;
+        }
+        h1 {
+            margin: 0 0 12px;
+            font-size: 20px;
+            font-weight: 600;
+        }
+        .player {
+            width: var(--size);
+            height: var(--size);
+            margin-top: 8px;
+        }
+        .footer {
+            margin-top: 8px;
+            font-size: 12px;
+            color: #94a3b8;
+            text-align: center;
+        }
+        a { color: #60a5fa; text-decoration: none; }
+        a:hover { text-decoration: underline; }
+        .noscript { font-size: 14px; color: #fca5a5; }
+    </style>
+    <!-- Lottie web component (pinned version) -->
+    <script src="https://cdn.jsdelivr.net/npm/@lottiefiles/lottie-player@2.0.4/dist/lottie-player.js" crossorigin="anonymous"></script>
+    <meta name="description" content="Simple website that loads and displays a Lottie animation." />
+</head>
+<body>
+    <main class="main">
+        <section class="card" aria-label="Lottie animation demo card">
+            <h1>Lottie Animation</h1>
+            <lottie-player
+                class="player"
+                src="https://assets10.lottiefiles.com/packages/lf20_q5pk6p1k.json"
+                background="transparent"
+                speed="1"
+                loop
+                autoplay
+                aria-label="Lottie animation"
+            ></lottie-player>
+            <div class="footer">
+                Powered by <a href="https://lottiefiles.com" target="_blank" rel="noreferrer">Lottie</a>
+            </div>
+            <noscript class="noscript">JavaScript is required to display the animation.</noscript>
+        </section>
+    </main>
+</body>
+</html>
+
