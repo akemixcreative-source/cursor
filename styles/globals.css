@@ -1,0 +1,129 @@
+:root {
+  --color-bg: #000000;
+  --color-text: #ffffff;
+  --color-text-muted: rgba(255, 255, 255, 0.6);
+  --color-text-faint: rgba(255, 255, 255, 0.4);
+
+  --color-accent: #ff4500;
+  --gradient-flame: linear-gradient(135deg, #ff4500 0%, #ff8800 100%);
+
+  --border-subtle: rgba(255, 255, 255, 0.08);
+  --border-strong: rgba(255, 255, 255, 0.15);
+
+  --surface-input: rgba(255, 255, 255, 0.055);
+  --surface-input-hover: rgba(255, 255, 255, 0.07);
+  --surface-input-focus: rgba(255, 255, 255, 0.09);
+  --surface-submit: rgba(255, 255, 255, 0.09);
+  --surface-submit-hover: rgba(255, 255, 255, 0.12);
+
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 16px;
+  --space-4: 24px;
+  --space-5: 32px;
+  --space-6: 48px;
+  --space-7: 64px;
+  --space-8: 96px;
+  --space-9: 128px;
+  --space-10: 160px;
+
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  /** Project tiles — matches reference card rounding (~31px) */
+  --radius-tile: 31px;
+
+  --max-width: 1280px;
+  /** Featured / work index grid — tighter rail than full site content */
+  --max-width-projects: min(1040px, 92vw);
+  --page-padding-x: clamp(16px, 4vw, 64px);
+
+  --ease-default: cubic-bezier(0.4, 0, 0.2, 1);
+
+  --font-sans: var(--font-geist-sans), system-ui, sans-serif;
+  --font-mono: var(--font-geist-mono), ui-monospace, monospace;
+  --font-logo: var(--font-geist-sans), system-ui, sans-serif;
+
+  /*
+   * Case study “work” typography — next/font sets --font-study-display / --font-study-mono on <html>.
+   * Space Grotesk (display) + Space Mono (technical body) match Jam3-style wide geometric + mono stacks.
+   */
+  --font-case-display: var(--font-study-display), system-ui, sans-serif;
+  --font-case-mono: var(--font-study-mono), ui-monospace, monospace;
+
+  --grain-opacity: 0.04;
+
+  /* Fixed header overlay — inner pages pad content below this */
+  --site-header-height: 96px;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  background-color: var(--color-bg);
+  scroll-behavior: auto;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  font-family: var(--font-sans);
+  font-weight: 400;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 3px;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+img,
+video {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+.visuallyHidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.flameGrain {
+  position: relative;
+}
+
+.flameGrain::after {
+  content: "";
+  pointer-events: none;
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  opacity: var(--grain-opacity);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.55'/%3E%3C/svg%3E");
+  mix-blend-mode: overlay;
+}

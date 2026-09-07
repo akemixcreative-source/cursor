@@ -1,0 +1,64 @@
+---
+description: Next.js 15, React 19, TypeScript, MDX conventions for Venera. Applies to .ts, .tsx, .mdx files.
+globs: ["**/*.ts", "**/*.tsx", "**/*.mdx"]
+---
+
+# Frontend Conventions
+
+## Stack (locked)
+- Next.js 15 (App Router only - no Pages Router)
+- React 19
+- TypeScript (strict mode)
+- MDX for project case studies (@next/mdx or Contentlayer)
+
+## Components
+- Functional components with hooks only - never class components.
+- One component per file, named identically to the component.
+- Pair every component with its CSS Module: Header.tsx with Header.module.css, both in the same folder.
+- Destructure props in function signature, not in body.
+- Define explicit prop interfaces above the component.
+- Never use `any`. Use `unknown` if truly unknown, then narrow.
+
+## File structure
+- /app - routes (App Router)
+- /components - reusable UI components
+- /content/projects/*.mdx - one MDX file per case study
+- /lib - utility functions, hooks, helpers
+- /public/videos, /public/images - assets
+- /styles/globals.css - CSS variables and global styles only
+
+## Imports (in this order, separated by blank lines)
+1. React
+2. External libraries
+3. @/ aliased internal imports
+4. Relative imports
+5. CSS Module import (always last)
+
+## Semantic HTML and accessibility
+- Use `<header>`, `<nav>`, `<main>`, `<section>`, `<article>`, `<footer>`. Not divs.
+- Every interactive element: visible text label OR `aria-label`.
+- Every image: `alt` attribute (empty string if purely decorative).
+- Every video: `aria-label` describing content for screen readers.
+- Focus states must be visible. Never `outline: none` without a replacement focus indicator.
+
+## MDX project case studies
+- One .mdx file = one project page at /work/[slug].
+- Required frontmatter for each project file:
+
+```yaml
+title: string
+client: string
+year: number
+role: string[]
+heroVideo: string
+posterImage: string
+category: "Brand Film" | "Product Motion" | "Performance Creative" | "Concept" | "Personal"
+featured: boolean
+```
+
+- Adding a new project = drop a new MDX file. Never modify components for new content.
+
+## Server vs Client components
+- Default to Server Components.
+- Add `"use client"` only when the component needs: state, effects, browser APIs, or event handlers.
+- Animation-heavy components (anything using GSAP, Framer Motion, Lenis) are Client Components.

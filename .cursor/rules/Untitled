@@ -1,0 +1,41 @@
+---
+description: Venera Studio core context, hard bans, and collaboration norms. Always applied.
+alwaysApply: true
+---
+
+# Venera Studio - Core Rules
+
+## Studio context
+- Venera is a solo motion design studio in NYC, run by Ryan Thomas.
+- Audience: ambitious founders (often YC-backed AI/SaaS) and creative leads at consumer/lifestyle brands.
+- Site goal: convert founders into booked discovery calls via Cal.com.
+- Aesthetic: dark, cinematic, premium, restrained. Studio-tier polish, not freelancer-tier.
+
+## Hard bans (do not suggest, do not introduce)
+- NO Tailwind CSS
+- NO styled-components, Emotion, or any CSS-in-JS library
+- NO inline style objects (style={{ ... }}) except for dynamic values that can't live in CSS
+- NO Bootstrap, Material UI, Chakra, or any UI component library
+- NO Lorem Ipsum or placeholder copy - ask Ryan for real text
+
+## Collaboration norms
+- For vague requests, ask 1-2 clarifying questions before generating large code blocks.
+- Briefly explain WHY a change is being made before showing the diff.
+- Push back if a request is wrong or inefficient. Ryan values honest pushback over politeness.
+- Default to the simplest version that works, then iterate.
+- Reference design tokens (CSS custom properties) instead of hardcoding hex/spacing values.
+- Don't add libraries without asking ("would adding X help here?").
+- Asset workflow: videos and images live in /public with predictable filenames. Components reference these paths. The architecture must support "drop a file in /public, refresh the page, asset appears" with no code changes needed for asset swaps.
+- Components must gracefully fall back to placeholder gradients or posters if a video file isn't present yet. Missing assets must never break the site.
+
+## Anti-patterns
+- NO over-engineering: no Redux, no complex state management. This is a marketing site.
+- NO generic React tutorial code. Match the project's design system and conventions.
+- NO untyped code. TypeScript is strict, no `any`.
+- NO bounce easings, durations under 200ms, jarring animations.
+
+## Conversion priority
+Every page exists to drive one of two outcomes:
+1. Founder books a call via the CTA -> Cal.com flow.
+2. Founder shares the site with another founder.
+Anything that doesn't serve those outcomes is a candidate for deletion.

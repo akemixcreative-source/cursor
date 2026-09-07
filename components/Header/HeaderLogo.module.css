@@ -1,0 +1,40 @@
+.logoLink {
+  display: inline-flex;
+  align-items: center;
+  flex-shrink: 0;
+  line-height: 0;
+}
+
+/*
+ * Sizing tracks nav text size for visual rhythm.
+ * The SVG keeps aspect ratio via its viewBox, so we only need to set height
+ * and let intrinsic width follow.
+ */
+.signatureSvg {
+  display: block;
+  height: calc(var(--nav-link-size) * 4.25);
+  width: auto;
+  max-width: min(280px, 52vw);
+  max-height: calc(min(280px, 52vw) * 616 / 934);
+  overflow: visible;
+}
+
+.logoStatic {
+  display: block;
+  height: calc(var(--nav-link-size) * 4.25);
+  width: auto;
+  max-width: min(280px, 52vw);
+  object-fit: contain;
+}
+
+.logoLink:focus-visible {
+  outline-offset: 8px;
+}
+
+@media (max-width: 640px) {
+  .signatureSvg,
+  .logoStatic {
+    max-width: min(240px, 56vw);
+    max-height: calc(min(240px, 56vw) * 616 / 934);
+  }
+}

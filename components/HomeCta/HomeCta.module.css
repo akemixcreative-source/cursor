@@ -1,0 +1,56 @@
+.section {
+  padding: clamp(var(--space-8), 10vw, var(--space-10)) var(--page-padding-x)
+    clamp(var(--space-9), 12vw, var(--space-10));
+}
+
+.inner {
+  max-width: var(--max-width);
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: clamp(var(--space-5), 4vw, var(--space-7));
+}
+
+.title {
+  margin: 0;
+  font-family: var(--font-sans);
+  font-size: clamp(1.65rem, 4vw, 3.75rem);
+  font-weight: 600;
+  line-height: 1.18;
+  letter-spacing: -0.025em;
+  max-width: 22ch;
+}
+
+.cta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: min(100%, 280px);
+  padding: var(--space-3) var(--space-8);
+  border-radius: 14px;
+  border: none;
+  background: var(--color-text);
+  color: var(--color-bg);
+  font-family: var(--font-sans);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  text-decoration: none;
+  cursor: pointer;
+  transition:
+    transform var(--ease-default) 0.4s,
+    filter var(--ease-default) 0.4s;
+}
+
+.cta:hover {
+  filter: brightness(0.95);
+  transform: translateY(-2px);
+  text-decoration: none;
+}
+
+.cta:focus-visible {
+  outline-offset: 4px;
+}

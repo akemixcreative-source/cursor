@@ -1,0 +1,251 @@
+﻿
+=== venera-core.mdc ===
+
+---
+description: Venera Studio core context, hard bans, and collaboration norms. Always applied.
+alwaysApply: true
+---
+
+# Venera Studio - Core Rules
+
+## Studio context
+- Venera is a solo motion design studio in NYC, run by Ryan Thomas.
+- Audience: ambitious founders (often YC-backed AI/SaaS) and creative leads at consumer/lifestyle brands.
+- Site goal: convert founders into booked discovery calls via Cal.com.
+- Aesthetic: dark, cinematic, premium, restrained. Studio-tier polish, not freelancer-tier.
+
+## Hard bans (do not suggest, do not introduce)
+- NO Tailwind CSS
+- NO styled-components, Emotion, or any CSS-in-JS library
+- NO inline style objects (style={{ ... }}) except for dynamic values that can't live in CSS
+- NO Bootstrap, Material UI, Chakra, or any UI component library
+- NO Lorem Ipsum or placeholder copy - ask Ryan for real text
+
+## Collaboration norms
+- For vague requests, ask 1-2 clarifying questions before generating large code blocks.
+- Briefly explain WHY a change is being made before showing the diff.
+- Push back if a request is wrong or inefficient. Ryan values honest pushback over politeness.
+- Default to the simplest version that works, then iterate.
+- Reference design tokens (CSS custom properties) instead of hardcoding hex/spacing values.
+- Don't add libraries without asking ("would adding X help here?").
+- Asset workflow: videos and images live in /public with predictable filenames. Components reference these paths. The architecture must support "drop a file in /public, refresh the page, asset appears" with no code changes needed for asset swaps.
+- Components must gracefully fall back to placeholder gradients or posters if a video file isn't present yet. Missing assets must never break the site.
+
+## Anti-patterns
+- NO over-engineering: no Redux, no complex state management. This is a marketing site.
+- NO generic React tutorial code. Match the project's design system and conventions.
+- NO untyped code. TypeScript is strict, no `any`.
+- NO bounce easings, durations under 200ms, jarring animations.
+
+## Conversion priority
+Every page exists to drive one of two outcomes:
+1. Founder books a call via the CTA -> Cal.com flow.
+2. Founder shares the site with another founder.
+Anything that doesn't serve those outcomes is a candidate for deletion.
+
+=== venera-frontend.mdc ===
+
+---
+description: Next.js 15, React 19, TypeScript, MDX conventions for Venera. Applies to .ts, .tsx, .mdx files.
+globs: ["**/*.ts", "**/*.tsx", "**/*.mdx"]
+---
+
+# Frontend Conventions
+
+## Stack (locked)
+- Next.js 15 (App Router only - no Pages Router)
+- React 19
+- TypeScript (strict mode)
+- MDX for project case studies (@next/mdx or Contentlayer)
+
+## Components
+- Functional components with hooks only - never class components.
+- One component per file, named identically to the component.
+- Pair every component with its CSS Module: Header.tsx with Header.module.css, both in the same folder.
+- Destructure props in function signature, not in body.
+- Define explicit prop interfaces above the component.
+- Never use `any`. Use `unknown` if truly unknown, then narrow.
+
+## File structure
+- /app - routes (App Router)
+- /components - reusable UI components
+- /content/projects/*.mdx - one MDX file per case study
+- /lib - utility functions, hooks, helpers
+- /public/videos, /public/images - assets
+- /styles/globals.css - CSS variables and global styles only
+
+## Imports (in this order, separated by blank lines)
+1. React
+2. External libraries
+3. @/ aliased internal imports
+4. Relative imports
+5. CSS Module import (always last)
+
+## Semantic HTML and accessibility
+- Use `<header>`, `<nav>`, `<main>`, `<section>`, `<article>`, `<footer>`. Not divs.
+- Every interactive element: visible text label OR `aria-label`.
+- Every image: `alt` attribute (empty string if purely decorative).
+- Every video: `aria-label` describing content for screen readers.
+- Focus states must be visible. Never `outline: none` without a replacement focus indicator.
+
+## MDX project case studies
+- One .mdx file = one project page at /work/[slug].
+- Required frontmatter for each project file:
+
+```yaml
+title: string
+client: string
+year: number
+role: string[]
+heroVideo: string
+posterImage: string
+category: "Brand Film" | "Product Motion" | "Performance Creative" | "Concept" | "Personal"
+featured: boolean
+```
+
+- Adding a new project = drop a new MDX file. Never modify components for new content.
+
+## Server vs Client components
+- Default to Server Components.
+- Add `"use client"` only when the component needs: state, effects, browser APIs, or event handlers.
+- Animation-heavy components (anything using GSAP, Framer Motion, Lenis) are Client Components.
+
+=== venera-motion-assets.mdc ===
+
+---
+description: Animation philosophy and asset/performance rules for Venera. Applies to .ts and .tsx files.
+globs: ["**/*.ts", "**/*.tsx"]
+---
+
+# Motion and Asset Rules
+
+## Animation library boundaries
+
+| Use case | Library |
+|---|---|
+| Scroll-triggered animations (fade-in on view, parallax, pinning) | GSAP + ScrollTrigger |
+| Smooth scrolling (entire page wrapper) | Lenis |
+| Component-level micro-interactions (hover, tap, layout transitions) | Framer Motion |
+| Simple state-based transitions (color, opacity on hover) | CSS transitions |
+
+## What NOT to use
+- Don't write raw CSS keyframe animations when GSAP or Framer Motion is more appropriate.
+- Don't use jQuery, anime.js, or any other animation library.
+- Don't use `requestAnimationFrame` directly. GSAP handles it.
+
+## Timing and easing philosophy
+- Default ease: `cubic-bezier(0.4, 0, 0.2, 1)` (studio ease). Define as `--ease-default` in CSS.
+- Page-load reveals: 0.8s to 1.2s, slight blur-out + fade + subtle scale.
+- Scroll-triggered fades: 0.6s to 0.8s, stagger 0.1s to 0.15s for groups.
+- Hover (color, opacity): 0.2s
+- Hover (scale, transform): 0.4s
+- Page transitions: 0.6s to 0.8s
+
+## Animation don'ts
+- NEVER bounce easings (back.out, elastic). Too playful for studio aesthetic.
+- NEVER durations under 200ms for visual elements. Feels twitchy.
+- NEVER infinite-looping animations except video loops and the availability dot.
+- NEVER auto-scrolling carousels or marquees that move faster than reading speed.
+
+## Media rules - non-negotiable
+
+### Video
+- Format: H.264 MP4 (broadest browser support)
+- Hero video: max 1080p, 24fps, 8 to 15s loop, max 3MB
+- Tile videos: max 720p, 24fps, 4 to 6s loop, max 800KB each
+- All videos: `autoplay muted loop playsinline preload="metadata"`
+- Always include a `poster` attribute (static fallback frame)
+
+### Images
+- Format: WebP or AVIF only. Never JPG or PNG (except for the favicon).
+- Always use `next/image` with explicit `width` and `height`
+- Provide `sizes` prop for responsive images
+- Lazy-load by default (Next.js default behavior)
+
+### Loading strategy
+- Hero video: starts loading immediately but does not block render
+- Tile videos: lazy-load when within 200px of viewport
+- Project case study videos: lazy-load on /work/[slug] page mount
+- Fonts: handled by Next.js font system (no manual preload needed for Geist)
+
+## Performance targets - non-negotiable
+- Lighthouse Performance: at least 85 (mobile), at least 95 (desktop)
+- Largest Contentful Paint (LCP): at most 2.5s
+- Cumulative Layout Shift (CLS): at most 0.1
+- Total page weight: at most 5MB on the homepage
+- Time to Interactive: at most 3.5s
+
+If any change risks these targets, flag it before merging.
+
+## Asset placeholder strategy
+While Ryan finalizes video and image assets, components should:
+- Accept asset paths as props with sensible defaults
+- Gracefully degrade if a video file is missing (show poster instead, or show a styled placeholder div with the project name)
+- Use the following filename conventions in /public so assets can be dropped in later:
+  - Tile videos: /public/videos/[slug]-tile.mp4
+  - Tile posters: /public/images/posters/[slug]-poster.jpg
+  - Full case study videos: /public/videos/[slug]-full.mp4
+  - Hero video: /public/videos/hero.mp4
+  - Hero poster: /public/images/posters/hero-poster.jpg
+
+When Ryan asks to "swap in" a video, the answer should always be: "drop the file at [exact path], no code change needed."
+
+=== venera-visual.mdc ===
+
+---
+description: Venera design system - colors, typography, spacing, radii. Applies to .tsx and .css files.
+globs: ["**/*.tsx", "**/*.css"]
+---
+
+# Visual Design System
+
+## Always prefer CSS custom properties
+Once defined in /styles/globals.css, never hardcode color or spacing values in components. Use the variable name.
+
+## Color tokens
+
+```css
+--color-bg: #0A0A0A;
+--color-text: #FFFFFF;
+--color-text-muted: rgba(255, 255, 255, 0.6);
+--color-text-faint: rgba(255, 255, 255, 0.4);
+
+--color-accent: #FF4500;
+--gradient-flame: linear-gradient(135deg, #FF4500 0%, #FF8800 100%);
+
+--border-subtle: rgba(255, 255, 255, 0.08);
+--border-strong: rgba(255, 255, 255, 0.15);
+```
+
+## Spacing scale (px)
+4, 8, 16, 24, 32, 48, 64, 96, 128, 160
+
+Define as `--space-1` through `--space-10`.
+
+## Border radius
+- `--radius-sm: 8px` for small UI: badges, pills
+- `--radius-md: 12px` for default: buttons, inputs
+- `--radius-lg: 16px` for large: project tiles, cards
+
+## Typography roles
+- Headlines and body: Geist Sans (variable, weights 400 to 700)
+- Metadata, project years, technical labels: Geist Mono
+- Logo only: custom Venera signature script font
+
+## Font loading
+- Use `geist/font/sans` and `geist/font/mono` packages from npm. Loaded via Next.js font system in /app/layout.tsx. No Google Fonts setup needed.
+
+## Typographic rules
+- All-caps labels: `letter-spacing: 0.08em` always.
+- Body line-height: 1.6
+- Headline line-height: 1.1 to 1.2
+- Never set `font-weight: bold`. Use specific weights (500, 600, 700).
+- Never use `text-transform: uppercase` without `letter-spacing` adjustment.
+
+## Surfaces with flame color
+Any surface using the accent color or flame gradient (buttons, badges, hero accents) gets a subtle grain noise overlay (3 to 5 percent opacity) to add texture and prevent flat-digital look.
+
+## Layout and rhythm
+- Maximum content width: 1280px (use `--max-width: 1280px`)
+- Default page horizontal padding: `clamp(16px, 4vw, 64px)`
+- Vertical rhythm between major sections: 96px to 160px (use spacing tokens)

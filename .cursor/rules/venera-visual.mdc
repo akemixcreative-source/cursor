@@ -1,0 +1,57 @@
+---
+description: Venera design system - colors, typography, spacing, radii. Applies to .tsx and .css files.
+globs: ["**/*.tsx", "**/*.css"]
+---
+
+# Visual Design System
+
+## Always prefer CSS custom properties
+Once defined in /styles/globals.css, never hardcode color or spacing values in components. Use the variable name.
+
+## Color tokens
+
+```css
+--color-bg: #0A0A0A;
+--color-text: #FFFFFF;
+--color-text-muted: rgba(255, 255, 255, 0.6);
+--color-text-faint: rgba(255, 255, 255, 0.4);
+
+--color-accent: #FF4500;
+--gradient-flame: linear-gradient(135deg, #FF4500 0%, #FF8800 100%);
+
+--border-subtle: rgba(255, 255, 255, 0.08);
+--border-strong: rgba(255, 255, 255, 0.15);
+```
+
+## Spacing scale (px)
+4, 8, 16, 24, 32, 48, 64, 96, 128, 160
+
+Define as `--space-1` through `--space-10`.
+
+## Border radius
+- `--radius-sm: 8px` for small UI: badges, pills
+- `--radius-md: 12px` for default: buttons, inputs
+- `--radius-lg: 16px` for large: project tiles, cards
+
+## Typography roles
+- Headlines and body: Geist Sans (variable, weights 400 to 700)
+- Metadata, project years, technical labels: Geist Mono
+- Logo only: custom Venera signature script font
+
+## Font loading
+- Use `geist/font/sans` and `geist/font/mono` packages from npm. Loaded via Next.js font system in /app/layout.tsx. No Google Fonts setup needed.
+
+## Typographic rules
+- All-caps labels: `letter-spacing: 0.08em` always.
+- Body line-height: 1.6
+- Headline line-height: 1.1 to 1.2
+- Never set `font-weight: bold`. Use specific weights (500, 600, 700).
+- Never use `text-transform: uppercase` without `letter-spacing` adjustment.
+
+## Surfaces with flame color
+Any surface using the accent color or flame gradient (buttons, badges, hero accents) gets a subtle grain noise overlay (3 to 5 percent opacity) to add texture and prevent flat-digital look.
+
+## Layout and rhythm
+- Maximum content width: 1280px (use `--max-width: 1280px`)
+- Default page horizontal padding: `clamp(16px, 4vw, 64px)`
+- Vertical rhythm between major sections: 96px to 160px (use spacing tokens)
