@@ -56,7 +56,7 @@ export function HeaderLogo() {
 
   if (reduceMotion) {
     return (
-      <Link className={styles.logoLink} href="/" aria-label="Venera Studio home">
+      <Link className={styles.logoLink} href="/" aria-label="Venera home">
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           className={styles.logoStatic}
@@ -74,14 +74,14 @@ export function HeaderLogo() {
   const glowFilterId = `${uid}-glow-${playId}`;
 
   return (
-    <Link className={styles.logoLink} href="/" aria-label="Venera Studio home">
+    <Link className={styles.logoLink} href="/" aria-label="Venera home">
       <svg
         key={playId}
         className={styles.signatureSvg}
         viewBox={`0 0 ${VENERA_LOGO_VIEWBOX_WIDTH} ${VENERA_LOGO_VIEWBOX_HEIGHT}`}
         preserveAspectRatio="xMidYMid meet"
         role="img"
-        aria-label="Venera Studio"
+        aria-label="Venera"
       >
         <defs>
           <mask id={maskId} maskUnits="userSpaceOnUse">

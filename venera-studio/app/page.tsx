@@ -1,3 +1,5 @@
+import type { Metadata } from "next";
+
 import { Hero } from "@/components/Hero/Hero";
 import { HeroIntro } from "@/components/Hero/HeroIntro";
 import { HomeCta } from "@/components/HomeCta/HomeCta";
@@ -6,14 +8,22 @@ import { Reveal } from "@/components/Reveal/Reveal";
 import { Services } from "@/components/Services/Services";
 
 import { getFeaturedProjects } from "@/lib/projects";
+import { SITE_NAME } from "@/lib/seo";
 
 import styles from "@/app/page.module.css";
+
+export const metadata: Metadata = {
+  alternates: {
+    canonical: "/",
+  },
+};
 
 export default function HomePage() {
   const featured = getFeaturedProjects();
 
   return (
     <>
+      <h1 className="visuallyHidden">{SITE_NAME}</h1>
       <Hero />
       <HeroIntro />
       <Services />

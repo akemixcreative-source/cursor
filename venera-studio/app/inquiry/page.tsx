@@ -1,14 +1,16 @@
 import type { Metadata } from "next";
 
 import { ContactForm } from "@/components/ContactForm/ContactForm";
+import { pageMetadata } from "@/lib/seo";
 
 import styles from "@/app/inquiry/inquiry.module.css";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: "Inquiry",
   description:
     "Tell Venera about your launch film, product motion, or performance creative—then book an intro on Cal.com.",
-};
+  path: "/inquiry",
+});
 
 export default function InquiryPage() {
   return (

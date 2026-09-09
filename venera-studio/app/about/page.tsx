@@ -1,14 +1,18 @@
 import type { Metadata } from "next";
 
 import { CAL_BOOKING_URL } from "@/lib/constants";
+import { pageMetadata } from "@/lib/seo";
 
 import { Reveal } from "@/components/Reveal/Reveal";
 
 import styles from "@/app/about/about.module.css";
 
-export const metadata: Metadata = {
-  title: "About us",
-};
+export const metadata: Metadata = pageMetadata({
+  title: "About",
+  description:
+    "Venera is Ryan Thomas's solo motion design practice in New York—launch films, product storytelling, and performance creative for founders and brand teams.",
+  path: "/about",
+});
 
 export default function AboutPage() {
   return (

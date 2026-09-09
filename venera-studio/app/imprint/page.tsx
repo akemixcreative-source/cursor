@@ -1,12 +1,15 @@
 import type { Metadata } from "next";
 
 import { Reveal } from "@/components/Reveal/Reveal";
+import { pageMetadata } from "@/lib/seo";
 
 import styles from "@/app/privacy/legal.module.css";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: "Imprint",
-};
+  description: "Legal disclosure and business details for Venera in New York.",
+  path: "/imprint",
+});
 
 export default function ImprintPage() {
   return (

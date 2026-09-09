@@ -18,20 +18,22 @@ export function Header() {
         <HeaderLogo />
 
         <nav className={styles.nav} aria-label="Primary">
+          <div className={styles.navLinks}>
+            <Link
+              className={`${styles.navLink} ${aboutActive ? styles.navLinkActive : ""}`}
+              href="/about"
+            >
+              About us
+            </Link>
+            <Link
+              className={`${styles.navLink} ${workActive ? styles.navLinkActive : ""}`}
+              href="/work"
+            >
+              Projects
+            </Link>
+          </div>
           <Link
-            className={`${styles.navLink} ${aboutActive ? styles.navLinkActive : ""}`}
-            href="/about"
-          >
-            About us
-          </Link>
-          <Link
-            className={`${styles.navLink} ${workActive ? styles.navLinkActive : ""}`}
-            href="/work"
-          >
-            Projects
-          </Link>
-          <Link
-            className={`${styles.navLink} ${inquiryActive ? styles.navLinkActive : ""}`}
+            className={`${styles.navCta} ${inquiryActive ? styles.navCtaActive : ""}`}
             href="/inquiry"
           >
             Inquiry

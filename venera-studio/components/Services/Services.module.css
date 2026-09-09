@@ -8,6 +8,16 @@
   margin: 0 auto;
 }
 
+.sectionLabel {
+  margin: 0 0 clamp(var(--space-5), 4vw, var(--space-7));
+  font-family: var(--font-case-mono);
+  font-size: clamp(0.8125rem, 1.2vw, 1.0625rem);
+  font-weight: 400;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+}
+
 .grid {
   list-style: none;
   margin: 0;
@@ -15,6 +25,8 @@
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: clamp(var(--space-5), 4vw, var(--space-7));
+  border-top: 1px solid var(--border-subtle);
+  padding-top: clamp(var(--space-5), 4vw, var(--space-7));
 }
 
 .item {

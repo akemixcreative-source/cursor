@@ -1,35 +1,58 @@
-# dependencies
-/node_modules
-/.pnp
-.pnp.*
-.yarn/*
-!.yarn/patches
-!.yarn/plugins
-!.yarn/releases
-!.yarn/versions
+# Dependencies
+node_modules/
 
-# testing
-/coverage
+# Next.js build
+.next/
+out/
 
-# next.js
-/.next/
-/out/
+# Vercel
+.vercel/
 
-# production
-/build
-
-# misc
-.DS_Store
-*.pem
-
-# debug
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-
-# env files
-.env*.local
+# Environment files
 .env
+.env.*
+!.env.example
 
-# vercel
-.vercel
+# OS files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Editor
+.cursor/
+.vscode/
+
+# === Heavy design/source files in /public ===
+# These bloat the repo — keep them local, not in version control
+public/images/mockups/*.psd
+public/images/mockups/*.fig
+public/images/mockups/*.aep
+public/images/mockups/Project Section/
+
+# Large unused PNGs in mockups (design references, not served on the site)
+public/images/mockups/Frame 11.png
+public/images/mockups/Frame 14.png
+public/images/mockups/Frame 15.png
+public/images/mockups/image 93.png
+public/images/mockups/image 95_4k.png
+public/images/mockups/footer.png
+public/images/mockups/Comp 1*.psd
+public/images/mockups/ios wallpaper.png
+public/images/mockups/ven.png
+public/images/mockups/Screenshot*.png
+public/images/mockups/WhatsApp*.png
+
+# Deployment snapshots
+vercel-deployment-*.json
+
+# Cursor rules export
+rules-export.txt
+
+# Hero video (49MB — too large for git, serve from CDN or Vercel Blob)
+public/images/mockups/Header Video.mp4
+
+# Figma source
+public/images/mockups/Website Ref.fig
+
+# Broken git dir from earlier attempt
+.git-broken/

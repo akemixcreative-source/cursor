@@ -28,8 +28,13 @@ const SERVICES: ServiceEntry[] = [
 
 export function Services() {
   return (
-    <section className={styles.section} aria-label="Services">
+    <section className={styles.section} aria-labelledby="services-heading">
       <div className={styles.inner}>
+        <Reveal>
+          <p id="services-heading" className={styles.sectionLabel}>
+            Services
+          </p>
+        </Reveal>
         <ul className={styles.grid}>
           {SERVICES.map((service, index) => (
             <li key={service.eyebrow} className={styles.item}>

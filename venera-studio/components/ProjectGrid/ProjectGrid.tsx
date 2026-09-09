@@ -30,6 +30,7 @@ export function ProjectGrid({ projects }: ProjectGridProps) {
               tileImage={project.tileImage}
               tileGif={project.tileGif}
               tileTag={project.tileTag ?? defaultTileTag(project.category, project.year)}
+              tileCode={project.tileCode}
             />
           </Reveal>
         </li>

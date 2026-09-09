@@ -1,12 +1,15 @@
 import type { Metadata } from "next";
 
 import { Reveal } from "@/components/Reveal/Reveal";
+import { pageMetadata } from "@/lib/seo";
 
 import styles from "@/app/privacy/legal.module.css";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: "Privacy Policy",
-};
+  description: "How Venera collects and uses data from this site and project inquiries.",
+  path: "/privacy",
+});
 
 export default function PrivacyPage() {
   return (

@@ -13,6 +13,7 @@ import {
   getProjectBySlug,
   getProjectSlugs,
 } from "@/lib/projects";
+import { pageMetadata } from "@/lib/seo";
 
 import styles from "@/app/work/[slug]/CaseStudy.module.css";
 
@@ -34,10 +35,11 @@ export async function generateMetadata({
     return {};
   }
 
-  return {
+  return pageMetadata({
     title: project.title,
-    description: `${project.client} · ${project.year} · ${project.category}`,
-  };
+    description: `${project.title} — ${project.client} (${project.year}). Motion design case study from Venera, Ryan Thomas in New York.`,
+    path: `/work/${slug}`,
+  });
 }
 
 export default async function ProjectPage({ params }: ProjectPageProps) {

@@ -90,6 +90,8 @@ function parseFrontmatter(data: Record<string, unknown>): ProjectFrontmatter {
   const tileGif =
     typeof data.tileGif === "string" ? data.tileGif : undefined;
   const tileTag = typeof data.tileTag === "string" ? data.tileTag : undefined;
+  const tileCode =
+    typeof data.tileCode === "string" ? data.tileCode : undefined;
   const introParagraphs = Array.isArray(data.introParagraphs)
     ? data.introParagraphs.filter((p): p is string => typeof p === "string")
     : undefined;
@@ -121,6 +123,7 @@ function parseFrontmatter(data: Record<string, unknown>): ProjectFrontmatter {
     tileImage,
     tileGif,
     tileTag,
+    tileCode,
     introParagraphs,
     detailColumnLeft,
     detailColumnRight,

@@ -17,6 +17,8 @@ interface ProjectTileProps {
   /** Hover GIF — add file under /public when ready; omitted or broken = cover only */
   tileGif?: string;
   tileTag: string;
+  /** Editorial index code shown above the title (e.g. "V001"). */
+  tileCode?: string;
 }
 
 /**
@@ -30,6 +32,7 @@ export function ProjectTile({
   tileImage,
   tileGif,
   tileTag,
+  tileCode,
 }: ProjectTileProps) {
   const rootRef = useRef<HTMLAnchorElement>(null);
   const [nearViewport, setNearViewport] = useState(false);
@@ -120,6 +123,7 @@ export function ProjectTile({
       </motion.div>
 
       <div className={styles.body}>
+        {tileCode ? <p className={styles.code}>{tileCode}</p> : null}
         <div className={styles.titleRow}>
           <h3 className={styles.title}>{title}</h3>
           <span className={styles.tag}>{tileTag}</span>

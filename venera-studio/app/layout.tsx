@@ -20,22 +20,56 @@ const studyMono = Space_Mono({
 import { Footer } from "@/components/Footer/Footer";
 import { Header } from "@/components/Header/Header";
 import { MainFade } from "@/components/MainFade/MainFade";
+import { SiteJsonLd } from "@/components/SiteJsonLd/SiteJsonLd";
 import { SmoothScrollProvider } from "@/components/SmoothScrollProvider/SmoothScrollProvider";
 import { getSiteMetadataBase } from "@/lib/metadataBase";
+import {
+  SITE_DESCRIPTION,
+  SITE_NAME,
+  SITE_OG_IMAGE,
+  SITE_OG_IMAGE_ALT,
+} from "@/lib/seo";
 
 import "@/styles/globals.css";
 
 export const metadata: Metadata = {
   metadataBase: getSiteMetadataBase(),
   title: {
-    default: "Venera Studio · Motion design for ambitious teams",
-    template: "%s · Venera Studio",
+    default: SITE_NAME,
+    template: `%s | ${SITE_NAME}`,
   },
-  description:
-    "Premium motion design from New York—launch films, product storytelling, and performance creative for founders and brand teams.",
+  description: SITE_DESCRIPTION,
+  applicationName: SITE_NAME,
+  alternates: {
+    canonical: "/",
+  },
   openGraph: {
     type: "website",
     locale: "en_US",
+    siteName: SITE_NAME,
+    title: SITE_NAME,
+    description: SITE_DESCRIPTION,
+    url: "/",
+    images: [
+      {
+        url: SITE_OG_IMAGE,
+        alt: SITE_OG_IMAGE_ALT,
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: SITE_NAME,
+    description: SITE_DESCRIPTION,
+    images: [SITE_OG_IMAGE],
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+    },
   },
 };
 
@@ -50,6 +84,7 @@ export default function RootLayout({
       className={`${GeistSans.variable} ${GeistMono.variable} ${studyDisplay.variable} ${studyMono.variable}`}
     >
       <body>
+        <SiteJsonLd />
         <SmoothScrollProvider>
           <Header />
           <MainFade>{children}</MainFade>

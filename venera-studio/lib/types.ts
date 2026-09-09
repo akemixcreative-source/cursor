@@ -36,6 +36,8 @@ export interface ProjectFrontmatter {
   tileGif?: string;
   /** Right-hand label on home grid, e.g. "(Personal) 2026" or "2026". */
   tileTag?: string;
+  /** Editorial index label on the tile, e.g. "V001". Mono caps, top-left of media. */
+  tileCode?: string;
   /** Case study intro — center column under title (2 short paragraphs). */
   introParagraphs?: string[];
   /** Two-column detail block below the hero video. */

@@ -5,12 +5,16 @@ import { Reveal } from "@/components/Reveal/Reveal";
 import { SectionHeading } from "@/components/SectionHeading/SectionHeading";
 
 import { getAllProjects } from "@/lib/projects";
+import { pageMetadata } from "@/lib/seo";
 
 import styles from "@/app/work/workPage.module.css";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: "Projects",
-};
+  description:
+    "Selected launch films, product motion, and performance creative case studies from Venera—Ryan Thomas's motion design studio in New York.",
+  path: "/work",
+});
 
 export default function WorkIndexPage() {
   const projects = getAllProjects();
@@ -18,6 +22,7 @@ export default function WorkIndexPage() {
   return (
     <Reveal>
       <section className={styles.section}>
+        <h1 className="visuallyHidden">Projects</h1>
         <div className={styles.shell}>
           <SectionHeading
             eyebrow="Projects"
