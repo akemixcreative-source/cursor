@@ -1,0 +1,4 @@
+.article {
+  padding: calc(var(--site-header-height) + var(--space-7))
+    var(--page-padding-x) var(--space-10);
+}

@@ -1,0 +1,30 @@
+.featured {
+  padding: var(--space-6) 0 var(--space-8);
+}
+
+.shell {
+  max-width: var(--max-width-projects);
+  margin: 0 auto;
+  padding: 0 clamp(var(--space-4), 6vw, var(--space-8));
+}
+
+.sectionLabel {
+  margin: 0 0 clamp(var(--space-5), 4vw, var(--space-7));
+  font-family: var(--font-case-mono);
+  font-size: clamp(0.8125rem, 1.2vw, 1.0625rem);
+  font-weight: 400;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  text-align: left;
+  color: var(--color-text-muted);
+  padding-bottom: var(--space-4);
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.empty {
+  margin: 0;
+  color: var(--color-text-muted);
+  font-size: 0.9375rem;
+  line-height: 1.6;
+  text-align: center;
+}

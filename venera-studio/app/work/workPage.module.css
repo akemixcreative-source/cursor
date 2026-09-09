@@ -1,0 +1,9 @@
+.section {
+  padding: calc(var(--site-header-height) + var(--space-9)) 0 var(--space-10);
+}
+
+.shell {
+  max-width: var(--max-width-projects);
+  margin: 0 auto;
+  padding: 0 clamp(var(--space-4), 6vw, var(--space-8));
+}

@@ -1,0 +1,133 @@
+.header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  background-color: transparent;
+  border-bottom: none;
+}
+
+.inner {
+  --nav-link-size: 0.9375rem;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  max-width: none;
+  width: 100%;
+  margin: 0 auto;
+  padding: var(--space-4) var(--page-padding-x);
+  gap: var(--space-4);
+}
+
+.nav {
+  display: flex;
+  align-items: center;
+  gap: clamp(var(--space-4), 3vw, var(--space-6));
+}
+
+.navLinks {
+  display: flex;
+  align-items: center;
+  gap: clamp(var(--space-4), 2.4vw, var(--space-6));
+}
+
+.navLink {
+  position: relative;
+  font-size: var(--nav-link-size);
+  font-weight: 400;
+  letter-spacing: -0.005em;
+  color: var(--color-text);
+  text-decoration: none;
+  transition: color var(--ease-default) 0.4s;
+  text-shadow:
+    0 1px 12px rgba(0, 0, 0, 0.85),
+    0 0 2px rgba(0, 0, 0, 0.9);
+}
+
+.navLink::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -3px;
+  width: 100%;
+  height: 1px;
+  background-color: currentColor;
+  opacity: 0.85;
+  transform: scaleX(0);
+  transform-origin: right center;
+  transition: transform var(--ease-default) 0.45s;
+}
+
+.navLink:hover {
+  color: var(--color-text-muted);
+  text-decoration: none;
+}
+
+.navLink:hover::after {
+  transform: scaleX(1);
+  transform-origin: left center;
+}
+
+.navLinkActive {
+  color: rgba(255, 255, 255, 0.65);
+}
+
+.navLinkActive::after {
+  transform: scaleX(1);
+  transform-origin: left center;
+}
+
+/* Primary conversion target — bordered pill, mono caps */
+.navCta {
+  display: inline-flex;
+  align-items: center;
+  padding: 9px 18px;
+  border: 1px solid var(--border-strong);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--color-text);
+  font-family: var(--font-case-mono);
+  font-size: 0.6875rem;
+  font-weight: 400;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  text-decoration: none;
+  transition:
+    background-color var(--ease-default) 0.4s,
+    color var(--ease-default) 0.4s,
+    border-color var(--ease-default) 0.4s;
+}
+
+.navCta:hover {
+  background-color: var(--color-text);
+  color: var(--color-bg);
+  border-color: var(--color-text);
+  text-decoration: none;
+}
+
+.navCtaActive {
+  background-color: var(--color-text);
+  color: var(--color-bg);
+  border-color: var(--color-text);
+}
+
+@media (max-width: 640px) {
+  .inner {
+    --nav-link-size: 0.875rem;
+  }
+
+  .nav {
+    gap: var(--space-3);
+  }
+
+  .navLinks {
+    gap: var(--space-4);
+  }
+
+  .navCta {
+    padding: 8px 14px;
+    letter-spacing: 0.12em;
+  }
+}

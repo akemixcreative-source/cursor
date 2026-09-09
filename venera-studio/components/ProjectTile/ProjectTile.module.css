@@ -1,0 +1,138 @@
+.tileLink {
+  display: block;
+  border-radius: var(--radius-tile);
+  overflow: hidden;
+  background-color: transparent;
+  text-decoration: none;
+  color: inherit;
+  transition: transform var(--ease-default) 0.4s;
+}
+
+.tileLink:hover {
+  text-decoration: none;
+}
+
+.tileLink:focus-visible {
+  outline-offset: 4px;
+}
+
+.media {
+  position: relative;
+  display: flex;
+  align-items: stretch;
+  justify-content: stretch;
+  background: #0a0a0a;
+  border-radius: var(--radius-tile);
+  overflow: hidden;
+}
+
+/** Flush full-width media frame: image covers the entire tile */
+.mediaInset {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  overflow: hidden;
+}
+
+.mediaInner {
+  width: 100%;
+  height: 100%;
+}
+
+.stack {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.video,
+.still,
+.cover {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.cover {
+  display: block;
+  border-radius: 14px;
+}
+
+/* GIF sits above cover; revealed on hover (pointer devices only, see below) */
+.gifLayer {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0;
+  transition: opacity var(--ease-default) 0.45s;
+  pointer-events: none;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .tileLink:hover .gifLayer {
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .gifLayer {
+    display: none !important;
+  }
+}
+
+.placeholderTitle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  padding: var(--space-4);
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  text-align: center;
+  color: var(--color-text-muted);
+}
+
+.body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  padding: var(--space-4) 0 0;
+}
+
+.code {
+  margin: 0;
+  font-family: var(--font-case-mono);
+  font-size: 0.6875rem;
+  font-weight: 400;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--color-text-faint);
+}
+
+.titleRow {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-4);
+}
+
+.title {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 500;
+  line-height: 1.25;
+  letter-spacing: -0.01em;
+}
+
+.tag {
+  font-size: 0.875rem;
+  font-weight: 400;
+  color: var(--color-text-muted);
+  white-space: nowrap;
+  text-align: right;
+}

@@ -1,0 +1,58 @@
+# Dependencies
+node_modules/
+
+# Next.js build
+.next/
+out/
+
+# Vercel
+.vercel/
+
+# Environment files
+.env
+.env.*
+!.env.example
+
+# OS files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Editor
+.cursor/
+.vscode/
+
+# === Heavy design/source files in /public ===
+# These bloat the repo — keep them local, not in version control
+public/images/mockups/*.psd
+public/images/mockups/*.fig
+public/images/mockups/*.aep
+public/images/mockups/Project Section/
+
+# Large unused PNGs in mockups (design references, not served on the site)
+public/images/mockups/Frame 11.png
+public/images/mockups/Frame 14.png
+public/images/mockups/Frame 15.png
+public/images/mockups/image 93.png
+public/images/mockups/image 95_4k.png
+public/images/mockups/footer.png
+public/images/mockups/Comp 1*.psd
+public/images/mockups/ios wallpaper.png
+public/images/mockups/ven.png
+public/images/mockups/Screenshot*.png
+public/images/mockups/WhatsApp*.png
+
+# Deployment snapshots
+vercel-deployment-*.json
+
+# Cursor rules export
+rules-export.txt
+
+# Hero video (49MB — too large for git, serve from CDN or Vercel Blob)
+public/images/mockups/Header Video.mp4
+
+# Figma source
+public/images/mockups/Website Ref.fig
+
+# Broken git dir from earlier attempt
+.git-broken/
