@@ -1,6 +1,6 @@
 /** Production site origin used for metadata, JSON-LD, and canonical URLs. */
 export const SITE_URL =
-  process.env.NEXT_PUBLIC_SITE_URL ?? "https://venerastudio.com";
+  process.env.NEXT_PUBLIC_SITE_URL?.trim() || "https://venerastudio.com";
 
 /**
  * Public brand vocabulary reused across SEO metadata, JSON-LD, footer, and
