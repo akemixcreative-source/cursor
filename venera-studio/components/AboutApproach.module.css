@@ -1,0 +1,130 @@
+/* ---------------------------------------------------------------------------
+   AboutApproach — approach copy + stamp + CTA (tokens only)
+   --------------------------------------------------------------------------- */
+
+.section {
+  margin-block-start: 0;
+}
+
+.approachGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  align-items: start;
+  gap: clamp(40px, 7vw, 96px);
+  inline-size: 100%;
+  max-inline-size: 1280px;
+  margin-inline: auto;
+}
+
+/* Matches the source photo's 3:2 frame so the street context reads as shot. */
+.portraitFrame {
+  position: relative;
+  inline-size: 100%;
+  aspect-ratio: 3 / 2;
+  margin: 0;
+  overflow: hidden;
+  background-color: var(--surface-1);
+  border-radius: 0;
+}
+
+.portrait {
+  object-fit: cover;
+  object-position: center;
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  max-inline-size: 50ch;
+  inline-size: 100%;
+}
+
+@media (min-width: 900px) {
+  .approachGrid {
+    grid-template-columns: minmax(280px, 0.85fr) minmax(0, 1.15fr);
+  }
+}
+
+/** Section title — larger than body */
+.sectionHeadline {
+  font-family: var(--font-geist), ui-sans-serif, system-ui;
+  font-size: var(--text-h3);
+  font-weight: var(--weight-semibold);
+  line-height: var(--leading-display);
+  letter-spacing: var(--tracking-display);
+  color: var(--fg);
+  margin: 0 0 clamp(24px, 3.5vh, 32px);
+  max-inline-size: 28ch;
+}
+
+.prose {
+  font-family: var(--font-geist), ui-sans-serif, system-ui;
+  font-size: var(--text-body);
+  line-height: var(--leading-body);
+  color: var(--fg-muted);
+  margin: 0 0 clamp(28px, 5vh, 44px);
+  max-inline-size: 50ch;
+}
+
+.prose:last-of-type {
+  margin-bottom: 0;
+}
+
+/* --- Closing stamp --------------------------------------------------------- */
+
+.closingStamp {
+  font-family: var(--font-geist-mono), ui-monospace, monospace;
+  font-weight: var(--weight-medium);
+  font-size: var(--text-meta);
+  letter-spacing: var(--tracking-meta);
+  text-transform: uppercase;
+  line-height: 1.45;
+  color: var(--fg-muted);
+  margin: clamp(96px, 18vh, 200px) auto 0;
+  padding-block-start: clamp(48px, 8vh, 88px);
+  border-block-start: 1px solid var(--border);
+  text-align: center;
+  text-wrap: balance;
+  max-inline-size: 50ch;
+  inline-size: 100%;
+}
+
+/* --- CTA ------------------------------------------------------------------- */
+
+.ctaWrap {
+  margin-block-start: clamp(72px, 12vh, 140px);
+  display: flex;
+  justify-content: center;
+}
+
+.cta {
+  font-family: var(--font-geist-mono), ui-monospace, monospace;
+  font-weight: var(--weight-medium);
+  font-size: var(--text-meta);
+  letter-spacing: var(--tracking-meta);
+  text-transform: uppercase;
+  line-height: 1;
+  color: var(--flame);
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4em;
+  transition: color 180ms ease;
+}
+
+.cta:hover,
+.cta:focus-visible {
+  color: var(--flame-hover);
+  outline: none;
+}
+
+.ctaArrow {
+  display: inline-block;
+  transition: transform 200ms ease-out;
+}
+
+.cta:hover .ctaArrow,
+.cta:focus-visible .ctaArrow {
+  transform: translateX(4px);
+}

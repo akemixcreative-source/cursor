@@ -1,0 +1,333 @@
+/* ---------------------------------------------------------------------------
+   HeroIntro
+   Brand statement panel directly below the hero video. Stacked on narrow
+   viewports; from 960px up, headline + lead + CTA (left) and a square hero
+   visual (right) in a two-column grid aligned to the reference layout.
+   --------------------------------------------------------------------------- */
+
+.section {
+  position: relative;
+  background-color: var(--bg);
+  max-inline-size: var(--max);
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+  padding-block: clamp(80px, 12vh, 144px) clamp(48px, 7vh, 96px);
+}
+
+/* Two-up: headline block (left) + reference-style hero visual (right). */
+.inner {
+  display: grid;
+  grid-template-columns: 1fr;
+  align-items: start;
+  gap: clamp(40px, 6vw, 72px);
+}
+
+@media (min-width: 960px) {
+  .inner {
+    grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
+    gap: clamp(28px, 3.5vw, 56px);
+    align-items: start;
+  }
+}
+
+/* Copy column: full width in the stacked layout; in two-up it lives in the
+   first grid track and keeps a readable measure. */
+.copy {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(20px, 2.5vh, 32px);
+  inline-size: 100%;
+  max-inline-size: 100%;
+  margin-inline: 0;
+  text-align: start;
+  min-inline-size: 0;
+}
+
+.copyReveal {
+  inline-size: 100%;
+}
+
+@media (min-width: 960px) {
+  .copy {
+    max-inline-size: min(100%, clamp(28rem, 48vw, 46rem));
+  }
+}
+
+.figure {
+  position: relative;
+  inline-size: 100%;
+  /* Larger frame than before; still capped so the grid stays balanced. */
+  max-inline-size: min(100%, clamp(320px, 42vw, 680px));
+  aspect-ratio: 1;
+  margin-inline: auto;
+  min-inline-size: 0;
+  overflow: hidden;
+  /* Solid backdrop for video blend modes (see .heroVisual). */
+  background-color: var(--bg);
+}
+
+@media (min-width: 960px) {
+  .figure {
+    margin-inline: 0;
+    justify-self: end;
+    max-inline-size: 100%;
+  }
+}
+
+.figureClip {
+  position: relative;
+  inline-size: 100%;
+  block-size: 100%;
+  /* Keeps dark-mode video blend backdrop predictable vs `--bg`. */
+  isolation: isolate;
+}
+
+.heroPoster {
+  z-index: 0;
+  object-fit: cover;
+  object-position: center;
+  transform: scale(1.12);
+}
+
+/* The poster remains underneath until actual playback begins. Keeping the
+   video non-interactive prevents mobile browsers from drawing a play control. */
+.heroVisual {
+  position: relative;
+  z-index: 1;
+  inline-size: 100%;
+  block-size: 100%;
+  object-fit: cover;
+  object-position: center;
+  transform: scale(1.38);
+  transform-origin: center center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.45s ease-out;
+}
+
+.heroVisual[data-playing="true"] {
+  opacity: 1;
+}
+
+.heroVisual::-webkit-media-controls,
+.heroVisual::-webkit-media-controls-start-playback-button {
+  display: none !important;
+  appearance: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .heroVisual {
+    transform: scale(1.12);
+  }
+}
+
+@media (hover: none) {
+  .heroVisual {
+    transform: scale(1.12);
+  }
+}
+
+.headline {
+  font-size: clamp(28px, 4.2vw, 72px);
+  font-weight: var(--weight-regular);
+  letter-spacing: 0;
+  line-height: 1.15;
+  margin: 0;
+  color: var(--fg);
+  text-wrap: balance;
+}
+
+/* Split lines use global `.srl-lineInner` (see `splitIntoLines.ts`). */
+.headline :global(.srl-lineInner) {
+  font-weight: var(--weight-regular);
+}
+
+.lead {
+  font-size: clamp(18px, 2.4vw, 36px);
+  font-weight: var(--weight-regular);
+  line-height: 1.3;
+  color: var(--fg-muted);
+  margin: 0;
+}
+
+.lead :global(.srl-lineInner) {
+  font-weight: var(--weight-regular);
+}
+
+/* ---------------------------------------------------------------------------
+   Contact CTA — outline box; hover inverts to white fill + chevron in.
+   --------------------------------------------------------------------------- */
+
+.ctaRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: clamp(12px, 2vw, 16px);
+  margin-block-start: clamp(4px, 1vh, 12px);
+}
+
+.contactPill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: clamp(16px, 2vw, 20px) clamp(28px, 3.5vw, 44px);
+  min-block-size: 56px;
+  color: var(--fg);
+  background-color: transparent;
+  border: 1px solid rgba(245, 240, 232, 0.72);
+  border-radius: 0;
+  font-family: var(--font-geist-mono), ui-monospace, monospace;
+  font-size: clamp(11px, 1.15vw, 13px);
+  font-weight: var(--weight-medium);
+  letter-spacing: var(--tracking-meta);
+  text-transform: uppercase;
+  line-height: 1;
+  text-decoration: none;
+  cursor: pointer;
+  transform: translateY(0) scale(1);
+  box-shadow: 0 0 0 0 transparent;
+  transition:
+    color 220ms cubic-bezier(0.22, 1, 0.36, 1),
+    background-color 220ms cubic-bezier(0.22, 1, 0.36, 1),
+    border-color 220ms cubic-bezier(0.22, 1, 0.36, 1),
+    transform 220ms cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 220ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.contactPill:hover,
+.contactPill:focus-visible {
+  color: var(--hero-cta-pill-fg);
+  background-color: var(--hero-cta-pill-bg);
+  border-color: var(--hero-cta-pill-bg);
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.35);
+  outline: none;
+}
+
+.contactPill:active {
+  transform: translateY(0) scale(0.98);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+  transition-duration: 80ms;
+}
+
+.contactPill:focus-visible {
+  box-shadow:
+    0 0 0 2px var(--bg),
+    0 0 0 4px var(--flame);
+}
+
+/* Book a call — flame fill + black type; inverts on hover. */
+.callPill {
+  color: var(--bg);
+  background-color: var(--flame);
+  border-color: var(--flame);
+}
+
+.callPill:hover,
+.callPill:focus-visible {
+  color: var(--flame);
+  background-color: var(--bg);
+  border-color: var(--flame);
+}
+
+.callPill:active {
+  color: var(--flame-deep);
+  background-color: var(--bg);
+  border-color: var(--flame-deep);
+}
+
+.pillChevron {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  inline-size: 0;
+  min-inline-size: 0;
+  block-size: 1em;
+  margin-inline-end: 0;
+  font-size: 1.12em;
+  line-height: 1;
+  opacity: 0;
+  overflow: hidden;
+  transform: translateX(-10px);
+  transition:
+    inline-size 280ms cubic-bezier(0.22, 1, 0.36, 1),
+    margin-inline-end 280ms cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 200ms ease,
+    transform 280ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.contactPill:hover .pillChevron,
+.contactPill:focus-visible .pillChevron,
+.contactPill:active .pillChevron {
+  inline-size: 0.7em;
+  margin-inline-end: 0.6em;
+  opacity: 1;
+  transform: translateX(2px);
+}
+
+.pillPhone {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  inline-size: 0;
+  min-inline-size: 0;
+  block-size: 1em;
+  margin-inline-end: 0;
+  line-height: 1;
+  opacity: 0;
+  overflow: hidden;
+  transform: translateX(-10px);
+  transition:
+    inline-size 280ms cubic-bezier(0.22, 1, 0.36, 1),
+    margin-inline-end 280ms cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 200ms ease,
+    transform 280ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.pillPhoneIcon {
+  display: block;
+  inline-size: 1em;
+  block-size: 1em;
+}
+
+.contactPill:hover .pillPhone,
+.contactPill:focus-visible .pillPhone,
+.contactPill:active .pillPhone {
+  inline-size: 1em;
+  margin-inline-end: 0.55em;
+  opacity: 1;
+  transform: translateX(2px);
+}
+
+.pillLabel {
+  display: inline-block;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .contactPill,
+  .contactPill:hover,
+  .contactPill:focus-visible,
+  .contactPill:active {
+    transform: none;
+    box-shadow: none;
+    transition: none;
+  }
+
+  .pillChevron {
+    inline-size: 0.7em;
+    margin-inline-end: 0.6em;
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+
+  .pillPhone {
+    inline-size: 1em;
+    margin-inline-end: 0.55em;
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}

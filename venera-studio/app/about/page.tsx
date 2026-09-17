@@ -1,89 +1,99 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 
-import { CAL_BOOKING_URL } from "@/lib/constants";
-import { pageMetadata } from "@/lib/seo";
+import AboutApproach from "@/components/AboutApproach";
+import { InnerPage } from "@/components/InnerPage";
+import { Nav } from "@/components/Nav";
+import { NycLiveClock } from "@/components/NycLiveClock";
+import { PageMeta } from "@/components/PageMeta";
+import { VeneraLogo } from "@/components/VeneraLogo";
+import { ORG_ID, SERVICE_ID } from "@/lib/organizationJsonLd";
+import {
+  SITE_BRAND,
+  SITE_SERVICE,
+  SITE_TITLE_BRAND,
+  SITE_TITLE_SERVICE,
+  SITE_URL,
+} from "@/lib/site";
+import styles from "./page.module.css";
 
-import { Reveal } from "@/components/Reveal/Reveal";
+const ABOUT_DESCRIPTION = `${SITE_BRAND} is a New York motion design studio offering launch films, product motion, brand systems, and performance creative for funded startups. Founders work directly with the studio on every brief.`;
 
-import styles from "@/app/about/about.module.css";
+const ABOUT_TITLE = `About ${SITE_TITLE_BRAND} | ${SITE_TITLE_SERVICE}`;
 
-export const metadata: Metadata = pageMetadata({
-  title: "About",
-  description:
-    "Venera is Ryan Thomas's solo motion design practice in New York—launch films, product storytelling, and performance creative for founders and brand teams.",
-  path: "/about",
-});
+export const metadata: Metadata = {
+  metadataBase: new URL(SITE_URL),
+  title: { absolute: ABOUT_TITLE },
+  description: ABOUT_DESCRIPTION,
+  alternates: { canonical: "/about" },
+  openGraph: {
+    title: ABOUT_TITLE,
+    description: ABOUT_DESCRIPTION,
+    type: "website",
+    url: "/about",
+    siteName: SITE_BRAND,
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: ABOUT_TITLE,
+    description: ABOUT_DESCRIPTION,
+  },
+};
+
+/**
+ * About page JSON-LD: studio AboutPage + Motion Design Service.
+ * Both reference the Organization declared globally in the root layout.
+ */
+const aboutPageJsonLd = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "AboutPage",
+      "@id": `${SITE_URL}/about#page`,
+      url: `${SITE_URL}/about`,
+      name: ABOUT_TITLE,
+      description: ABOUT_DESCRIPTION,
+      about: { "@id": ORG_ID },
+      mainEntity: { "@id": ORG_ID },
+      isPartOf: { "@id": ORG_ID },
+    },
+    {
+      "@type": "Service",
+      "@id": SERVICE_ID,
+      name: SITE_SERVICE,
+      serviceType: SITE_SERVICE,
+      provider: { "@id": ORG_ID },
+      areaServed: ["New York", "United States", "Remote"],
+      description:
+        "Launch films, product motion, and brand systems for funded founders. Direct studio engagement on every brief.",
+    },
+  ],
+};
 
 export default function AboutPage() {
   return (
-    <Reveal>
-      <article className={styles.section}>
-      <header className={styles.heroGrid}>
-        <h1 className={styles.headline}>
-          <span className={styles.headlineLine}>About</span>
-          <span className={styles.headlineLine}>Venera</span>
-        </h1>
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(aboutPageJsonLd),
+        }}
+      />
 
-        <div className={styles.copyCol}>
-          <p className={styles.paragraph}>
-            Venera is a solo motion design practice in New York, run by Ryan
-            Thomas. The work sits where launch films, product storytelling, and
-            performance creative overlap—built for founders and brand teams who
-            care how motion reads in the feed and on the homepage.
-          </p>
-          <p className={styles.paragraph}>
-            Engagements are intentionally small-craft: one principal creative,
-            clear timelines, and deliverables sized for real channels—not
-            generic showreel fluff.
-          </p>
-        </div>
+      <PageMeta
+        mode="always"
+        left={
+          <Link href="/" className={styles.chromeLogo} aria-label="Home">
+            <VeneraLogo variant="nav" priority />
+          </Link>
+        }
+        center={<NycLiveClock />}
+        right={<Nav ariaLabel="Primary" />}
+      />
 
-        <aside className={styles.metaCol}>
-          <span className={styles.metaLine}>Ryan Thomas</span>
-          <span className={styles.metaLine}>New York</span>
-          <span className={styles.metaLine}>Motion &amp; creative direction</span>
-        </aside>
-      </header>
-
-      <figure className={styles.mediaStrip}>
-        <span className="visuallyHidden">
-          Optional studio photograph or campaign still can be placed in this
-          frame.
-        </span>
-        <div className={styles.mediaInner} aria-hidden="true" />
-      </figure>
-
-      <section className={styles.processSection} aria-labelledby="approach-label">
-        <div className={styles.processGrid}>
-          <p id="approach-label" className={styles.processLabel}>
-            approach_
-          </p>
-          <p className={styles.processText}>
-            Direction stays restrained and cinematic: negative space, deliberate
-            pacing, and color that supports the product story. Motion is tuned
-            for legibility at small sizes—because most people meet your work on
-            a phone first.
-          </p>
-          <p className={styles.processText}>
-            Collaboration runs through Figma for boards and UI plates, After
-            Effects (and 3D where needed) for animation, and shared frames for
-            review so feedback stays tied to specific beats—not vague rounds.
-          </p>
-        </div>
-
-        <div className={styles.ctaRow}>
-          <a
-            className={styles.cta}
-            href={CAL_BOOKING_URL}
-            target="_blank"
-            rel="noreferrer"
-            aria-label="Book an intro on Cal.com (opens in a new tab)"
-          >
-            Book an intro
-          </a>
-        </div>
-      </section>
-      </article>
-    </Reveal>
+      <InnerPage showBack={false} wide>
+        <AboutApproach />
+      </InnerPage>
+    </>
   );
 }

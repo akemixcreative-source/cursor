@@ -1,0 +1,17 @@
+/* Line mask + inner track for staggered scroll reveals (HeroIntro). */
+
+.root {
+  margin: 0;
+}
+
+.srl-line {
+  display: block;
+  overflow: hidden;
+  padding-block: 0.02em;
+}
+
+.srl-lineInner {
+  display: block;
+  transform-origin: 0 50%;
+  will-change: transform, opacity;
+}
