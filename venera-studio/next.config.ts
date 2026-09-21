@@ -1,8 +1,8 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /** Allow HMR / dev assets when opening the site from your LAN IP on a phone. */
-  allowedDevOrigins: ["192.168.1.167"],
+  /** Allow HMR / dev assets from localhost and LAN preview hosts. */
+  allowedDevOrigins: ["127.0.0.1", "localhost", "::1", "192.168.1.167"],
 
   /** PostHog reverse proxy — reduces ad-blocker interference. */
   async rewrites() {
