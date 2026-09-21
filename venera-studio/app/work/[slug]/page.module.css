@@ -161,12 +161,10 @@
   inline-size: 100%;
 }
 
-/* Holds the ambient glow, which has to sit outside `.heroInner`'s clip. */
 .videoFrame {
   position: relative;
   inline-size: 100%;
-  overflow: visible;
-  isolation: isolate;
+  overflow: hidden;
 }
 
 .heroInner {

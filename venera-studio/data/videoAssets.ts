@@ -78,6 +78,8 @@ const VIDEO_ASSETS_WITH_AUDIO = new Set<VideoAssetKey>([
   "capsa-behind-the-scenes",
   "capsa-product-film",
   "meta-rayban-hero",
+  "gemini-hero",
+  "appstack-hero",
   "appstack-fundraise",
   "appstack-website-hero",
   "nexus-seed",
