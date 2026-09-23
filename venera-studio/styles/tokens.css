@@ -41,6 +41,10 @@
   --hero-cta-pill-bg: #ffffff;
   --hero-cta-pill-fg: #0e0e0e;
 
+  /** Film lightbox: darkened page + framed player. */
+  --lightbox-scrim: rgba(0, 0, 0, 0.82);
+  --lightbox-frame: #0a0a0a;
+
   /* effects */
   --grain-opacity: 0.055;
 

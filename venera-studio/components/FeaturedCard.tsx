@@ -11,6 +11,7 @@ import { getFeaturedVideoKey } from "@/data/projects";
 import { getVideoAssetPoster } from "@/data/videoAssets";
 import { easeInOutQuint } from "@/lib/asciiScramble";
 import { SecureVideo } from "@/components/SecureVideo";
+import { VideoLightbox } from "@/components/VideoLightbox";
 import styles from "./FeaturedCard.module.css";
 
 const FEATURED_TAG_SCRAMBLE_MS = 1200;
@@ -89,6 +90,7 @@ export function FeaturedCard({
   const [clusterGen, setClusterGen] = useState(0);
   const [videoActive, setVideoActive] = useState(false);
   const [videoInView, setVideoInView] = useState(false);
+  const [lightboxOpen, setLightboxOpen] = useState(false);
   const mediaFrameRef = useRef<HTMLDivElement>(null);
   const videoElRef = useRef<HTMLVideoElement | null>(null);
 
@@ -118,7 +120,7 @@ export function FeaturedCard({
         setVideoInView(visible);
         const video = videoElRef.current;
         if (!video) return;
-        if (visible) {
+        if (visible && !lightboxOpen) {
           void video.play().catch(() => {});
         } else {
           video.pause();
@@ -128,7 +130,12 @@ export function FeaturedCard({
     );
     observer.observe(node);
     return () => observer.disconnect();
-  }, [videoActive]);
+  }, [lightboxOpen, videoActive]);
+
+  useEffect(() => {
+    if (!lightboxOpen) return;
+    videoElRef.current?.pause();
+  }, [lightboxOpen]);
 
   useEffect(
     () => () => {
@@ -176,7 +183,7 @@ export function FeaturedCard({
                 videoRef={videoElRef}
                 className={mediaClassName}
                 poster={poster}
-                autoPlay={videoInView}
+                autoPlay={videoInView && !lightboxOpen}
                 muted
                 loop
                 playsInline
@@ -193,6 +200,16 @@ export function FeaturedCard({
                 aria-hidden
               />
             )}
+            <button
+              type="button"
+              className={styles.openFilm}
+              aria-label={`Open film: ${project.title}`}
+              onClick={(event) => {
+                event.preventDefault();
+                event.stopPropagation();
+                setLightboxOpen(true);
+              }}
+            />
             {project.mediaBadges?.length ? (
               <div className={styles.mediaBadges}>
                 {project.mediaBadges.map((badge) => (
@@ -235,6 +252,13 @@ export function FeaturedCard({
         <h3 className={styles.title}>{project.title}</h3>
         <p className={styles.description}>{project.description}</p>
       </Link>
+      {lightboxOpen ? (
+        <VideoLightbox
+          videoKey={videoKey}
+          poster={poster}
+          onClose={() => setLightboxOpen(false)}
+        />
+      ) : null}
     </article>
   );
 }

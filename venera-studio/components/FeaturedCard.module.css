@@ -82,6 +82,21 @@
   filter: grayscale(1);
 }
 
+.openFilm {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  padding: 0;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+}
+
+.openFilm:focus-visible {
+  outline: 2px solid var(--flame);
+  outline-offset: -4px;
+}
+
 /* Partner marks — top-right of media frame (above video). */
 .mediaBadges {
   position: absolute;
