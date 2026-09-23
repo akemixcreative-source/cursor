@@ -45,8 +45,8 @@
   --lightbox-scrim: rgba(0, 0, 0, 0.82);
   --lightbox-frame: #0a0a0a;
 
-  /** Hover veil on films that open in the lightbox. */
-  --film-hover-veil: rgba(245, 240, 232, 0.14);
+  /** Dark hover scrim on films that open in the lightbox. */
+  --film-hover-scrim: rgba(0, 0, 0, 0.48);
 
   /* effects */
   --grain-opacity: 0.055;

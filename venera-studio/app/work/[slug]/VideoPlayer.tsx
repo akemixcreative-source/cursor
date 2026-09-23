@@ -56,7 +56,11 @@ export function VideoPlayer({ videoKey, poster }: VideoPlayerProps) {
           className={styles.soundToggle}
           aria-label="Open film"
           onClick={() => setOpen(true)}
-        />
+        >
+          <span className={styles.expandHint} aria-hidden>
+            Expand
+          </span>
+        </button>
       </div>
       {open ? (
         <VideoLightbox
