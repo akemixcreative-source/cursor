@@ -182,6 +182,12 @@
   block-size: auto;
   max-inline-size: 100%;
   border-radius: 0;
+  transition: opacity 320ms ease;
+}
+
+.heroInner:hover .heroVideo,
+.heroInner:focus-within .heroVideo {
+  opacity: 0.72;
 }
 
 .soundToggle {
@@ -194,6 +200,21 @@
   background: transparent;
   cursor: pointer;
   touch-action: manipulation;
+}
+
+.soundToggle::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: var(--film-hover-veil);
+  opacity: 0;
+  transition: opacity 320ms ease;
+  pointer-events: none;
+}
+
+.soundToggle:hover::after,
+.soundToggle:focus-visible::after {
+  opacity: 1;
 }
 
 .soundToggle:focus-visible {
