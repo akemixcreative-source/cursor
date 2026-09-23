@@ -3,8 +3,18 @@ let softwareRenderer: boolean | null = null;
 type NavigatorWithConnection = Navigator & {
   connection?: {
     saveData?: boolean;
+    effectiveType?: string;
   };
 };
+
+function hasConstrainedNetwork(): boolean {
+  const connection = (navigator as NavigatorWithConnection).connection;
+  if (!connection) return false;
+  if (connection.saveData) return true;
+  return (
+    connection.effectiveType === "slow-2g" || connection.effectiveType === "2g"
+  );
+}
 
 /**
  * Browsers do not expose a direct "hardware acceleration disabled" flag.
@@ -41,10 +51,9 @@ export function hasSoftwareRenderer(): boolean {
 export function prefersLightweightRendering(): boolean {
   if (typeof window === "undefined") return false;
 
-  const connection = (navigator as NavigatorWithConnection).connection;
   return (
     window.matchMedia("(prefers-reduced-motion: reduce)").matches ||
-    connection?.saveData === true ||
+    hasConstrainedNetwork() ||
     hasSoftwareRenderer()
   );
 }

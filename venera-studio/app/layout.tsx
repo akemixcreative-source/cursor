@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Suspense } from "react";
 import { Geist, Geist_Mono } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
@@ -37,6 +37,13 @@ const geistMono = Geist_Mono({
 });
 
 const DEFAULT_TITLE = SITE_TITLE;
+
+export const viewport: Viewport = {
+  themeColor: "#000000",
+  viewportFit: "cover",
+  width: "device-width",
+  initialScale: 1,
+};
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),

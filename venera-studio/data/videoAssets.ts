@@ -98,6 +98,15 @@ export function getVideoAssetFallback(key: VideoAssetKey): string {
   return VIDEO_ASSETS[key].fallback;
 }
 
+/** Narrow-viewport encode when a display-sized cut exists. */
+const VIDEO_MOBILE_FALLBACKS: Partial<Record<VideoAssetKey, string>> = {
+  "hero-intro-visual": "/images/hero-intro/hero-visual-mobile.mp4",
+};
+
+export function getVideoAssetMobileFallback(key: VideoAssetKey): string {
+  return VIDEO_MOBILE_FALLBACKS[key] ?? VIDEO_ASSETS[key].fallback;
+}
+
 export function getVideoAssetPoster(key: VideoAssetKey): string {
   return VIDEO_ASSETS[key].poster;
 }

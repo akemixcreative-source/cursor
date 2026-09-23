@@ -11,6 +11,7 @@ import { getFeaturedVideoKey } from "@/data/projects";
 import { getVideoAssetPoster } from "@/data/videoAssets";
 import { easeInOutQuint } from "@/lib/asciiScramble";
 import { SecureVideo } from "@/components/SecureVideo";
+import { prefersLightweightRendering } from "@/lib/renderingCapabilities";
 import styles from "./FeaturedCard.module.css";
 
 const FEATURED_TAG_SCRAMBLE_MS = 1200;
@@ -95,6 +96,7 @@ export function FeaturedCard({
   useEffect(() => {
     const node = mediaFrameRef.current;
     if (!node || videoActive) return;
+    if (prefersLightweightRendering()) return;
 
     const observer = new IntersectionObserver(
       ([entry]) => {

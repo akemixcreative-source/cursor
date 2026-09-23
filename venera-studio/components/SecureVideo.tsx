@@ -1,6 +1,5 @@
 "use client";
 
-import Hls from "hls.js";
 import {
   useCallback,
   useEffect,
@@ -16,6 +15,7 @@ import {
   useSecurePlayback,
   type PlaybackState,
 } from "@/hooks/useSecurePlayback";
+import { prefersLightweightRendering } from "@/lib/renderingCapabilities";
 
 const PLAY_RETRY_MS = 1500;
 
@@ -36,6 +36,15 @@ function kickPlayback(video: HTMLVideoElement): void {
 
 type ReadyPlayback = Extract<PlaybackState, { status: "ready" }>["playback"];
 
+function attachNativeSource(video: HTMLVideoElement, url: string): () => void {
+  video.src = url;
+  if (video.autoplay) kickPlayback(video);
+  return () => {
+    video.removeAttribute("src");
+    video.load();
+  };
+}
+
 function attachPlayback(
   video: HTMLVideoElement,
   playback: ReadyPlayback,
@@ -43,38 +52,59 @@ function attachPlayback(
 ): () => void {
   const { url, format } = playback;
 
-  if (format === "hls") {
-    if (video.canPlayType("application/vnd.apple.mpegurl")) {
-      video.src = url;
-      if (video.autoplay) kickPlayback(video);
-      return () => {
-        video.removeAttribute("src");
-        video.load();
-      };
-    }
-    if (Hls.isSupported()) {
-      const hls = new Hls({ enableWorker: true });
-      hls.loadSource(url);
-      hls.attachMedia(video);
-      hls.on(Hls.Events.MANIFEST_PARSED, () => {
-        if (video.autoplay) kickPlayback(video);
-      });
-      hls.on(Hls.Events.ERROR, (_event, data) => {
-        if (data.fatal) onError?.();
-      });
-      return () => {
-        hls.destroy();
-        video.removeAttribute("src");
-        video.load();
-      };
-    }
+  if (format !== "hls") {
+    return attachNativeSource(video, url);
   }
 
-  video.src = url;
-  if (video.autoplay) kickPlayback(video);
+  if (video.canPlayType("application/vnd.apple.mpegurl")) {
+    return attachNativeSource(video, url);
+  }
+
+  let cancelled = false;
+  let detach = () => {};
+
+  void import("hls.js").then(({ default: Hls }) => {
+    if (cancelled) return;
+    if (!Hls.isSupported()) {
+      detach = attachNativeSource(video, url);
+      return;
+    }
+
+    const constrained =
+      window.matchMedia("(max-width: 720px)").matches ||
+      prefersLightweightRendering();
+
+    const hls = new Hls({
+      enableWorker: true,
+      capLevelToPlayerSize: true,
+      maxBufferLength: constrained ? 6 : 12,
+      maxMaxBufferLength: constrained ? 12 : 24,
+      startLevel: constrained ? 0 : -1,
+    });
+
+    if (cancelled) {
+      hls.destroy();
+      return;
+    }
+
+    hls.loadSource(url);
+    hls.attachMedia(video);
+    hls.on(Hls.Events.MANIFEST_PARSED, () => {
+      if (video.autoplay) kickPlayback(video);
+    });
+    hls.on(Hls.Events.ERROR, (_event, data) => {
+      if (data.fatal) onError?.();
+    });
+    detach = () => {
+      hls.destroy();
+      video.removeAttribute("src");
+      video.load();
+    };
+  });
+
   return () => {
-    video.removeAttribute("src");
-    video.load();
+    cancelled = true;
+    detach();
   };
 }
 

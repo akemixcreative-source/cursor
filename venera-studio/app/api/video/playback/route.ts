@@ -25,7 +25,7 @@ export async function GET(request: Request) {
 
   return NextResponse.json(playback, {
     headers: {
-      "Cache-Control": "private, no-store",
+      "Cache-Control": "private, max-age=45",
     },
   });
 }

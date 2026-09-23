@@ -155,12 +155,3 @@
   }
 }
 
-/* Hidden hero MP4 — starts buffering while the counter runs. */
-.preloadVideo {
-  position: absolute;
-  inline-size: 0;
-  block-size: 0;
-  opacity: 0;
-  pointer-events: none;
-  visibility: hidden;
-}

@@ -30,6 +30,7 @@ export default function HomePage() {
         href={HERO_INTRO_MP4}
         as="video"
         type="video/mp4"
+        media="(min-width: 960px) and (prefers-reduced-motion: no-preference)"
         fetchPriority="high"
       />
 

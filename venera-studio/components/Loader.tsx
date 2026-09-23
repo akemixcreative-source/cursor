@@ -5,11 +5,8 @@ import { useCallback, useEffect, useState, type TransitionEvent } from "react";
 import { createPortal } from "react-dom";
 import { AsciiRampText } from "@/components/AsciiRampText";
 import { VeneraLogo } from "@/components/VeneraLogo";
-import { getVideoAssetFallback } from "@/data/videoAssets";
 import { prefersLightweightRendering } from "@/lib/renderingCapabilities";
 import styles from "./Loader.module.css";
-
-const HOME_HERO_INTRO_MP4 = getVideoAssetFallback("hero-intro-visual");
 
 /**
  * Loader
@@ -138,15 +135,6 @@ export function Loader() {
       </motion.div>
 
       <span className={styles.right}>{count.toString().padStart(3, "0")}</span>
-      <video
-        className={styles.preloadVideo}
-        src={HOME_HERO_INTRO_MP4}
-        preload="auto"
-        muted
-        playsInline
-        aria-hidden
-        tabIndex={-1}
-      />
     </div>
   );
 
