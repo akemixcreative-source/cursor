@@ -12,7 +12,9 @@ function hasConstrainedNetwork(): boolean {
   if (!connection) return false;
   if (connection.saveData) return true;
   return (
-    connection.effectiveType === "slow-2g" || connection.effectiveType === "2g"
+    connection.effectiveType === "slow-2g" ||
+    connection.effectiveType === "2g" ||
+    connection.effectiveType === "3g"
   );
 }
 

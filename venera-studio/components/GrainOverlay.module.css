@@ -23,3 +23,9 @@
   /* Normal compositing keeps the texture inexpensive on software renderers. */
   mix-blend-mode: normal;
 }
+
+@media (max-width: 720px), (hover: none), (pointer: coarse), (prefers-reduced-motion: reduce) {
+  .grain {
+    display: none;
+  }
+}
