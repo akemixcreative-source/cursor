@@ -1,0 +1,7 @@
+.root {
+  font-variant-numeric: tabular-nums;
+  letter-spacing: var(--tracking-meta);
+  color: var(--fg-muted);
+  line-height: 1;
+  white-space: nowrap;
+}

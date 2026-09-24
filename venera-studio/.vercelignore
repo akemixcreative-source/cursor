@@ -1,0 +1,17 @@
+# Local / dev only
+.env*
+node_modules
+.next
+perf-check.mjs
+
+# Oversized source masters — web-optimized copies are used instead
+public/images/mockups/Nexus-1.mp4
+public/images/mockups/CUE V2.mp4
+public/images/mockups/draft_02.mp4
+public/images/mockups/Gemini(2).mp4
+public/images/mockups/Header Video.mp4
+public/images/mockups/Appstack-X.mp4
+public/videos/comp-1-1.mp4
+public/videos/capsa-ai-series-a-announcement-film.mp4
+public/images/mockups/Final 1(2).mp4
+public/images/mockups/Comp 1 (0-00-00-00).psd

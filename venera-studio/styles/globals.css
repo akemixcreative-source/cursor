@@ -1,0 +1,174 @@
+/* ---------------------------------------------------------------------------
+   Venera Studio - globals
+   Reset, base typography, body shell. No component styles here.
+   --------------------------------------------------------------------------- */
+
+@import "./tokens.css";
+
+/* reset --------------------------------------------------------------------- */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+figure,
+blockquote,
+dl,
+dd,
+ul,
+ol {
+  margin: 0;
+  padding: 0;
+}
+
+ul,
+ol {
+  list-style: none;
+}
+
+img,
+picture,
+video,
+canvas,
+svg {
+  display: block;
+  max-inline-size: 100%;
+}
+
+input,
+button,
+textarea,
+select {
+  font: inherit;
+  color: inherit;
+}
+
+button {
+  background: none;
+  border: 0;
+  cursor: pointer;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+/* base ---------------------------------------------------------------------- */
+
+html {
+  color-scheme: dark;
+  background-color: var(--bg);
+  -webkit-text-size-adjust: 100%;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  -webkit-tap-highlight-color: transparent;
+}
+
+body {
+  min-block-size: 100dvh;
+  background-color: var(--bg);
+  color: var(--fg);
+  font-family: var(--font-geist), system-ui, -apple-system, "Segoe UI", sans-serif;
+  font-size: var(--text-body);
+  font-weight: var(--weight-regular);
+  line-height: var(--leading-body);
+  overflow-x: hidden;
+}
+
+::selection {
+  background-color: var(--flame);
+  color: var(--bg);
+}
+
+/* type utilities ------------------------------------------------------------ */
+
+.mono {
+  font-family: var(--font-geist-mono), ui-monospace, "SFMono-Regular", Menlo, monospace;
+  font-weight: var(--weight-medium);
+  font-size: var(--text-meta);
+  letter-spacing: var(--tracking-meta);
+  text-transform: uppercase;
+  line-height: 1;
+}
+
+.display {
+  font-size: var(--text-display);
+  font-weight: var(--weight-heavy);
+  letter-spacing: var(--tracking-display);
+  line-height: var(--leading-display);
+}
+
+.h2 {
+  font-size: var(--text-h2);
+  font-weight: var(--weight-heavy);
+  letter-spacing: var(--tracking-display);
+  line-height: var(--leading-display);
+}
+
+.lead {
+  font-size: var(--text-lead);
+  font-weight: var(--weight-semibold);
+  line-height: 1.15;
+}
+
+.h3 {
+  font-size: var(--text-h3);
+  font-weight: var(--weight-semibold);
+  line-height: 1.25;
+}
+
+/* custom cursor ------------------------------------------------------------
+   When the Cursor component is mounted on a hover/fine-pointer device, it
+   adds .cursor-active to <body>. We then hide the system cursor on every
+   element so the brand cursor is the only pointer on screen - including over
+   links, buttons, and anything else with its own cursor: pointer default. */
+
+body.cursor-active,
+body.cursor-active * {
+  cursor: none !important;
+}
+
+/* touch / phone ------------------------------------------------------------- */
+/* GSAP scroll reveals still hide copy unless we force visibility. Animations
+   are skipped — legibility wins on small screens. */
+
+@media (hover: none), (pointer: coarse) {
+  :root {
+    --grain-opacity: 0.05;
+  }
+}
+
+/* GSAP scroll reveals start hidden; if ScrollTrigger never fires the page looks
+   blank after the hero. Failsafe keeps copy legible everywhere. */
+[data-scroll-reveal],
+[data-scroll-reveal] .srl-lineInner {
+  opacity: 1 !important;
+  transform: none !important;
+  visibility: visible !important;
+}
+
+/* reduced motion ----------------------------------------------------------- */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

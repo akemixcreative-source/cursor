@@ -1,0 +1,62 @@
+.scrim {
+  position: fixed;
+  inset: 0;
+  z-index: 240;
+  display: grid;
+  place-items: center;
+  padding: clamp(16px, 4vw, 48px);
+  background: var(--lightbox-scrim);
+  border: none;
+  cursor: pointer;
+}
+
+.window {
+  position: relative;
+  z-index: 1;
+  inline-size: min(1280px, 100%);
+  max-block-size: min(88vh, 100%);
+  background: var(--lightbox-frame);
+  border: 1px solid var(--border-strong);
+  cursor: default;
+}
+
+.video {
+  display: block;
+  inline-size: 100%;
+  block-size: auto;
+  max-block-size: min(88vh, 100%);
+  background: var(--bg);
+}
+
+.close {
+  position: absolute;
+  inset-block-start: 10px;
+  inset-inline-end: 10px;
+  z-index: 2;
+  inline-size: 36px;
+  block-size: 36px;
+  padding: 0;
+  border: 1px solid var(--border-strong);
+  background: var(--media-badge-bg);
+  color: var(--fg);
+  font-size: 22px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.close:focus-visible {
+  outline: 2px solid var(--flame);
+  outline-offset: 2px;
+}
+
+.visuallyHidden {
+  position: absolute;
+  inline-size: 1px;
+  block-size: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}

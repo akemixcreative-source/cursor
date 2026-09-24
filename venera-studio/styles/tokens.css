@@ -1,0 +1,83 @@
+/* ---------------------------------------------------------------------------
+   Venera Studio - design tokens
+   Single source of truth. Do not introduce hex literals outside this file.
+   --------------------------------------------------------------------------- */
+
+:root {
+  /* color */
+  --bg: #000000;
+  --fg: #f5f0e8;
+  --fg-muted: #8a8580;
+
+  /** Mono kicker middots (`SELF-INITIATED · HAND-MADE`, etc.) */
+  --kicker-sep: var(--fg);
+
+  --flame: #ff4500;
+  --flame-hover: #ff6b2c;
+  --flame-deep: #c8330a;
+
+  /** Custom cursor default (square pointer); view variant uses --fg / --bg. */
+  --cursor-default-bg: #ffffff;
+
+  --surface-1: #1a1a1a;
+  --surface-2: #242424;
+
+  /** Dense form fields: slightly above black so edges read on --bg. */
+  --form-fill: #0f0f0f;
+
+  --border: rgba(245, 240, 232, 0.08);
+  --border-strong: rgba(245, 240, 232, 0.16);
+  --tag-bg: rgba(245, 240, 232, 0.06);
+
+  /** Partner logo chip on featured media. */
+  --media-badge-bg: rgba(0, 0, 0, 0.42);
+  --media-badge-border: rgba(245, 240, 232, 0.12);
+
+  /** Hero contact pill status dot (soft lavender on dark). */
+  --hero-cta-dot: #b4a7ff;
+  --hero-cta-dot-ring: rgba(180, 167, 255, 0.22);
+
+  /** HeroIntro primary CTA — high-contrast pill (white on dark canvas). */
+  --hero-cta-pill-bg: #ffffff;
+  --hero-cta-pill-fg: #0e0e0e;
+
+  /** Film lightbox: darkened page + framed player. */
+  --lightbox-scrim: rgba(0, 0, 0, 0.82);
+  --lightbox-frame: #0a0a0a;
+
+  /** Dark hover scrim on films that open in the lightbox. */
+  --film-hover-scrim: rgba(0, 0, 0, 0.48);
+
+  /* effects */
+  --grain-opacity: 0.055;
+
+  /** Homepage hero radial fallback when `<video>` is missing or not decoded yet */
+  --hero-fallback-spot: rgba(255, 69, 0, 0.22);
+  --hero-fallback-depth: rgb(36 36 36 / 0.95);
+
+  /* layout */
+  --max: 1680px;
+  --gutter: clamp(24px, 5vw, 96px);
+
+  /* type scale */
+  --text-meta: 11px;
+  --text-body: clamp(15px, 1.3vw, 22px);
+  --text-h3: clamp(20px, 2.2vw, 36px);
+  --text-lead: clamp(28px, 3vw, 40px);
+  --text-h2: clamp(40px, 5vw, 80px);
+  --text-display: clamp(60px, 8vw, 128px);
+
+  /* type weight */
+  --weight-regular: 400;
+  --weight-medium: 500;
+  --weight-semibold: 600;
+  --weight-heavy: 700;
+
+  /* tracking */
+  --tracking-display: -0.03em;
+  --tracking-meta: 0.08em;
+
+  /* leading */
+  --leading-display: 1.05;
+  --leading-body: 1.55;
+}

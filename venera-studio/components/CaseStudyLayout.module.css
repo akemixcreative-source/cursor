@@ -1,0 +1,178 @@
+/* ---------------------------------------------------------------------------
+   Case study: fixed sidebar (desktop) + main column centered in viewport.
+   Sidebar: 280px @ left 80px, top 120px. Main: max 880px, margin auto.
+   --------------------------------------------------------------------------- */
+
+.pageLayout {
+  position: relative;
+  width: 100%;
+  box-sizing: border-box;
+  min-height: 100vh;
+  padding-block: clamp(48px, 8vh, 88px) clamp(72px, 12vh, 140px);
+  padding-inline: 24px;
+}
+
+@media (min-width: 1024px) {
+  .pageLayout {
+    padding-block-start: 120px;
+    padding-block-end: clamp(72px, 12vh, 140px);
+    padding-inline: 0;
+  }
+}
+
+/* ——— Mobile / tablet: sidebar stacks above main ——— */
+
+.sidebar {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  align-items: flex-start;
+  gap: 16px;
+  overflow-x: auto;
+  overflow-y: visible;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin;
+  position: static;
+  inline-size: 100%;
+  margin-block-end: clamp(32px, 5vh, 48px);
+}
+
+@media (min-width: 768px) and (max-width: 1023px) {
+  .sidebar {
+    flex-wrap: wrap;
+    overflow-x: visible;
+  }
+}
+
+@media (min-width: 1024px) {
+  .sidebar {
+    position: fixed;
+    inset-block-start: 120px;
+    inset-inline-start: 80px;
+    inline-size: 280px;
+    margin-block-end: 0;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    gap: clamp(28px, 4vh, 40px);
+    overflow: visible;
+    z-index: 5;
+    pointer-events: auto;
+  }
+}
+
+.metaBlock {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-inline-size: 0;
+}
+
+@media (max-width: 1023px) {
+  .metaBlock {
+    flex: 0 0 auto;
+  }
+}
+
+.metaLabel {
+  font-family: var(--font-geist-mono), ui-monospace, monospace;
+  font-size: var(--text-meta);
+  font-weight: var(--weight-medium);
+  letter-spacing: var(--tracking-meta);
+  text-transform: uppercase;
+  color: var(--fg-muted);
+  line-height: 1.3;
+}
+
+.metaBody {
+  font-size: var(--text-body);
+  line-height: var(--leading-body);
+  color: var(--fg);
+  margin: 0;
+}
+
+.clientLink {
+  color: inherit;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+  text-decoration-color: var(--border-strong);
+  transition:
+    color 160ms ease,
+    text-decoration-color 160ms ease;
+}
+
+.clientLink:hover,
+.clientLink:focus-visible {
+  color: var(--flame);
+  text-decoration-color: var(--flame);
+  outline: none;
+}
+
+.tagList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.tag {
+  display: inline-flex;
+  align-items: center;
+  padding-block: 6px;
+  padding-inline: 10px;
+  border-radius: 0;
+  border: 1px solid var(--border);
+  font-family: var(--font-geist-mono), ui-monospace, monospace;
+  font-size: 10px;
+  letter-spacing: var(--tracking-meta);
+  text-transform: uppercase;
+  color: var(--fg-muted);
+}
+
+/* ——— Main: viewport-centered on desktop; inset when narrow vs sidebar ——— */
+
+.mainColumn {
+  position: relative;
+  z-index: 1;
+  box-sizing: border-box;
+  min-inline-size: 0;
+  inline-size: 100%;
+  max-inline-size: 100%;
+  margin-inline: 0;
+}
+
+@media (min-width: 1024px) {
+  .mainColumn {
+    max-inline-size: 880px;
+    inline-size: min(880px, 100%);
+    margin-inline: auto;
+    /*
+      When viewport-centered, the block’s left edge can sit under the fixed
+      sidebar. Nudge body inward so copy clears the sidebar (392 = 80 + 280 + 32).
+    */
+    padding-inline-start: max(
+      0px,
+      calc(392px - (100vw - min(880px, 100vw)) / 2)
+    );
+    padding-inline-end: 0;
+  }
+}
+
+@media (max-width: 767px) {
+  .pageLayout {
+    padding: 100px 24px 80px;
+  }
+
+  .sidebar {
+    margin-block-end: 48px;
+  }
+
+  .mainColumn {
+    padding-inline: 0;
+  }
+}
+
+@media (max-width: 1023px) {
+  .mainColumn {
+    padding-inline-start: 0;
+    padding-inline-end: 0;
+  }
+}

@@ -1,0 +1,59 @@
+/* ---------------------------------------------------------------------------
+   Nav
+   Right-aligned mono-caps link row. The default top chrome on every page
+   except case studies (which use PageMeta instead).
+   --------------------------------------------------------------------------- */
+
+.nav {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: clamp(16px, 2vw, 32px);
+  inline-size: 100%;
+}
+
+.link {
+  position: relative;
+  display: inline-block;
+  color: var(--fg);
+  font-family: var(--font-geist-mono), ui-monospace, monospace;
+  font-weight: var(--weight-medium);
+  font-size: var(--text-meta);
+  letter-spacing: var(--tracking-meta);
+  text-transform: uppercase;
+  line-height: 1;
+  padding-block: 4px;
+  transition: color 180ms ease;
+}
+
+/* ↳ enter marker: collapsed by default, slides in inline before the label
+   on hover/focus (matches the Smiling Wolf nav indicator). The arrow inherits
+   the link color so it picks up the --flame hover state for free. */
+.link::before {
+  content: "↳";
+  display: inline-block;
+  max-inline-size: 0;
+  margin-inline-end: 0;
+  opacity: 0;
+  overflow: hidden;
+  transform: translateX(-4px);
+  transition:
+    max-inline-size 220ms cubic-bezier(0.65, 0, 0.35, 1),
+    margin-inline-end 220ms cubic-bezier(0.65, 0, 0.35, 1),
+    opacity 200ms ease,
+    transform 220ms cubic-bezier(0.65, 0, 0.35, 1);
+}
+
+.link:hover::before,
+.link:focus-visible::before {
+  max-inline-size: 1.4em;
+  margin-inline-end: 0.4em;
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.link:hover,
+.link:focus-visible {
+  color: var(--flame);
+  outline: none;
+}

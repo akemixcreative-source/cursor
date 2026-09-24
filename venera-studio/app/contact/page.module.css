@@ -1,0 +1,143 @@
+/* ---------------------------------------------------------------------------
+   /contact
+   Editorial intake page: display headline + muted lead, intake form, and a
+   mono-caps email/location meta block. Everything left-aligned in a single
+   constrained column.
+   --------------------------------------------------------------------------- */
+
+.chromeLogo {
+  display: inline-flex;
+  align-items: center;
+  line-height: 0;
+}
+
+.page {
+  max-inline-size: clamp(48rem, 90vw, 80rem);
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+  padding-block: clamp(96px, 14vh, 168px) clamp(64px, 10vh, 120px);
+
+  display: flex;
+  flex-direction: column;
+  gap: clamp(40px, 6vh, 72px);
+}
+
+.intro {
+  inline-size: 100%;
+}
+
+.introGrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: clamp(40px, 6vh, 72px);
+}
+
+@media (min-width: 960px) {
+  .introGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: clamp(32px, 4vw, 64px);
+    align-items: start;
+  }
+}
+
+.introPath {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(20px, 3vh, 32px);
+  min-inline-size: 0;
+}
+
+@media (min-width: 960px) {
+  .introPath + .introPath {
+    padding-inline-start: clamp(24px, 3vw, 40px);
+    border-inline-start: 1px solid var(--border);
+  }
+}
+
+.heading {
+  font-family: var(--font-geist), ui-sans-serif, system-ui;
+  font-size: var(--text-display);
+  font-weight: var(--weight-regular);
+  line-height: var(--leading-display);
+  letter-spacing: var(--tracking-display);
+  color: var(--fg);
+  margin: 0;
+  max-inline-size: 18ch;
+}
+
+.lead {
+  font-family: var(--font-geist), ui-sans-serif, system-ui;
+  font-size: var(--text-body);
+  font-weight: var(--weight-regular);
+  line-height: var(--leading-body);
+  color: var(--fg-muted);
+  margin: 0;
+  max-inline-size: 70ch;
+}
+
+.discoveryCta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  align-self: flex-start;
+  min-block-size: 44px;
+  padding-inline: clamp(20px, 2.5vw, 28px);
+  padding-block: 10px;
+  border-radius: 9999px;
+  background-color: var(--flame);
+  border: 1px solid var(--flame);
+  color: var(--bg);
+  font-family: var(--font-geist-mono), ui-monospace, monospace;
+  font-size: var(--text-meta);
+  font-weight: var(--weight-medium);
+  letter-spacing: var(--tracking-meta);
+  text-transform: uppercase;
+  line-height: 1;
+  text-decoration: none;
+  transition:
+    background-color 160ms ease,
+    border-color 160ms ease,
+    color 160ms ease;
+}
+
+.discoveryCta:hover,
+.discoveryCta:focus-visible {
+  background-color: transparent;
+  color: var(--flame);
+  outline: none;
+}
+
+/* email / location meta lines ---------------------------------------------- */
+
+.meta {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin: 0;
+  padding-block-start: clamp(8px, 2vh, 16px);
+}
+
+.metaLine {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 8px;
+}
+
+.metaKey,
+.metaValue {
+  margin: 0;
+  font-family: var(--font-geist-mono), ui-monospace, monospace;
+  font-size: var(--text-meta);
+  font-weight: var(--weight-medium);
+  letter-spacing: var(--tracking-meta);
+  text-transform: uppercase;
+  line-height: 1.4;
+}
+
+.metaKey {
+  color: var(--fg-muted);
+}
+
+.metaValue {
+  color: var(--fg);
+}
