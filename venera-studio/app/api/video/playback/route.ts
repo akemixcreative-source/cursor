@@ -14,7 +14,8 @@ export async function GET(request: Request) {
   }
 
   const referer = request.headers.get("referer");
-  if (!isAllowedPlaybackReferer(referer)) {
+  const origin = request.headers.get("origin");
+  if (!isAllowedPlaybackReferer(referer, origin)) {
     return NextResponse.json({ error: "Forbidden" }, { status: 403 });
   }
 
