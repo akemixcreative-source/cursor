@@ -84,6 +84,13 @@ function retryPlaybackFetch(videoKey: string): Promise<PlaybackPayload> {
   return beginPlaybackFetch(videoKey);
 }
 
+/** Drop a failed/stale cache entry and request a fresh playback URL. */
+export function retrySecurePlayback(videoKey: VideoAssetKey): void {
+  void retryPlaybackFetch(videoKey).catch(() => {
+    /* error state surfaced via store */
+  });
+}
+
 /** Start playback URL resolution as early as possible. */
 export function prefetchSecurePlayback(videoKey: VideoAssetKey): void {
   const cached = playbackCache.get(videoKey);
