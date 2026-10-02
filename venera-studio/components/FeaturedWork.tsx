@@ -11,8 +11,8 @@ import styles from "./FeaturedWork.module.css";
  * FeaturedWork
  * Homepage featured strip: FEATURED chip + responsive grid. Below the
  * two-up breakpoint each tile is full width; from `1100px` up, projects are
- * laid out in pairs in `projects` order (first row: Appstack + Gemini,
- * second row: Nexus + Capsa).
+ * laid out in pairs in `projects` order (first row: Meta + Appstack,
+ * second row: Gemini + Nexus).
  *
  * Client: after the grid mounts, `ScrollTrigger.refresh()` runs so every
  * tile’s reveal re-measures after media layout (order-safe vs hooks).
