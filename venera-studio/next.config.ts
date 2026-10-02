@@ -28,6 +28,29 @@ const nextConfig: NextConfig = {
   },
 
   /**
+   * Search Console needs a real XML document at `/sitemap.xml` — no
+   * Content-Disposition download, no HTML shell. Pin the type at the
+   * config layer in case the route handler is wrapped.
+   */
+  async headers() {
+    return [
+      {
+        source: "/sitemap.xml",
+        headers: [
+          {
+            key: "Content-Type",
+            value: "application/xml; charset=utf-8",
+          },
+          {
+            key: "Cache-Control",
+            value: "public, max-age=3600, must-revalidate",
+          },
+        ],
+      },
+    ];
+  },
+
+  /**
    * Canonical path shape for Google: no trailing slash on content routes,
    * `/work` is the homepage featured index (no empty 404).
    * `skipTrailingSlashRedirect` stays on so `/ingest/` is not rewritten.
