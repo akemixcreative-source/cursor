@@ -16,11 +16,12 @@ import { buildRootBrandJsonLd } from "@/lib/organizationJsonLd";
 import {
   SITE_BRAND,
   SITE_DESCRIPTION,
-  SITE_SERVICE,
+  SITE_OG_IMAGE_ALT,
   SITE_TITLE,
   SITE_TITLE_BRAND,
   SITE_URL,
 } from "@/lib/site";
+import { STUDIO_X_HANDLE } from "@/lib/studioContact";
 
 const geist = Geist({
   subsets: ["latin"],
@@ -36,8 +37,6 @@ const geistMono = Geist_Mono({
   display: "swap",
 });
 
-const DEFAULT_TITLE = SITE_TITLE;
-
 export const viewport: Viewport = {
   themeColor: "#000000",
   viewportFit: "cover",
@@ -48,38 +47,56 @@ export const viewport: Viewport = {
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: {
-    default: DEFAULT_TITLE,
+    default: SITE_TITLE,
     template: `%s | ${SITE_TITLE_BRAND}`,
   },
   description: SITE_DESCRIPTION,
   applicationName: SITE_BRAND,
-  authors: [{ name: SITE_BRAND }],
+  authors: [{ name: SITE_BRAND, url: SITE_URL }],
   creator: SITE_BRAND,
   publisher: SITE_BRAND,
+  category: "Motion Design",
   keywords: [
-    SITE_BRAND,
-    "venera studio",
-    SITE_SERVICE,
-    "motion design",
-    "motion design studio",
-    "New York motion design",
+    "Venera",
+    "Venera Studio",
+    "Venera motion",
+    "Venera motion design",
+    "venerastudio",
+    "New York motion design studio",
     "launch films",
     "product motion",
     "brand systems",
   ],
-  alternates: { canonical: "/" },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+      "max-video-preview": -1,
+    },
+  },
   openGraph: {
     type: "website",
-    url: "/",
+    locale: "en_US",
+    url: SITE_URL,
     siteName: SITE_BRAND,
-    title: DEFAULT_TITLE,
+    title: SITE_TITLE,
     description: SITE_DESCRIPTION,
+    images: [{ url: "/opengraph-image", width: 1200, height: 630, alt: SITE_OG_IMAGE_ALT }],
   },
   twitter: {
     card: "summary_large_image",
-    title: DEFAULT_TITLE,
+    title: SITE_TITLE,
     description: SITE_DESCRIPTION,
-    creator: "@veneracreative",
+    creator: STUDIO_X_HANDLE,
+    site: STUDIO_X_HANDLE,
+  },
+  icons: {
+    icon: [{ url: "/icon.png", type: "image/png" }],
+    apple: [{ url: "/apple-icon.png" }],
   },
 };
 

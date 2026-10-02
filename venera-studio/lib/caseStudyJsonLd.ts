@@ -1,7 +1,7 @@
 import type { Project } from "@/data/projects";
 
 import { getVideoAssetPoster } from "@/data/videoAssets";
-import { ORG_ID } from "@/lib/organizationJsonLd";
+import { ORG_ID, WEBSITE_ID } from "@/lib/organizationJsonLd";
 import { SITE_BRAND, SITE_URL } from "@/lib/site";
 
 function toAbsoluteUrl(path: string): string {
@@ -47,6 +47,7 @@ export function buildCaseStudyJsonLd(project: Project) {
     description,
     url: pageUrl,
     datePublished: `${project.year}`,
+    isPartOf: { "@id": WEBSITE_ID },
     creator: orgRef,
     author: orgRef,
     publisher: orgRef,

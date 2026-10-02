@@ -7,6 +7,7 @@ import { PageMeta } from "@/components/PageMeta";
 import { VeneraLogo } from "@/components/VeneraLogo";
 import { ContactForm } from "@/components/contact/ContactForm";
 import { STUDIO_ADDRESS } from "@/lib/studioContact";
+import { ORG_ID, WEBSITE_ID } from "@/lib/organizationJsonLd";
 import {
   SITE_BRAND,
   SITE_TITLE_BRAND,
@@ -15,8 +16,8 @@ import {
 } from "@/lib/site";
 import styles from "./page.module.css";
 
-const CONTACT_TITLE = `Contact | ${SITE_TITLE_BRAND} · ${SITE_TITLE_SERVICE}`;
-const CONTACT_DESCRIPTION = `Start a project with ${SITE_BRAND}. Share your product, goals, and timeline for a reply within 1 to 2 business days.`;
+const CONTACT_TITLE = `Contact ${SITE_TITLE_BRAND} | ${SITE_TITLE_SERVICE}`;
+const CONTACT_DESCRIPTION = `Start a project with Venera. Share your product, goals, and timeline — the New York motion design studio replies within 1 to 2 business days.`;
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
@@ -37,6 +38,22 @@ export const metadata: Metadata = {
   },
 };
 
+const contactPageJsonLd = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "ContactPage",
+      "@id": `${SITE_URL}/contact#page`,
+      url: `${SITE_URL}/contact`,
+      name: CONTACT_TITLE,
+      description: CONTACT_DESCRIPTION,
+      isPartOf: { "@id": WEBSITE_ID },
+      about: { "@id": ORG_ID },
+      mainEntity: { "@id": ORG_ID },
+    },
+  ],
+};
+
 /**
  * /contact
  *
@@ -47,6 +64,12 @@ export const metadata: Metadata = {
 export default function ContactPage() {
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(contactPageJsonLd),
+        }}
+      />
       <PageMeta
         mode="always"
         left={
@@ -66,7 +89,7 @@ export default function ContactPage() {
               aria-labelledby="contact-heading"
             >
               <h1 id="contact-heading" className={styles.heading}>
-                Start a project with venera
+                Start a project with Venera
               </h1>
               <p className={styles.lead}>
                 We help funded SaaS startups transform complex products into

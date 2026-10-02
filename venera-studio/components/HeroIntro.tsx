@@ -6,7 +6,7 @@ import styles from "./HeroIntro.module.css";
 const HEADLINE = "Launch videos that make startups look inevitable.";
 
 const LEAD =
-  "Designing brand with creative craft that founders and people love.";
+  "Venera is a New York motion design studio. Designing brand with creative craft that founders and people love.";
 
 const CTA_LABEL = "START A PROJECT";
 const CALL_CTA_LABEL = "BOOK A CALL";

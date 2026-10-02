@@ -14,6 +14,10 @@ export const STUDIO_INSTAGRAM_URL = "https://www.instagram.com/venera_motion/";
 
 export const STUDIO_BEHANCE_URL = "https://www.behance.net/ryanjiju";
 
+export const STUDIO_X_URL = "https://x.com/veneracreative";
+
+export const STUDIO_X_HANDLE = "@veneracreative";
+
 /** Cal.com intro call booking (contact page + form). */
 export const DISCOVERY_CALL_URL = "https://cal.com/venera/intro";
 

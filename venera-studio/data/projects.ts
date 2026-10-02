@@ -105,7 +105,7 @@ const projectCatalog: readonly Project[] = [
     caseStudyLede:
       "We conceived, produced, and delivered Capsa AI's $18M Series A announcement from end to end on a launch-week timeline.",
     seoTitle:
-      "Capsa AI $18M Series A Announcement | Venera · Motion Design Services",
+      "Capsa AI $18M Series A Announcement | Venera",
     seoDescription:
       "The Series A announcement film for Capsa AI's $18M round, co-led by TX Ventures and Pivot Investment Partners. Venera directed the founder capture, 19 product motion scenes, and custom 3D centerpiece. Coverage: Finextra, PYMNTS, FinTech Futures, Tech.eu.",
     ogTitle: "Capsa AI | $18M Series A Announcement",
