@@ -28,9 +28,8 @@ const nextConfig: NextConfig = {
   },
 
   /**
-   * Search Console needs a real XML document at `/sitemap.xml` — no
-   * Content-Disposition download, no HTML shell. Pin the type at the
-   * config layer in case the route handler is wrapped.
+   * `/sitemap.xml` is a static file in `public/`. Pin XML + charset so
+   * Google Search Console does not see HTML or a download attachment.
    */
   async headers() {
     return [
