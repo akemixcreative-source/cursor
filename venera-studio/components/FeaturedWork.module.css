@@ -2,8 +2,8 @@
    FeaturedWork
    FEATURED chip + 12-column grid. Narrow / tablet: one project per row
    (full width). Wide (two-up): consecutive pairs share a row (6+6 cols) —
-   order in data/projects is row order (Gemini + Meta first, then
-   Appstack + Nexus, then odd last full bleed).
+   order in data/projects is row order (Meta + Appstack first, then
+   Gemini + Nexus, then odd last full bleed).
    --------------------------------------------------------------------------- */
 
 .section {

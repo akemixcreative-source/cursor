@@ -132,7 +132,7 @@ const projectCatalog: readonly Project[] = [
   {
     slug: "meta-rayban-oakley",
     title: "Meta Rayban × Oakley",
-    year: 2025,
+    year: 2026,
     services: ["EXPERIMENTAL", "BRAND FILM", "PRODUCT MOTION"],
     homepageServices: ["EXPERIMENTAL", "BRAND FILM"],
     collaboratorsMetaLabel: "Client",
@@ -142,14 +142,14 @@ const projectCatalog: readonly Project[] = [
     pipeline: "Fully hand-crafted · No generative AI",
     description:
       "A self-initiated concept film for the Meta × Ray-Ban × Oakley eyewear collaboration. The 3D and subtle motion were built in Blender and composited by hand, with no generative AI in the pipeline.",
-    homepageKicker: "IN PROGRESS · SELF-INITIATED · HAND-MADE",
-    caseStudyKicker: "IN PROGRESS · SELF-INITIATED · CRAFT STUDY · HAND-MADE",
+    homepageKicker: "2026 · SELF-INITIATED · HAND-MADE",
+    caseStudyKicker: "2026 · SELF-INITIATED · CRAFT STUDY · HAND-MADE",
     caseStudyLede:
       "A self-initiated concept film for the Meta × Ray-Ban × Oakley eyewear collaboration, built to test how far hand-crafted 3D and subtle motion could push a product story without using a single frame of generative AI.",
     heroVideoKey: "meta-rayban-hero",
     heroPosterUrl: "/images/posters/meta-rayban-hero.jpg",
     mediaPosterUrl: "/images/posters/meta-rayban-hero.jpg",
-    aspectRatio: 16 / 9,
+    aspectRatio: 21 / 9,
     featuredSlot: "collageFull",
   },
   {
@@ -272,11 +272,11 @@ const projectCatalog: readonly Project[] = [
 ];
 
 const FEATURED_PROJECT_ORDER = [
+  "meta-rayban-oakley",
   "appstack",
   "google-gemini",
   "nexus",
   "capsa-ai-series-a-announcement-film",
-  "meta-rayban-oakley",
   "typography",
 ] as const;
 
