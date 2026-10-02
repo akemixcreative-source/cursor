@@ -57,10 +57,7 @@ export function Loader() {
 
   useEffect(() => {
     if (!shouldRender) return;
-    if (
-      window.matchMedia("(hover: none), (pointer: coarse)").matches ||
-      prefersLightweightRendering()
-    ) {
+    if (prefersLightweightRendering()) {
       finishLoader();
       setShouldRender(false);
     }

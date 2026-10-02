@@ -77,6 +77,7 @@ export function HeroIntroVisual() {
         sizes="(min-width: 960px) 45vw, 100vw"
         className={styles.heroPoster}
         priority
+        quality={100}
         aria-hidden
       />
       {allowMotion ? (

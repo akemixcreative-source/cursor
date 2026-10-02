@@ -28,7 +28,7 @@ export function VeneraLogo({
     variant === "nav"
       ? "64px"
       : variant === "loader"
-        ? "(max-width: 768px) 50vw, 280px"
+        ? "(max-width: 768px) 70vw, 560px"
         : "(max-width: 768px) 72vw, 420px";
 
   return (
@@ -43,6 +43,8 @@ export function VeneraLogo({
         fill
         className={styles.img}
         sizes={sizes}
+        quality={100}
+        unoptimized={variant === "loader"}
         priority={priority}
         draggable={false}
       />

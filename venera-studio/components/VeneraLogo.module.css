@@ -31,7 +31,7 @@
 
 /* Loader center — fluid height, native aspect ratio. */
 .rootLoader {
-  block-size: clamp(64px, 10vw, 140px);
+  block-size: clamp(88px, 16vw, 200px);
   aspect-ratio: 1;
   inline-size: auto;
 }
@@ -48,6 +48,7 @@
   object-position: center;
   user-select: none;
   pointer-events: none;
+  image-rendering: auto;
 }
 
 @media (prefers-reduced-motion: reduce) {

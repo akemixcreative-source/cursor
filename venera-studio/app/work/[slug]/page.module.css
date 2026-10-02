@@ -249,6 +249,17 @@
   transform: translateY(0);
 }
 
+@media (hover: none), (pointer: coarse) {
+  .soundToggle::after {
+    opacity: 0.45;
+  }
+
+  .expandHint {
+    opacity: 1;
+    transform: none;
+  }
+}
+
 .soundToggle:focus-visible {
   outline: 2px solid var(--flame);
   outline-offset: -4px;
