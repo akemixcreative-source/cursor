@@ -149,7 +149,7 @@ const projectCatalog: readonly Project[] = [
     heroVideoKey: "meta-rayban-hero",
     heroPosterUrl: "/images/posters/meta-rayban-hero.jpg",
     mediaPosterUrl: "/images/posters/meta-rayban-hero.jpg",
-    aspectRatio: 21 / 9,
+    aspectRatio: 16 / 9,
     featuredSlot: "collageFull",
   },
   {

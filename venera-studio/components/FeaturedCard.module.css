@@ -77,9 +77,14 @@
   object-fit: contain;
 }
 
-.card:hover .media,
 .card:focus-within .media {
   filter: grayscale(1);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .card:hover .media {
+    filter: grayscale(1);
+  }
 }
 
 /* Partner marks — top-right of media frame (above video). */

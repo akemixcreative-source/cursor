@@ -49,6 +49,8 @@
   text-transform: uppercase;
   line-height: 1.4;
   color: var(--fg-muted);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: geometricPrecision;
 }
 
 .left {
@@ -93,7 +95,7 @@
 
 .wordmarkClip {
   --reveal: 0%;
-  --feather: 7%;
+  --feather: 2.5%;
   animation: wordmarkReveal 2.1s cubic-bezier(0.77, 0, 0.18, 1) 0.15s forwards;
   display: inline-flex;
   align-items: center;
@@ -114,7 +116,6 @@
     transparent calc(var(--reveal) + var(--feather)),
     transparent 100%
   );
-  will-change: -webkit-mask-image, mask-image;
 }
 
 /* mobile ------------------------------------------------------------------- */
@@ -146,12 +147,6 @@
     transition:
       opacity 320ms ease-in,
       transform 320ms ease-in;
-  }
-}
-
-@media (hover: none), (pointer: coarse) {
-  .overlay {
-    display: none;
   }
 }
 

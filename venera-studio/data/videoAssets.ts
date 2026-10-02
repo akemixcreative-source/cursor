@@ -16,7 +16,7 @@ export const VIDEO_ASSETS = {
     poster: "/images/posters/capsa-product-film.jpg",
   },
   "meta-rayban-hero": {
-    fallback: "/images/mockups/Header-Video-web.mp4",
+    fallback: "/images/mockups/meta-ai-glasses-web.mp4",
     poster: "/images/posters/meta-rayban-hero.jpg",
   },
   "gemini-hero": {

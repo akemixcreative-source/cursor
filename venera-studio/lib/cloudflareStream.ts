@@ -51,19 +51,40 @@ export function getStreamUidForKey(key: VideoAssetKey): string | null {
   return uid && uid.length > 0 ? uid : null;
 }
 
-export function isAllowedPlaybackReferer(referer: string | null): boolean {
-  if (!referer) return process.env.NODE_ENV !== "production";
-  try {
-    const { hostname } = new URL(referer);
-    if (hostname === "localhost" || hostname === "127.0.0.1") return true;
-    if (hostname === "venerastudio.com" || hostname.endsWith(".venerastudio.com")) {
-      return true;
-    }
-    if (hostname.endsWith(".vercel.app")) return true;
-    return false;
-  } catch {
-    return false;
+function isAllowedPlaybackHost(hostname: string): boolean {
+  if (hostname === "localhost" || hostname === "127.0.0.1" || hostname === "[::1]") {
+    return true;
   }
+  if (hostname === "venerastudio.com" || hostname.endsWith(".venerastudio.com")) {
+    return true;
+  }
+  return hostname.endsWith(".vercel.app");
+}
+
+function hostFromUrl(value: string): string | null {
+  try {
+    return new URL(value).hostname;
+  } catch {
+    return null;
+  }
+}
+
+/**
+ * Same-origin playback fetches are allowed. Privacy browsers and in-app
+ * webviews often strip Referer/Origin — treat a missing pair as same-origin.
+ * If either header is present, at least one must be a studio host.
+ */
+export function isAllowedPlaybackReferer(
+  referer: string | null,
+  origin?: string | null,
+): boolean {
+  const hosts = [referer, origin]
+    .filter((value): value is string => Boolean(value))
+    .map(hostFromUrl)
+    .filter((host): host is string => Boolean(host));
+
+  if (hosts.length === 0) return true;
+  return hosts.some(isAllowedPlaybackHost);
 }
 
 async function signStreamToken(
