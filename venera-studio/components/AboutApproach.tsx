@@ -25,7 +25,7 @@ export default function AboutApproach() {
 
         <div className={styles.content}>
           <h1 className={styles.sectionHeadline} id="about-approach">
-            Work directly with the studio making the work.
+            Venera is the studio making the work.
           </h1>
           <p className={styles.prose}>
             Most studios put a producer between the founder and the craft.

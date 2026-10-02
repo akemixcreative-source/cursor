@@ -32,15 +32,16 @@ export async function generateMetadata({
   const description = project.seoDescription ?? metaDescription;
   const ogTitle = project.ogTitle ?? title;
   const ogDescription = project.ogDescription ?? description;
-  const ogImages = project.ogImageUrl
-    ? [{ url: project.ogImageUrl, width: 1200, height: 630, alt: displayTitle }]
+  const ogImage = project.ogImageUrl ?? project.heroPosterUrl ?? project.mediaPosterUrl;
+  const ogImages = ogImage
+    ? [{ url: ogImage, width: 1200, height: 630, alt: `${displayTitle} — ${SITE_TITLE_BRAND}` }]
     : undefined;
 
   return {
     metadataBase: new URL(SITE_URL),
     title: { absolute: title },
     description,
-    alternates: { canonical: `/work/${slug}` },
+    alternates: { canonical: `${SITE_URL}/work/${slug}` },
     openGraph: {
       title: ogTitle,
       description: ogDescription,
@@ -53,7 +54,7 @@ export async function generateMetadata({
       card: "summary_large_image",
       title: ogTitle,
       description: ogDescription,
-      images: project.ogImageUrl ? [project.ogImageUrl] : undefined,
+      images: ogImage ? [ogImage] : undefined,
     },
   };
 }

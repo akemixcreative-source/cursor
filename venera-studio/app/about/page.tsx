@@ -7,25 +7,23 @@ import { Nav } from "@/components/Nav";
 import { NycLiveClock } from "@/components/NycLiveClock";
 import { PageMeta } from "@/components/PageMeta";
 import { VeneraLogo } from "@/components/VeneraLogo";
-import { ORG_ID, SERVICE_ID } from "@/lib/organizationJsonLd";
+import { ORG_ID, WEBSITE_ID } from "@/lib/organizationJsonLd";
 import {
   SITE_BRAND,
-  SITE_SERVICE,
   SITE_TITLE_BRAND,
   SITE_TITLE_SERVICE,
   SITE_URL,
 } from "@/lib/site";
 import styles from "./page.module.css";
 
-const ABOUT_DESCRIPTION = `${SITE_BRAND} is a New York motion design studio offering launch films, product motion, brand systems, and performance creative for funded startups. Founders work directly with the studio on every brief.`;
-
 const ABOUT_TITLE = `About ${SITE_TITLE_BRAND} | ${SITE_TITLE_SERVICE}`;
+const ABOUT_DESCRIPTION = `${SITE_BRAND} is a New York motion design studio offering launch films, product motion, brand systems, and performance creative for funded startups. Founders work directly with Venera on every brief.`;
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: { absolute: ABOUT_TITLE },
   description: ABOUT_DESCRIPTION,
-  alternates: { canonical: "/about" },
+  alternates: { canonical: `${SITE_URL}/about` },
   openGraph: {
     title: ABOUT_TITLE,
     description: ABOUT_DESCRIPTION,
@@ -55,17 +53,7 @@ const aboutPageJsonLd = {
       description: ABOUT_DESCRIPTION,
       about: { "@id": ORG_ID },
       mainEntity: { "@id": ORG_ID },
-      isPartOf: { "@id": ORG_ID },
-    },
-    {
-      "@type": "Service",
-      "@id": SERVICE_ID,
-      name: SITE_SERVICE,
-      serviceType: SITE_SERVICE,
-      provider: { "@id": ORG_ID },
-      areaServed: ["New York", "United States", "Remote"],
-      description:
-        "Launch films, product motion, and brand systems for funded founders. Direct studio engagement on every brief.",
+      isPartOf: { "@id": WEBSITE_ID },
     },
   ],
 };

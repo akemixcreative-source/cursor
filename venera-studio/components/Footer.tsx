@@ -6,6 +6,7 @@ import {
   STUDIO_BEHANCE_URL,
   STUDIO_EMAIL,
   STUDIO_INSTAGRAM_URL,
+  STUDIO_X_URL,
 } from "@/lib/studioContact";
 import styles from "./Footer.module.css";
 
@@ -63,7 +64,7 @@ export function Footer() {
                 ·{" "}
               </span>
               <a
-                href="https://x.com/veneracreative"
+                href={STUDIO_X_URL}
                 target="_blank"
                 rel="noreferrer noopener"
               >
