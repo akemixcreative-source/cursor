@@ -26,6 +26,25 @@ const nextConfig: NextConfig = {
       },
     ];
   },
+
+  /**
+   * Canonical path shape for Google: no trailing slash on content routes,
+   * `/work` is the homepage featured index (no empty 404).
+   * `skipTrailingSlashRedirect` stays on so `/ingest/` is not rewritten.
+   */
+  async redirects() {
+    return [
+      { source: "/about/", destination: "/about", permanent: true },
+      { source: "/contact/", destination: "/contact", permanent: true },
+      { source: "/work", destination: "/", permanent: true },
+      { source: "/work/", destination: "/", permanent: true },
+      {
+        source: "/work/:slug/",
+        destination: "/work/:slug",
+        permanent: true,
+      },
+    ];
+  },
   skipTrailingSlashRedirect: true,
 };
 

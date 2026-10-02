@@ -17,7 +17,7 @@ const HERO_INTRO_MP4 = getVideoAssetFallback("hero-intro-visual");
 export const metadata: Metadata = {
   title: { absolute: SITE_TITLE },
   description: SITE_DESCRIPTION,
-  alternates: { canonical: "/" },
+  alternates: { canonical: SITE_URL },
   openGraph: {
     url: SITE_URL,
     title: SITE_TITLE,

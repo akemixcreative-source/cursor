@@ -41,7 +41,7 @@ export async function generateMetadata({
     metadataBase: new URL(SITE_URL),
     title: { absolute: title },
     description,
-    alternates: { canonical: `/work/${slug}` },
+    alternates: { canonical: `${SITE_URL}/work/${slug}` },
     openGraph: {
       title: ogTitle,
       description: ogDescription,

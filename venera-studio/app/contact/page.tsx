@@ -23,7 +23,7 @@ export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: { absolute: CONTACT_TITLE },
   description: CONTACT_DESCRIPTION,
-  alternates: { canonical: "/contact" },
+  alternates: { canonical: `${SITE_URL}/contact` },
   openGraph: {
     title: CONTACT_TITLE,
     description: CONTACT_DESCRIPTION,
