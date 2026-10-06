@@ -148,7 +148,7 @@ const projectCatalog: readonly Project[] = [
     collaboratorsMetaLabel: "Client",
     collaborators: "Self-initiated concept piece",
     role: "Concept, 3D, motion direction, compositing",
-    tools: "Blender, After Effects, Octane",
+    tools: "Blender, After Effects, Cycles",
     pipeline: "Fully hand-crafted · No generative AI",
     description:
       "A self-initiated concept film for the Meta × Ray-Ban × Oakley eyewear collaboration. The 3D and subtle motion were built in Blender and composited by hand, with no generative AI in the pipeline.",
