@@ -308,6 +308,82 @@
   outline: none;
 }
 
+.styleframes {
+  margin-block-start: clamp(64px, 8vw, 96px);
+}
+
+.styleframesLabel {
+  font-family: var(--font-geist-mono), ui-monospace, monospace;
+  font-weight: var(--weight-medium);
+  font-size: var(--text-meta);
+  letter-spacing: var(--tracking-meta);
+  text-transform: uppercase;
+  color: var(--fg-muted);
+  margin: 0 0 clamp(16px, 2.5vw, 24px);
+}
+
+.styleframeList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.styleframeButton {
+  display: block;
+  inline-size: 100%;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: #0a0a0a;
+  cursor: zoom-in;
+  line-height: 0;
+}
+
+.styleframeButton:focus-visible {
+  outline: 2px solid var(--flame);
+  outline-offset: 2px;
+}
+
+.styleframeImg {
+  display: block;
+  inline-size: 100%;
+  block-size: auto;
+  max-inline-size: 100%;
+}
+
+.styleframeDialog {
+  inline-size: 100vw;
+  block-size: 100vh;
+  max-inline-size: 100vw;
+  max-block-size: 100vh;
+  margin: 0;
+  padding: clamp(16px, 3vw, 40px);
+  border: 0;
+  background: transparent;
+}
+
+.styleframeDialog[open] {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.styleframeDialog::backdrop {
+  background: rgba(0, 0, 0, 0.92);
+}
+
+.styleframeDialogImg {
+  display: block;
+  inline-size: auto;
+  block-size: auto;
+  max-inline-size: 100%;
+  max-block-size: 100%;
+  object-fit: contain;
+}
+
 .craftMore {
   margin-block-start: clamp(96px, 14vw, 140px);
   padding-block-end: clamp(48px, 8vw, 96px);

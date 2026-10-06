@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useEffect, useId, useRef, useState } from "react";
 import { motion, useReducedMotion } from "motion/react";
 
 import { KickerText } from "@/components/KickerText";
@@ -11,6 +11,7 @@ import {
   isCraftStudySlug,
   shuffleProjects,
   type Project,
+  type Styleframe,
 } from "@/data/projects";
 import { VideoPlayer } from "./VideoPlayer";
 import styles from "./page.module.css";
@@ -25,6 +26,67 @@ const videoItem = {
     transition: { duration: 0.5, ease: easeEditorial },
   },
 };
+
+function StyleframeStack({ frames }: { frames: readonly Styleframe[] }) {
+  const [open, setOpen] = useState<Styleframe | null>(null);
+  const dialogRef = useRef<HTMLDialogElement>(null);
+  const titleId = useId();
+
+  useEffect(() => {
+    const dialog = dialogRef.current;
+    if (!dialog) return;
+    if (open && !dialog.open) dialog.showModal();
+    if (!open && dialog.open) dialog.close();
+  }, [open]);
+
+  return (
+    <section className={styles.styleframes} aria-labelledby={titleId}>
+      <h2 id={titleId} className={styles.styleframesLabel}>
+        Styleframes
+      </h2>
+      <ol className={styles.styleframeList}>
+        {frames.map((frame, index) => (
+          <li key={frame.src}>
+            <button
+              type="button"
+              className={styles.styleframeButton}
+              onClick={() => setOpen(frame)}
+            >
+              <img
+                className={styles.styleframeImg}
+                src={frame.src}
+                alt={frame.alt}
+                width={1920}
+                height={1080}
+                loading={index === 0 ? "eager" : "lazy"}
+                decoding="async"
+              />
+            </button>
+          </li>
+        ))}
+      </ol>
+      <dialog
+        ref={dialogRef}
+        className={styles.styleframeDialog}
+        aria-label={open?.alt ?? "Styleframe"}
+        onClose={() => setOpen(null)}
+        onClick={(event) => {
+          if (event.target === event.currentTarget) setOpen(null);
+        }}
+      >
+        {open ? (
+          <img
+            className={styles.styleframeDialogImg}
+            src={open.src}
+            alt={open.alt}
+            width={1920}
+            height={1080}
+          />
+        ) : null}
+      </dialog>
+    </section>
+  );
+}
 
 function CraftStudiesMore({ currentSlug }: { currentSlug: string }) {
   const [peers, setPeers] = useState<Project[]>([]);
@@ -129,6 +191,10 @@ export function WorkCaseStudyMain({ project }: { project: Project }) {
           </motion.div>
         ))}
       </section>
+
+      {project.styleframes?.length ? (
+        <StyleframeStack frames={project.styleframes} />
+      ) : null}
 
       <CraftStudiesMore currentSlug={project.slug} />
     </>

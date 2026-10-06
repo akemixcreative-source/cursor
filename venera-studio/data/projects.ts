@@ -16,6 +16,12 @@ export type CaseStudyVideo = {
   poster?: string;
 };
 
+/** Held still from a case-study film, shown under the player. */
+export type Styleframe = {
+  src: string;
+  alt: string;
+};
+
 export type Project = {
   slug: string;
   /** Homepage / index card title. Use `caseStudyTitle` for a shorter work-page H1 when needed. */
@@ -50,6 +56,8 @@ export type Project = {
   mediaVideoKey?: VideoAssetKey;
   /** Films after the hero on the work page. */
   additionalVideos?: readonly CaseStudyVideo[];
+  /** Still frames from the film, stacked under the player. */
+  styleframes?: readonly Styleframe[];
   /** Mono kicker above the work-page H1 (e.g. self-initiated). */
   caseStudyKicker?: string;
   /** Homepage featured tag row; defaults to `services`. */
@@ -149,6 +157,32 @@ const projectCatalog: readonly Project[] = [
     heroVideoKey: "meta-rayban-hero",
     heroPosterUrl: "/images/posters/meta-rayban-hero.jpg",
     mediaPosterUrl: "/images/posters/meta-rayban-hero.jpg",
+    styleframes: [
+      {
+        src: "/images/styleframes/meta-rayban-oakley/01-lockup.jpg",
+        alt: "Oakley and Meta logo lockup on black",
+      },
+      {
+        src: "/images/styleframes/meta-rayban-oakley/02-mechanism.jpg",
+        alt: "Close-up of the glasses hinge and lens hardware",
+      },
+      {
+        src: "/images/styleframes/meta-rayban-oakley/03-lens.jpg",
+        alt: "Oakley Prizm lenses in close-up",
+      },
+      {
+        src: "/images/styleframes/meta-rayban-oakley/04-lenses.jpg",
+        alt: "Color lens variations arranged in a star",
+      },
+      {
+        src: "/images/styleframes/meta-rayban-oakley/05-profile.jpg",
+        alt: "Side profile of the glasses",
+      },
+      {
+        src: "/images/styleframes/meta-rayban-oakley/06-silhouette.jpg",
+        alt: "Silhouette wearing the performance glasses",
+      },
+    ],
     aspectRatio: 21 / 9,
     featuredSlot: "collageFull",
   },
