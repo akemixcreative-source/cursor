@@ -53,7 +53,11 @@ function StyleframeStack({ frames }: { frames: readonly Styleframe[] }) {
       </h2>
       <ol className={styles.styleframeList}>
         {frames.map((frame, index) => (
-          <li key={frame.src}>
+          <li key={frame.src} className={styles.styleframeBeat}>
+            <div className={styles.styleframeCopy}>
+              <p className={styles.styleframeBeatLabel}>{frame.label}</p>
+              <h3 className={styles.styleframeBeatTitle}>{frame.title}</h3>
+            </div>
             <button
               type="button"
               className={styles.styleframeButton}

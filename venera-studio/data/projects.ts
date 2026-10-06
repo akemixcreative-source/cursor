@@ -16,12 +16,16 @@ export type CaseStudyVideo = {
   poster?: string;
 };
 
-/** Held still from a case-study film, shown under the player. */
+/** One beat in a case-study breakdown: a label, a sentence, then the still. */
 export type Styleframe = {
   src: string;
   alt: string;
   width: number;
   height: number;
+  /** Mono label above the sentence. */
+  label: string;
+  /** Sentence that names what the frame is doing. */
+  title: string;
 };
 
 export type Project = {
@@ -165,42 +169,56 @@ const projectCatalog: readonly Project[] = [
         alt: "Oakley and Meta logo lockup",
         width: 3973,
         height: 1774,
+        label: "Lockup",
+        title: "Oakley and Meta, held.",
       },
       {
         src: "/images/styleframes/meta-rayban-oakley/02-mechanism.jpg",
         alt: "Close-up of the glasses hinge and lens hardware",
         width: 3973,
         height: 1970,
+        label: "Mechanism",
+        title: "The hinge, treated as the product.",
       },
       {
         src: "/images/styleframes/meta-rayban-oakley/03-palm.jpg",
         alt: "Open hand against an orange field",
         width: 3973,
         height: 2235,
+        label: "Gesture",
+        title: "A hand enters the orange field.",
       },
       {
         src: "/images/styleframes/meta-rayban-oakley/04-lens.jpg",
         alt: "Prizm lens and hinge in close-up",
         width: 3973,
         height: 2235,
+        label: "Lens",
+        title: "Close enough to read Prizm.",
       },
       {
         src: "/images/styleframes/meta-rayban-oakley/05-lenses.jpg",
         alt: "Color lens variations arranged in a star",
         width: 3973,
         height: 2235,
+        label: "Variations",
+        title: "One frame, seven lens colors.",
       },
       {
         src: "/images/styleframes/meta-rayban-oakley/06-profile.jpg",
         alt: "Side profile of the glasses",
         width: 3973,
         height: 2235,
+        label: "Profile",
+        title: "The glasses in profile.",
       },
       {
         src: "/images/styleframes/meta-rayban-oakley/07-silhouette.jpg",
         alt: "Silhouette wearing the glasses",
         width: 3973,
         height: 2235,
+        label: "Figure",
+        title: "Worn, with the face left in shadow.",
       },
     ],
     aspectRatio: 21 / 9,

@@ -328,7 +328,40 @@
   padding: 0;
   display: flex;
   flex-direction: column;
+  gap: clamp(56px, 8vw, 96px);
+}
+
+.styleframeBeat {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(14px, 2vw, 20px);
+}
+
+.styleframeCopy {
+  display: flex;
+  flex-direction: column;
   gap: 8px;
+  max-inline-size: 28ch;
+}
+
+.styleframeBeatLabel {
+  margin: 0;
+  font-family: var(--font-geist-mono), ui-monospace, monospace;
+  font-weight: var(--weight-medium);
+  font-size: var(--text-meta);
+  letter-spacing: var(--tracking-meta);
+  text-transform: uppercase;
+  color: var(--fg-muted);
+}
+
+.styleframeBeatTitle {
+  margin: 0;
+  font-family: var(--font-geist), ui-sans-serif, system-ui;
+  font-size: clamp(22px, 2.4vw, 32px);
+  font-weight: 500;
+  line-height: 1.15;
+  color: #f5f0e8;
+  text-wrap: balance;
 }
 
 .styleframeButton {
