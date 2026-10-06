@@ -16,6 +16,14 @@ export type CaseStudyVideo = {
   poster?: string;
 };
 
+/** Held still from a case-study film, shown under the player. */
+export type Styleframe = {
+  src: string;
+  alt: string;
+  width: number;
+  height: number;
+};
+
 export type Project = {
   slug: string;
   /** Homepage / index card title. Use `caseStudyTitle` for a shorter work-page H1 when needed. */
@@ -50,6 +58,8 @@ export type Project = {
   mediaVideoKey?: VideoAssetKey;
   /** Films after the hero on the work page. */
   additionalVideos?: readonly CaseStudyVideo[];
+  /** Still frames from the film, stacked under the player. */
+  styleframes?: readonly Styleframe[];
   /** Mono kicker above the work-page H1 (e.g. self-initiated). */
   caseStudyKicker?: string;
   /** Homepage featured tag row; defaults to `services`. */
@@ -138,7 +148,7 @@ const projectCatalog: readonly Project[] = [
     collaboratorsMetaLabel: "Client",
     collaborators: "Self-initiated concept piece",
     role: "Concept, 3D, motion direction, compositing",
-    tools: "Blender, After Effects, Octane",
+    tools: "Blender, After Effects, Cycles",
     pipeline: "Fully hand-crafted · No generative AI",
     description:
       "A self-initiated concept film for the Meta × Ray-Ban × Oakley eyewear collaboration. The 3D and subtle motion were built in Blender and composited by hand, with no generative AI in the pipeline.",
@@ -149,6 +159,50 @@ const projectCatalog: readonly Project[] = [
     heroVideoKey: "meta-rayban-hero",
     heroPosterUrl: "/images/posters/meta-rayban-hero.jpg",
     mediaPosterUrl: "/images/posters/meta-rayban-hero.jpg",
+    styleframes: [
+      {
+        src: "/images/styleframes/meta-rayban-oakley/01-lockup.jpg",
+        alt: "Oakley and Meta logo lockup",
+        width: 3973,
+        height: 1774,
+      },
+      {
+        src: "/images/styleframes/meta-rayban-oakley/02-mechanism.jpg",
+        alt: "Close-up of the glasses hinge and lens hardware",
+        width: 3973,
+        height: 1970,
+      },
+      {
+        src: "/images/styleframes/meta-rayban-oakley/03-palm.jpg",
+        alt: "Open hand against an orange field",
+        width: 3973,
+        height: 2235,
+      },
+      {
+        src: "/images/styleframes/meta-rayban-oakley/04-lens.jpg",
+        alt: "Prizm lens and hinge in close-up",
+        width: 3973,
+        height: 2235,
+      },
+      {
+        src: "/images/styleframes/meta-rayban-oakley/05-lenses.jpg",
+        alt: "Color lens variations arranged in a star",
+        width: 3973,
+        height: 2235,
+      },
+      {
+        src: "/images/styleframes/meta-rayban-oakley/06-profile.jpg",
+        alt: "Side profile of the glasses",
+        width: 3973,
+        height: 2235,
+      },
+      {
+        src: "/images/styleframes/meta-rayban-oakley/07-silhouette.jpg",
+        alt: "Silhouette wearing the glasses",
+        width: 3973,
+        height: 2235,
+      },
+    ],
     aspectRatio: 21 / 9,
     featuredSlot: "collageFull",
   },
