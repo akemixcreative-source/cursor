@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
   <url>
     <loc>https://venerastudio.com</loc>
     <lastmod>2026-10-02</lastmod>
@@ -20,9 +20,37 @@
   </url>
   <url>
     <loc>https://venerastudio.com/work/meta-rayban-oakley</loc>
-    <lastmod>2026-10-02</lastmod>
+    <lastmod>2026-10-06</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
+    <image:image>
+      <image:loc>https://venerastudio.com/images/styleframes/meta-rayban-oakley/01-lockup.jpg</image:loc>
+      <image:caption>Oakley and Meta logo lockup</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://venerastudio.com/images/styleframes/meta-rayban-oakley/02-mechanism.jpg</image:loc>
+      <image:caption>Close-up of the glasses hinge and lens hardware</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://venerastudio.com/images/styleframes/meta-rayban-oakley/03-palm.jpg</image:loc>
+      <image:caption>Open hand against an orange field</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://venerastudio.com/images/styleframes/meta-rayban-oakley/04-lens.jpg</image:loc>
+      <image:caption>Prizm lens and hinge in close-up</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://venerastudio.com/images/styleframes/meta-rayban-oakley/05-lenses.jpg</image:loc>
+      <image:caption>Color lens variations arranged in a star</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://venerastudio.com/images/styleframes/meta-rayban-oakley/06-profile.jpg</image:loc>
+      <image:caption>Side profile of the glasses</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://venerastudio.com/images/styleframes/meta-rayban-oakley/07-silhouette.jpg</image:loc>
+      <image:caption>Silhouette wearing the glasses</image:caption>
+    </image:image>
   </url>
   <url>
     <loc>https://venerastudio.com/work/appstack</loc>
@@ -32,9 +60,21 @@
   </url>
   <url>
     <loc>https://venerastudio.com/work/google-gemini</loc>
-    <lastmod>2026-10-02</lastmod>
+    <lastmod>2026-10-06</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.75</priority>
+    <image:image>
+      <image:loc>https://venerastudio.com/images/styleframes/google-gemini/01-experience-gemini.jpg</image:loc>
+      <image:caption>Experience Gemini title card with a phone and Style exploration</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://venerastudio.com/images/styleframes/google-gemini/02-interface.gif</image:loc>
+      <image:caption>Gemini interface motion, from the viewport through the on-screen prompts</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://venerastudio.com/images/styleframes/google-gemini/03-phone.gif</image:loc>
+      <image:caption>Phone animation of the Gemini conversation</image:caption>
+    </image:image>
   </url>
   <url>
     <loc>https://venerastudio.com/work/nexus</loc>
