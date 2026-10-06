@@ -1,7 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useId, useRef, useState } from "react";
+import { useEffect, useState } from "react";
+import { createPortal } from "react-dom";
 import { motion, useReducedMotion } from "motion/react";
 
 import { KickerText } from "@/components/KickerText";
@@ -29,14 +30,20 @@ const videoItem = {
 
 function StyleframeStack({ frames }: { frames: readonly Styleframe[] }) {
   const [open, setOpen] = useState<Styleframe | null>(null);
-  const dialogRef = useRef<HTMLDialogElement>(null);
-  const titleId = useId();
+  const titleId = "styleframes-heading";
 
   useEffect(() => {
-    const dialog = dialogRef.current;
-    if (!dialog) return;
-    if (open && !dialog.open) dialog.showModal();
-    if (!open && dialog.open) dialog.close();
+    if (!open) return;
+    const previous = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    const onKey = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setOpen(null);
+    };
+    window.addEventListener("keydown", onKey);
+    return () => {
+      document.body.style.overflow = previous;
+      window.removeEventListener("keydown", onKey);
+    };
   }, [open]);
 
   return (
@@ -56,8 +63,8 @@ function StyleframeStack({ frames }: { frames: readonly Styleframe[] }) {
                 className={styles.styleframeImg}
                 src={frame.src}
                 alt={frame.alt}
-                width={1920}
-                height={1080}
+                width={frame.width}
+                height={frame.height}
                 loading={index === 0 ? "eager" : "lazy"}
                 decoding="async"
               />
@@ -65,25 +72,32 @@ function StyleframeStack({ frames }: { frames: readonly Styleframe[] }) {
           </li>
         ))}
       </ol>
-      <dialog
-        ref={dialogRef}
-        className={styles.styleframeDialog}
-        aria-label={open?.alt ?? "Styleframe"}
-        onClose={() => setOpen(null)}
-        onClick={(event) => {
-          if (event.target === event.currentTarget) setOpen(null);
-        }}
-      >
-        {open ? (
-          <img
-            className={styles.styleframeDialogImg}
-            src={open.src}
-            alt={open.alt}
-            width={1920}
-            height={1080}
-          />
-        ) : null}
-      </dialog>
+      {open
+        ? createPortal(
+            <div
+              className={styles.styleframeScrim}
+              role="presentation"
+              onClick={() => setOpen(null)}
+            >
+              <figure
+                className={styles.styleframeWindow}
+                role="dialog"
+                aria-modal="true"
+                aria-label={open.alt}
+                onClick={(event) => event.stopPropagation()}
+              >
+                <img
+                  className={styles.styleframeDialogImg}
+                  src={open.src}
+                  alt={open.alt}
+                  width={open.width}
+                  height={open.height}
+                />
+              </figure>
+            </div>,
+            document.body,
+          )
+        : null}
     </section>
   );
 }

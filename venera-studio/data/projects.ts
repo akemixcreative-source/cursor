@@ -20,6 +20,8 @@ export type CaseStudyVideo = {
 export type Styleframe = {
   src: string;
   alt: string;
+  width: number;
+  height: number;
 };
 
 export type Project = {
@@ -160,27 +162,45 @@ const projectCatalog: readonly Project[] = [
     styleframes: [
       {
         src: "/images/styleframes/meta-rayban-oakley/01-lockup.jpg",
-        alt: "Oakley and Meta logo lockup on black",
+        alt: "Oakley and Meta logo lockup",
+        width: 3973,
+        height: 1774,
       },
       {
         src: "/images/styleframes/meta-rayban-oakley/02-mechanism.jpg",
         alt: "Close-up of the glasses hinge and lens hardware",
+        width: 3973,
+        height: 1970,
       },
       {
-        src: "/images/styleframes/meta-rayban-oakley/03-lens.jpg",
-        alt: "Oakley Prizm lenses in close-up",
+        src: "/images/styleframes/meta-rayban-oakley/03-palm.jpg",
+        alt: "Open hand against an orange field",
+        width: 3973,
+        height: 2235,
       },
       {
-        src: "/images/styleframes/meta-rayban-oakley/04-lenses.jpg",
+        src: "/images/styleframes/meta-rayban-oakley/04-lens.jpg",
+        alt: "Prizm lens and hinge in close-up",
+        width: 3973,
+        height: 2235,
+      },
+      {
+        src: "/images/styleframes/meta-rayban-oakley/05-lenses.jpg",
         alt: "Color lens variations arranged in a star",
+        width: 3973,
+        height: 2235,
       },
       {
-        src: "/images/styleframes/meta-rayban-oakley/05-profile.jpg",
+        src: "/images/styleframes/meta-rayban-oakley/06-profile.jpg",
         alt: "Side profile of the glasses",
+        width: 3973,
+        height: 2235,
       },
       {
-        src: "/images/styleframes/meta-rayban-oakley/06-silhouette.jpg",
-        alt: "Silhouette wearing the performance glasses",
+        src: "/images/styleframes/meta-rayban-oakley/07-silhouette.jpg",
+        alt: "Silhouette wearing the glasses",
+        width: 3973,
+        height: 2235,
       },
     ],
     aspectRatio: 21 / 9,
