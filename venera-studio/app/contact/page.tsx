@@ -57,8 +57,8 @@ const contactPageJsonLd = {
 /**
  * /contact
  *
- * Editorial intake page: display headline + muted lead at top, full intake
- * form below, mono-caps email/location meta lines at the bottom. PageMeta
+ * Editorial intake page: project headline, then the intake form, then the
+ * discovery call. Mono-caps email/location lines sit at the bottom. PageMeta
  * sticks to the top of the viewport (logo + nav).
  */
 export default function ContactPage() {
@@ -82,43 +82,33 @@ export default function ContactPage() {
       />
 
       <main className={styles.page}>
-        <section className={styles.intro} aria-label="Contact options">
-          <div className={styles.introGrid}>
-            <article
-              className={styles.introPath}
-              aria-labelledby="contact-heading"
-            >
-              <h1 id="contact-heading" className={styles.heading}>
-                Start a project with Venera
-              </h1>
-              <p className={styles.lead}>
-                We help funded SaaS startups transform complex products into
-                cinematic motion experiences from launch films to product
-                walkthroughs and motion systems. Share your vision in under 2
-                minutes. We respond within 1-2 business days.
-              </p>
-            </article>
-
-            <article
-              className={styles.introPath}
-              aria-labelledby="discovery-heading"
-            >
-              <h2 id="discovery-heading" className={styles.heading}>
-                Book a discovery call
-              </h2>
-              <p className={styles.lead}>
-                Prefer to talk first? Book a 30-minute intro call. We&apos;ll
-                discuss your product, timeline, and whether we&apos;re the right
-                fit. No form required.
-              </p>
-              <BookingCallButton className={styles.discoveryCta}>
-                Book a call
-              </BookingCallButton>
-            </article>
-          </div>
+        <section className={styles.intro} aria-labelledby="contact-heading">
+          <h1 id="contact-heading" className={styles.heading}>
+            Start a project with Venera
+          </h1>
+          <p className={styles.lead}>
+            We help funded SaaS startups transform complex products into
+            cinematic motion experiences from launch films to product
+            walkthroughs and motion systems. Share your vision in under 2
+            minutes. We respond within 1-2 business days.
+          </p>
         </section>
 
         <ContactForm />
+
+        <section className={styles.discovery} aria-labelledby="discovery-heading">
+          <h2 id="discovery-heading" className={styles.heading}>
+            Book a discovery call
+          </h2>
+          <p className={styles.lead}>
+            Prefer to talk first? Book a 30-minute intro call. We&apos;ll
+            discuss your product, timeline, and whether we&apos;re the right
+            fit. No form required.
+          </p>
+          <BookingCallButton className={styles.discoveryCta}>
+            Book a call
+          </BookingCallButton>
+        </section>
 
         <dl className={styles.meta} aria-label="Contact details">
           <div className={styles.metaLine}>
