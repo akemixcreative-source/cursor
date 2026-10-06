@@ -227,6 +227,26 @@ const projectCatalog: readonly Project[] = [
     heroVideoKey: "gemini-hero",
     heroPosterUrl: "/images/posters/gemini-hero.jpg",
     mediaPosterUrl: "/images/posters/gemini-hero.jpg",
+    styleframes: [
+      {
+        src: "/images/styleframes/google-gemini/01-experience-gemini.jpg",
+        alt: "Experience Gemini title card with a phone and Style exploration",
+        width: 1200,
+        height: 673,
+      },
+      {
+        src: "/images/styleframes/google-gemini/02-interface.gif",
+        alt: "Gemini interface motion, from the viewport through the on-screen prompts",
+        width: 1200,
+        height: 675,
+      },
+      {
+        src: "/images/styleframes/google-gemini/03-phone.gif",
+        alt: "Phone animation of the Gemini conversation",
+        width: 1200,
+        height: 675,
+      },
+    ],
     aspectRatio: 21 / 9,
     featuredSlot: "collageFull",
   },
