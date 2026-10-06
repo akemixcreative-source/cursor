@@ -22,36 +22,18 @@
   gap: clamp(40px, 6vh, 72px);
 }
 
-.intro {
-  inline-size: 100%;
-}
-
-.introGrid {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: clamp(40px, 6vh, 72px);
-}
-
-@media (min-width: 960px) {
-  .introGrid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: clamp(32px, 4vw, 64px);
-    align-items: start;
-  }
-}
-
-.introPath {
+.intro,
+.discovery {
   display: flex;
   flex-direction: column;
   gap: clamp(20px, 3vh, 32px);
+  inline-size: 100%;
   min-inline-size: 0;
 }
 
-@media (min-width: 960px) {
-  .introPath + .introPath {
-    padding-inline-start: clamp(24px, 3vw, 40px);
-    border-inline-start: 1px solid var(--border);
-  }
+.discovery {
+  padding-block-start: clamp(8px, 2vh, 16px);
+  border-block-start: 1px solid var(--border);
 }
 
 .heading {
