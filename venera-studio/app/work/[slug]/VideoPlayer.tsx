@@ -6,7 +6,6 @@ import { releaseVideoAudio, takeVideoAudio } from "@/lib/videoAudioLock";
 
 import { videoAssetHasAudio, type VideoAssetKey } from "@/data/videoAssets";
 
-import { AmbientVideoGlow } from "@/components/AmbientVideoGlow";
 import { SecureVideo } from "@/components/SecureVideo";
 
 import styles from "./page.module.css";
@@ -113,8 +112,6 @@ export function VideoPlayer({ videoKey, poster }: VideoPlayerProps) {
 
   return (
     <div ref={rootRef} className={styles.videoFrame}>
-      <AmbientVideoGlow videoRef={videoRef} active={nearViewport} />
-
       <div className={styles.heroInner}>
         <SecureVideo
           videoKey={videoKey}
