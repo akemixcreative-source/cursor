@@ -1,0 +1,54 @@
+/* ---------------------------------------------------------------------------
+   AmbientVideoGlow
+   Mirrored frame bled out past the film's edges. The element is sized far
+   larger than its 12x7 bitmap on purpose: that upscale is the blur.
+   --------------------------------------------------------------------------- */
+
+.glow {
+  position: absolute;
+  /*
+    A canvas is a replaced element, so `auto` sizing collapses to the 12x7
+    bitmap instead of filling the insets. The size is stated outright: wider
+    than tall so the spill reads as side light rather than an even halo.
+  */
+  inset-inline-start: -14%;
+  inset-block-start: -5%;
+  inline-size: 128%;
+  block-size: 110%;
+  /* The global media reset caps canvases at 100%, which would clip the spill. */
+  max-inline-size: none;
+  z-index: -1;
+
+  pointer-events: none;
+
+  /*
+    The film covers the middle of this element, so the only visible part is the
+    overhang. These stops hold full strength up to the film's edge and fade
+    across the overhang, giving light that falls away from the frame instead of
+    ending on a hard rectangle. Stops track the insets above: 14 / 128 ~= 11%
+    horizontally, 5 / 110 ~= 5% vertically.
+  */
+  mask-image:
+    linear-gradient(to right, transparent, #000 11%, #000 89%, transparent),
+    linear-gradient(to bottom, transparent, #000 5%, #000 95%, transparent);
+  mask-composite: intersect;
+  -webkit-mask-image:
+    linear-gradient(to right, transparent, #000 11%, #000 89%, transparent),
+    linear-gradient(to bottom, transparent, #000 5%, #000 95%, transparent);
+  -webkit-mask-composite: source-in;
+
+  /* Held at 0 until the first frame lands so the poster never gets a black wash. */
+  opacity: 0;
+  transition: opacity 900ms ease-out;
+  contain: layout paint style;
+}
+
+.glow[data-lit="true"] {
+  opacity: 0.42;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .glow {
+    transition-duration: 0.01ms;
+  }
+}

@@ -1,0 +1,122 @@
+/* ---------------------------------------------------------------------------
+   Cursor
+   Custom pointer that follows the mouse with a small lerp. Two variants:
+   - default: 14px white circular pointer
+   - view:    cream pill labeled "View" used over interactive media
+
+   z-index 300 = above GrainOverlay (100) and Loader (200).
+   Pointer-events disabled so clicks pass through to the actual UI.
+   --------------------------------------------------------------------------- */
+
+.root {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 300;
+  pointer-events: none;
+  contain: layout paint style;
+  will-change: transform;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+
+  background-color: var(--cursor-default-bg);
+  color: var(--bg);
+
+  font-family: var(--font-geist-mono), ui-monospace, monospace;
+  font-weight: var(--weight-medium);
+  font-size: var(--text-meta);
+  letter-spacing: var(--tracking-meta);
+  text-transform: uppercase;
+  line-height: 1;
+
+  inline-size: 14px;
+  block-size: 14px;
+  padding-inline: 0;
+  padding-block: 0;
+  border-radius: 999px;
+
+  white-space: nowrap;
+  overflow: hidden;
+
+  opacity: 0;
+  transform: translate3d(-100px, -100px, 0) translate(-50%, -50%);
+
+  transition:
+    inline-size 280ms cubic-bezier(0.65, 0, 0.35, 1),
+    block-size 280ms cubic-bezier(0.65, 0, 0.35, 1),
+    padding-inline 280ms cubic-bezier(0.65, 0, 0.35, 1),
+    padding-block 280ms cubic-bezier(0.65, 0, 0.35, 1),
+    border-radius 280ms cubic-bezier(0.65, 0, 0.35, 1),
+    background-color 220ms ease,
+    color 220ms ease,
+    font-size 220ms ease,
+    opacity 180ms ease;
+}
+
+/* Reveal once we have a real cursor position (set by JS after first mousemove). */
+.root[data-ready="true"] {
+  opacity: 1;
+}
+
+/* Hide when the cursor leaves the document. */
+.root[data-active="false"] {
+  opacity: 0;
+}
+
+/* "view" variant: cream pill with dark label over featured video. */
+.root[data-variant="view"] {
+  inline-size: auto;
+  min-inline-size: 88px;
+  block-size: 28px;
+  padding-inline: 14px;
+  padding-block: 0;
+  border-radius: 999px;
+  background-color: var(--fg);
+  color: var(--bg);
+}
+
+/* After a short dwell on the media, the pill grows and picks up the flame. */
+.root[data-variant="view"][data-view-hot="true"] {
+  min-inline-size: 112px;
+  block-size: 38px;
+  padding-inline: 22px;
+  font-size: calc(var(--text-meta) + 2px);
+  background-color: var(--flame);
+  color: var(--bg);
+}
+
+/* the inner label collapses by max-inline-size for a clean morph */
+.label {
+  display: inline-block;
+  max-inline-size: 0;
+  opacity: 0;
+  overflow: hidden;
+  transform: translateY(0);
+  transition:
+    max-inline-size 280ms cubic-bezier(0.65, 0, 0.35, 1),
+    opacity 200ms ease 60ms;
+}
+
+.root[data-variant="view"] .label {
+  max-inline-size: 200px;
+  opacity: 1;
+}
+
+/* the leading arrow only appears in view variant (mono-caps marker) */
+.arrow {
+  display: inline-block;
+  max-inline-size: 0;
+  opacity: 0;
+  overflow: hidden;
+  transition:
+    max-inline-size 280ms cubic-bezier(0.65, 0, 0.35, 1),
+    opacity 160ms ease 40ms;
+}
+
+.root[data-variant="view"] .arrow {
+  max-inline-size: 1.5em;
+  opacity: 1;
+}

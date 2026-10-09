@@ -1,99 +1,110 @@
+import Link from "next/link";
 import type { Metadata } from "next";
-import { MDXRemote } from "next-mdx-remote/rsc";
 import { notFound } from "next/navigation";
 
-import { CaseStudyDetailColumns } from "@/components/CaseStudyDetailColumns/CaseStudyDetailColumns";
-import { CaseStudyIntro } from "@/components/CaseStudyIntro/CaseStudyIntro";
-import { CaseStudyVideo } from "@/components/CaseStudyVideo/CaseStudyVideo";
-import { mdxComponents } from "@/components/MdxProse/mdxComponents";
-import { StoryboardGrid } from "@/components/StoryboardGrid/StoryboardGrid";
-import { Reveal } from "@/components/Reveal/Reveal";
+import { CaseStudyLayout } from "@/components/CaseStudyLayout";
+import { NycLiveClock } from "@/components/NycLiveClock";
+import { PageMeta } from "@/components/PageMeta";
+import { VeneraLogo } from "@/components/VeneraLogo";
+import { getProject, projects } from "@/data/projects";
+import { buildCaseStudyJsonLd } from "@/lib/caseStudyJsonLd";
+import { SITE_BRAND, SITE_TITLE_BRAND, SITE_URL } from "@/lib/site";
+import styles from "./page.module.css";
+import { WorkCaseStudyMain } from "./WorkCaseStudyMain";
 
-import {
-  getProjectBySlug,
-  getProjectSlugs,
-} from "@/lib/projects";
-import { pageMetadata } from "@/lib/seo";
-
-import styles from "@/app/work/[slug]/CaseStudy.module.css";
-
-interface ProjectPageProps {
+type WorkPageProps = {
   params: Promise<{ slug: string }>;
-}
+};
 
 export function generateStaticParams() {
-  return getProjectSlugs().map((slug) => ({ slug }));
+  return projects.map((p) => ({ slug: p.slug }));
 }
 
 export async function generateMetadata({
   params,
-}: ProjectPageProps): Promise<Metadata> {
+}: WorkPageProps): Promise<Metadata> {
   const { slug } = await params;
-  const project = getProjectBySlug(slug);
+  const project = getProject(slug);
+  if (!project) return { title: "Work" };
+  const displayTitle = project.caseStudyTitle ?? project.title;
+  const metaDescription = project.caseStudyLede ?? project.description;
+  const title = project.seoTitle ?? `${displayTitle} | ${SITE_TITLE_BRAND}`;
+  const description = project.seoDescription ?? metaDescription;
+  const ogTitle = project.ogTitle ?? title;
+  const ogDescription = project.ogDescription ?? description;
+  const ogImages = project.ogImageUrl
+    ? [{ url: project.ogImageUrl, width: 1200, height: 630, alt: displayTitle }]
+    : undefined;
 
-  if (!project) {
-    return {};
-  }
-
-  return pageMetadata({
-    title: project.title,
-    description: `${project.title} — ${project.client} (${project.year}). Motion design case study from Venera, Ryan Thomas in New York.`,
-    path: `/work/${slug}`,
-  });
+  return {
+    metadataBase: new URL(SITE_URL),
+    title: { absolute: title },
+    description,
+    alternates: { canonical: `/work/${slug}` },
+    openGraph: {
+      title: ogTitle,
+      description: ogDescription,
+      type: "article",
+      url: `/work/${slug}`,
+      siteName: SITE_BRAND,
+      images: ogImages,
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: ogTitle,
+      description: ogDescription,
+      images: project.ogImageUrl ? [project.ogImageUrl] : undefined,
+    },
+  };
 }
 
-export default async function ProjectPage({ params }: ProjectPageProps) {
+export default async function WorkCaseStudyPage({ params }: WorkPageProps) {
   const { slug } = await params;
-  const project = getProjectBySlug(slug);
+  const project = getProject(slug);
+  if (!project) notFound();
 
-  if (!project) {
-    notFound();
-  }
+  const displayTitle = project.caseStudyTitle ?? project.title;
 
-  const intro =
-    project.introParagraphs && project.introParagraphs.length > 0
-      ? project.introParagraphs
-      : [
-          `${project.title} — case study for ${project.client}.`,
-          "Additional process notes and frames live below the hero film.",
-        ];
-
-  const storyboard = project.storyboard ?? [];
-  const detailLeft = project.detailColumnLeft ?? "";
-  const detailRight = project.detailColumnRight ?? "";
-  const showMdx = project.body.trim().length > 0;
+  const caseStudyJsonLd = buildCaseStudyJsonLd(project);
 
   return (
-    <Reveal>
-      <article className={styles.article}>
-      <CaseStudyIntro
-        title={project.title}
-        client={project.client}
-        year={project.year}
-        introParagraphs={intro}
-        credits={project.credits}
-        roles={project.role}
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(caseStudyJsonLd),
+        }}
       />
 
-      <CaseStudyVideo
-        title={project.title}
-        heroVideo={project.heroVideo}
-        posterImage={project.posterImage}
+      <PageMeta
+        mode="always"
+        ariaLabel="Case study"
+        left={
+          <Link href="/" className={styles.chromeLogo} aria-label="Home">
+            <VeneraLogo variant="nav" />
+          </Link>
+        }
+        center={
+          <div className={styles.chromeMetaCenter}>
+            <NycLiveClock />
+            <span className={styles.chromeTitle} title={displayTitle}>
+              {displayTitle}
+            </span>
+          </div>
+        }
+        right={
+          <Link href="/#work" className={styles.chromeLink}>
+            Index
+          </Link>
+        }
       />
 
-      <CaseStudyDetailColumns left={detailLeft} right={detailRight} />
-
-      <StoryboardGrid
-        items={storyboard}
-        heading={project.storyboardHeading}
-      />
-
-      {showMdx ? (
-        <div className={styles.prose}>
-          <MDXRemote source={project.body} components={mdxComponents} />
-        </div>
-      ) : null}
-      </article>
-    </Reveal>
+      <main>
+        <CaseStudyLayout
+          project={project}
+          main={<WorkCaseStudyMain project={project} />}
+        />
+      </main>
+    </>
   );
 }

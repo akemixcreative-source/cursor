@@ -1,30 +1,174 @@
-.featured {
-  padding: var(--space-6) 0 var(--space-8);
-}
+/* Temporary Step 1 swatch page. Replaced by real homepage in Step 4. */
 
 .shell {
-  max-width: var(--max-width-projects);
-  margin: 0 auto;
-  padding: 0 clamp(var(--space-4), 6vw, var(--space-8));
+  max-inline-size: var(--max);
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+  padding-block: clamp(48px, 8vh, 120px);
+  display: flex;
+  flex-direction: column;
+  gap: clamp(48px, 8vh, 96px);
+}
+
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
 }
 
 .sectionLabel {
-  margin: 0 0 clamp(var(--space-5), 4vw, var(--space-7));
-  font-family: var(--font-case-mono);
-  font-size: clamp(0.8125rem, 1.2vw, 1.0625rem);
-  font-weight: 400;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  text-align: left;
-  color: var(--color-text-muted);
-  padding-bottom: var(--space-4);
-  border-bottom: 1px solid var(--border-subtle);
+  color: var(--fg-muted);
 }
 
-.empty {
-  margin: 0;
-  color: var(--color-text-muted);
-  font-size: 0.9375rem;
-  line-height: 1.6;
+.divider {
+  block-size: 1px;
+  background-color: var(--border);
+  inline-size: 100%;
+}
+
+/* color swatches ----------------------------------------------------------- */
+
+.swatchGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 16px;
+}
+
+.swatch {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.swatchChip {
+  aspect-ratio: 1.6 / 1;
+  border-radius: 0;
+  border: 1px solid var(--border);
+}
+
+.swatchMeta {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.swatchName {
+  color: var(--fg);
+}
+
+.swatchValue {
+  color: var(--fg-muted);
+  font-family: var(--font-geist-mono), ui-monospace, monospace;
+  font-size: var(--text-meta);
+  letter-spacing: 0.02em;
+  line-height: 1;
+  text-transform: none;
+}
+
+/* type samples ------------------------------------------------------------- */
+
+.typeStack {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(24px, 4vh, 48px);
+}
+
+.typeRow {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  border-block-start: 1px solid var(--border);
+  padding-block-start: 16px;
+}
+
+.typeRow:first-child {
+  border-block-start: 0;
+  padding-block-start: 0;
+}
+
+.typeLabel {
+  color: var(--fg-muted);
+}
+
+.muted {
+  color: var(--fg-muted);
+}
+
+/* chrome demo -------------------------------------------------------------- */
+
+.chromeStack {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+.chromeFrame {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.chromeLabel {
+  color: var(--fg-muted);
+}
+
+.chromeFrameBody {
+  background-color: var(--surface-1);
+  border: 1px solid var(--border);
+  border-radius: 0;
+  padding: clamp(16px, 2vw, 24px);
+}
+
+/* fake featured-media placeholder used to verify the cream "view" cursor.
+   Replaced by real <FeaturedCard> media in Step 4. */
+.fakeMedia {
+  aspect-ratio: 16 / 9;
+  background-color: var(--surface-2);
+  background-image: linear-gradient(
+    135deg,
+    var(--surface-2) 0%,
+    var(--surface-1) 100%
+  );
+  border: 1px solid var(--border);
+  border-radius: 0;
+  display: grid;
+  place-items: center;
+  color: var(--fg-muted);
+}
+
+.fakeMediaLabel {
+  pointer-events: none;
+}
+
+.spacer {
+  block-size: 80vh;
+  display: grid;
+  place-items: center;
+  color: var(--fg-muted);
   text-align: center;
+}
+
+/* flame pill --------------------------------------------------------------- */
+
+.pillRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background-color: var(--flame);
+  color: var(--fg);
+  padding-block: 8px;
+  padding-inline: 14px;
+  border-radius: 0;
+  font-family: var(--font-geist-mono), ui-monospace, monospace;
+  font-weight: var(--weight-medium);
+  font-size: var(--text-meta);
+  letter-spacing: var(--tracking-meta);
+  text-transform: uppercase;
+  line-height: 1;
 }
