@@ -4,8 +4,9 @@ import Link from "next/link";
 import styles from "./AboutApproach.module.css";
 
 /**
- * About differentiator: founder identity, approach copy, closing stamp, CTA.
+ * About differentiator: approach copy, closing stamp, CTA.
  * Accent flame on “START A PROJECT” link only.
+ * Studio-focused — no personal names in visible copy.
  */
 export default function AboutApproach() {
   return (
@@ -14,7 +15,7 @@ export default function AboutApproach() {
         <figure className={styles.portraitFrame}>
           <Image
             src="/images/about/studio-portrait.jpg"
-            alt="Ryan Thomas, founder of Venera motion design studio"
+            alt="Venera studio founder"
             fill
             priority
             sizes="(min-width: 900px) 42vw, 100vw"
@@ -23,9 +24,8 @@ export default function AboutApproach() {
         </figure>
 
         <div className={styles.content}>
-          <p className={styles.founderLabel}>Ryan Thomas</p>
           <h1 className={styles.sectionHeadline} id="about-approach">
-            Venera is Ryan Thomas&apos;s motion design studio.
+            Venera is the studio making the work.
           </h1>
           <p className={styles.prose}>
             Most studios put a producer between the founder and the craft.
@@ -34,9 +34,9 @@ export default function AboutApproach() {
             and nobody can quite say why.
           </p>
           <p className={styles.prose}>
-            Ryan Thomas runs Venera as a New York motion design studio without
-            those layers. Founders work directly with him on launch films,
-            product motion, and brand systems. The person briefed is the person
+            Venera removes the layers. Founders work directly with the studio on
+            launch films, product motion, and brand systems. This motion design
+            studio in New York is structured so the team briefed is the team
             directing, cutting, and shipping the work. Decisions happen in one
             conversation, not three.
           </p>

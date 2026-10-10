@@ -7,25 +7,23 @@ import { Nav } from "@/components/Nav";
 import { NycLiveClock } from "@/components/NycLiveClock";
 import { PageMeta } from "@/components/PageMeta";
 import { VeneraLogo } from "@/components/VeneraLogo";
-import { ORG_ID, PERSON_ID } from "@/lib/organizationJsonLd";
+import { ORG_ID } from "@/lib/organizationJsonLd";
 import {
   SITE_BRAND,
-  SITE_FOUNDER,
   SITE_TITLE_BRAND,
   SITE_TITLE_SERVICE,
   SITE_URL,
 } from "@/lib/site";
 import styles from "./page.module.css";
 
-const ABOUT_DESCRIPTION = `${SITE_BRAND} is Ryan Thomas's New York motion design studio offering launch films, product motion, brand systems, and performance creative for funded startups. Founders work directly with Ryan on every brief.`;
+const ABOUT_DESCRIPTION = `${SITE_BRAND} is a New York motion design studio offering launch films, product motion, brand systems, and performance creative for funded startups. Founders work directly with Venera on every brief.`;
 
-const ABOUT_TITLE = `About ${SITE_FOUNDER} | ${SITE_TITLE_BRAND} ${SITE_TITLE_SERVICE}`;
+const ABOUT_TITLE = `About ${SITE_TITLE_BRAND} | ${SITE_TITLE_SERVICE}`;
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: { absolute: ABOUT_TITLE },
   description: ABOUT_DESCRIPTION,
-  authors: [{ name: SITE_FOUNDER, url: `${SITE_URL}/about` }],
   alternates: { canonical: "/about" },
   openGraph: {
     title: ABOUT_TITLE,
@@ -42,7 +40,8 @@ export const metadata: Metadata = {
 };
 
 /**
- * About page JSON-LD: AboutPage tied to both the studio and Ryan Thomas.
+ * About page JSON-LD: studio AboutPage.
+ * Organization + Person stay in the root layout graph.
  */
 const aboutPageJsonLd = {
   "@context": "https://schema.org",
@@ -53,8 +52,8 @@ const aboutPageJsonLd = {
       url: `${SITE_URL}/about`,
       name: ABOUT_TITLE,
       description: ABOUT_DESCRIPTION,
-      about: [{ "@id": ORG_ID }, { "@id": PERSON_ID }],
-      mainEntity: { "@id": PERSON_ID },
+      about: { "@id": ORG_ID },
+      mainEntity: { "@id": ORG_ID },
       isPartOf: { "@id": `${SITE_URL}/#website` },
     },
   ],
