@@ -1,0 +1,199 @@
+/* ---------------------------------------------------------------------------
+   FeaturedCard
+   One project in the homepage featured grid. Media on top (image or video),
+   metadata row (year + tags) directly under, then title and description.
+   Hover: media goes grayscale on hover (full color at rest). Cursor variant swap is wired
+   from the component via useCursor().
+   --------------------------------------------------------------------------- */
+
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  color: var(--fg);
+}
+
+/* the entire card is wrapped in a Next Link; reset default underline +
+   inherit color so the heading and body copy follow our token scale. */
+.link {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  color: inherit;
+  text-decoration: none;
+}
+
+.mediaCluster {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  inline-size: 100%;
+}
+
+/* media frame ------------------------------------------------------------- */
+
+.mediaFrame {
+  position: relative;
+  inline-size: 100%;
+  max-inline-size: 100%;
+  overflow: hidden;
+  background-color: var(--surface-1);
+  border: 1px solid var(--border);
+  border-radius: 0;
+  isolation: isolate;
+  margin-block-end: clamp(10px, 1.2vw, 16px);
+  --media-zoom: 1;
+}
+
+/* ~21:9 and wider: fluid with viewport — 16:9 on narrow screens (more
+   visible height), 21:9 from tablet up so clips match Gemini-style framing
+   while still growing/shrinking with the collage column width. */
+.mediaCinematic {
+  aspect-ratio: 16 / 9;
+}
+
+@media (min-width: 640px) {
+  .mediaCinematic {
+    aspect-ratio: 21 / 9;
+  }
+}
+
+.media {
+  inline-size: 100%;
+  block-size: 100%;
+  object-fit: cover;
+  object-position: center center;
+  display: block;
+  transform: scale(var(--media-zoom, 1));
+  transform-origin: center center;
+  transition:
+    transform 600ms cubic-bezier(0.22, 1, 0.36, 1),
+    filter 400ms ease;
+  filter: grayscale(0);
+  will-change: transform, filter;
+}
+
+.mediaContain {
+  object-fit: contain;
+}
+
+.card:hover .media,
+.card:focus-within .media {
+  filter: grayscale(1);
+}
+
+/* Partner marks — top-right of media frame (above video). */
+.mediaBadges {
+  position: absolute;
+  inset-block-start: clamp(8px, 1vw, 14px);
+  inset-inline-end: clamp(8px, 1vw, 14px);
+  z-index: 2;
+
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-end;
+  gap: clamp(6px, 0.75vw, 12px);
+
+  padding-block: clamp(4px, 0.45vw, 6px);
+  padding-inline: clamp(6px, 0.65vw, 10px);
+
+  background-color: var(--media-badge-bg);
+  border: 1px solid var(--media-badge-border);
+  border-radius: 0;
+  pointer-events: none;
+}
+
+.mediaBadge {
+  display: block;
+  block-size: clamp(22px, 2.8vw, 34px);
+  inline-size: auto;
+  max-inline-size: clamp(48px, 8vw, 88px);
+  object-fit: contain;
+  object-position: center;
+}
+
+/* meta row --------------------------------------------------------------- */
+
+.meta {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: clamp(8px, 1vw, 12px);
+  margin-block-end: clamp(12px, 1.5vw, 20px);
+}
+
+.homeKicker {
+  font-family: var(--font-geist-mono), ui-monospace, monospace;
+  font-weight: var(--weight-medium);
+  font-size: var(--text-meta);
+  letter-spacing: var(--tracking-meta);
+  text-transform: uppercase;
+  color: var(--fg-muted);
+  margin: 0;
+  margin-block-end: clamp(8px, 1vw, 14px);
+  line-height: 1.35;
+}
+
+.kickerSep {
+  color: var(--kicker-sep);
+}
+
+.year {
+  font-family: var(--font-geist-mono), ui-monospace, monospace;
+  font-weight: var(--weight-medium);
+  font-size: var(--text-meta);
+  letter-spacing: var(--tracking-meta);
+  text-transform: uppercase;
+  line-height: 1;
+  color: var(--fg-muted);
+}
+
+.dot {
+  inline-size: 3px;
+  block-size: 3px;
+  border-radius: 999px;
+  background-color: var(--fg-muted);
+  display: inline-block;
+}
+
+.tag {
+  display: inline-flex;
+  align-items: center;
+  background-color: var(--tag-bg);
+  color: var(--fg);
+  padding-block: clamp(5px, 0.5vh, 8px);
+  padding-inline: clamp(8px, 1vw, 12px);
+  border-radius: 0;
+  font-family: var(--font-geist-mono), ui-monospace, monospace;
+  font-weight: var(--weight-medium);
+  font-size: var(--text-meta);
+  letter-spacing: var(--tracking-meta);
+  text-transform: uppercase;
+  line-height: 1;
+}
+
+/* copy ------------------------------------------------------------------- */
+
+.title {
+  font-size: var(--text-h3);
+  font-weight: var(--weight-semibold);
+  letter-spacing: -0.01em;
+  line-height: 1.2;
+  margin: 0;
+  margin-block-end: clamp(4px, 0.6vw, 8px);
+  transition: color 200ms ease;
+}
+
+.card:hover .title,
+.card:focus-within .title {
+  color: var(--flame-hover);
+}
+
+.description {
+  font-size: var(--text-body);
+  color: var(--fg-muted);
+  line-height: var(--leading-body);
+  margin: 0;
+  max-inline-size: min(50ch, 100%);
+}

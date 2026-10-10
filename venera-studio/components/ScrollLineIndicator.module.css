@@ -1,0 +1,48 @@
+/* Fixed vertical cue — visible only while the page is scrolling. */
+
+.root {
+  position: fixed;
+  inset-block: 0;
+  inset-inline-end: clamp(14px, 1.8vw, 28px);
+  z-index: 70;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  pointer-events: none;
+}
+
+.line {
+  display: block;
+  inline-size: 1px;
+  block-size: clamp(52px, 10vh, 88px);
+  border-radius: 999px;
+  background: linear-gradient(
+    180deg,
+    transparent 0%,
+    rgba(245, 240, 232, 0.08) 12%,
+    rgba(245, 240, 232, 0.42) 50%,
+    rgba(245, 240, 232, 0.08) 88%,
+    transparent 100%
+  );
+  opacity: 0;
+  transform: scaleY(0.88);
+  transition:
+    opacity 380ms ease,
+    transform 480ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.root[data-active="true"] .line {
+  opacity: 1;
+  transform: scaleY(1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .line {
+    transition: opacity 120ms ease;
+    transform: none;
+  }
+
+  .root[data-active="true"] .line {
+    transform: none;
+  }
+}

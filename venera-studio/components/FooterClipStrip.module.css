@@ -1,0 +1,47 @@
+/* ---------------------------------------------------------------------------
+   FooterClipStrip — small looping segments from the main hero MP4.
+   --------------------------------------------------------------------------- */
+
+.strip {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(72px, 1fr));
+  gap: 10px;
+  inline-size: 100%;
+  max-inline-size: min(100%, 720px);
+  margin-block-start: clamp(16px, 2.5vh, 24px);
+}
+
+@media (min-width: 600px) {
+  .strip {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 12px;
+  }
+}
+
+.cell {
+  position: relative;
+  aspect-ratio: 1;
+  overflow: hidden;
+  background: var(--surface-1);
+  border-radius: 0;
+}
+
+.video {
+  display: block;
+  inline-size: 100%;
+  block-size: 100%;
+  object-fit: cover;
+  object-position: center;
+  opacity: 0;
+  transition: opacity 280ms ease;
+}
+
+.videoReady {
+  opacity: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .video {
+    opacity: 1;
+  }
+}
