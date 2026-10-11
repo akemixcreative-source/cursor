@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import { createPortal } from "react-dom";
 import { motion, useReducedMotion } from "motion/react";
 
 import { KickerText } from "@/components/KickerText";
@@ -11,6 +12,7 @@ import {
   isCraftStudySlug,
   shuffleProjects,
   type Project,
+  type Styleframe,
 } from "@/data/projects";
 import { VideoPlayer } from "./VideoPlayer";
 import styles from "./page.module.css";
@@ -25,6 +27,80 @@ const videoItem = {
     transition: { duration: 0.5, ease: easeEditorial },
   },
 };
+
+function StyleframeStack({ frames }: { frames: readonly Styleframe[] }) {
+  const [open, setOpen] = useState<Styleframe | null>(null);
+  const titleId = "styleframes-heading";
+
+  useEffect(() => {
+    if (!open) return;
+    const previous = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    const onKey = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setOpen(null);
+    };
+    window.addEventListener("keydown", onKey);
+    return () => {
+      document.body.style.overflow = previous;
+      window.removeEventListener("keydown", onKey);
+    };
+  }, [open]);
+
+  return (
+    <section className={styles.styleframes} aria-labelledby={titleId}>
+      <h2 id={titleId} className={styles.styleframesLabel}>
+        Styleframes
+      </h2>
+      <ol className={styles.styleframeList}>
+        {frames.map((frame, index) => (
+          <li key={frame.src}>
+            <button
+              type="button"
+              className={styles.styleframeButton}
+              onClick={() => setOpen(frame)}
+            >
+              <img
+                className={styles.styleframeImg}
+                src={frame.src}
+                alt={frame.alt}
+                width={frame.width}
+                height={frame.height}
+                loading={index === 0 ? "eager" : "lazy"}
+                decoding="async"
+              />
+            </button>
+          </li>
+        ))}
+      </ol>
+      {open
+        ? createPortal(
+            <div
+              className={styles.styleframeScrim}
+              role="presentation"
+              onClick={() => setOpen(null)}
+            >
+              <figure
+                className={styles.styleframeWindow}
+                role="dialog"
+                aria-modal="true"
+                aria-label={open.alt}
+                onClick={(event) => event.stopPropagation()}
+              >
+                <img
+                  className={styles.styleframeDialogImg}
+                  src={open.src}
+                  alt={open.alt}
+                  width={open.width}
+                  height={open.height}
+                />
+              </figure>
+            </div>,
+            document.body,
+          )
+        : null}
+    </section>
+  );
+}
 
 function CraftStudiesMore({ currentSlug }: { currentSlug: string }) {
   const [peers, setPeers] = useState<Project[]>([]);
@@ -129,6 +205,10 @@ export function WorkCaseStudyMain({ project }: { project: Project }) {
           </motion.div>
         ))}
       </section>
+
+      {project.styleframes?.length ? (
+        <StyleframeStack frames={project.styleframes} />
+      ) : null}
 
       <CraftStudiesMore currentSlug={project.slug} />
     </>

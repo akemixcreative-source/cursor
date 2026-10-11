@@ -16,6 +16,14 @@ export type CaseStudyVideo = {
   poster?: string;
 };
 
+/** Held still from a case-study film, shown under the player. */
+export type Styleframe = {
+  src: string;
+  alt: string;
+  width: number;
+  height: number;
+};
+
 export type Project = {
   slug: string;
   /** Homepage / index card title. Use `caseStudyTitle` for a shorter work-page H1 when needed. */
@@ -50,6 +58,8 @@ export type Project = {
   mediaVideoKey?: VideoAssetKey;
   /** Films after the hero on the work page. */
   additionalVideos?: readonly CaseStudyVideo[];
+  /** Still frames from the film, stacked under the player. */
+  styleframes?: readonly Styleframe[];
   /** Mono kicker above the work-page H1 (e.g. self-initiated). */
   caseStudyKicker?: string;
   /** Homepage featured tag row; defaults to `services`. */
@@ -149,6 +159,50 @@ const projectCatalog: readonly Project[] = [
     heroVideoKey: "meta-rayban-hero",
     heroPosterUrl: "/images/posters/meta-rayban-hero.jpg",
     mediaPosterUrl: "/images/posters/meta-rayban-hero.jpg",
+    styleframes: [
+      {
+        src: "/images/styleframes/meta-rayban-oakley/01-lockup.jpg",
+        alt: "Oakley and Meta logo lockup",
+        width: 3973,
+        height: 1774,
+      },
+      {
+        src: "/images/styleframes/meta-rayban-oakley/02-mechanism.jpg",
+        alt: "Close-up of the glasses hinge and lens hardware",
+        width: 3973,
+        height: 1970,
+      },
+      {
+        src: "/images/styleframes/meta-rayban-oakley/03-palm.jpg",
+        alt: "Open hand against an orange field",
+        width: 3973,
+        height: 2235,
+      },
+      {
+        src: "/images/styleframes/meta-rayban-oakley/04-lens.jpg",
+        alt: "Prizm lens and hinge in close-up",
+        width: 3973,
+        height: 2235,
+      },
+      {
+        src: "/images/styleframes/meta-rayban-oakley/05-lenses.jpg",
+        alt: "Color lens variations arranged in a star",
+        width: 3973,
+        height: 2235,
+      },
+      {
+        src: "/images/styleframes/meta-rayban-oakley/06-profile.jpg",
+        alt: "Side profile of the glasses",
+        width: 3973,
+        height: 2235,
+      },
+      {
+        src: "/images/styleframes/meta-rayban-oakley/07-silhouette.jpg",
+        alt: "Silhouette wearing the glasses",
+        width: 3973,
+        height: 2235,
+      },
+    ],
     aspectRatio: 21 / 9,
     featuredSlot: "collageFull",
   },
@@ -173,6 +227,26 @@ const projectCatalog: readonly Project[] = [
     heroVideoKey: "gemini-hero",
     heroPosterUrl: "/images/posters/gemini-hero.jpg",
     mediaPosterUrl: "/images/posters/gemini-hero.jpg",
+    styleframes: [
+      {
+        src: "/images/styleframes/google-gemini/01-experience-gemini.jpg",
+        alt: "Experience Gemini title card with a phone and Style exploration",
+        width: 1200,
+        height: 673,
+      },
+      {
+        src: "/images/styleframes/google-gemini/02-interface.gif",
+        alt: "Gemini interface motion, from the viewport through the on-screen prompts",
+        width: 1200,
+        height: 675,
+      },
+      {
+        src: "/images/styleframes/google-gemini/03-phone.gif",
+        alt: "Phone animation of the Gemini conversation",
+        width: 1200,
+        height: 675,
+      },
+    ],
     aspectRatio: 21 / 9,
     featuredSlot: "collageFull",
   },
