@@ -1,0 +1,109 @@
+/* ---------------------------------------------------------------------------
+   InnerPage
+   Lightweight shell for /about, /contact, and journal stubs.
+   --------------------------------------------------------------------------- */
+
+.shell {
+  max-inline-size: var(--max);
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+  padding-block: clamp(48px, 8vh, 96px) clamp(64px, 10vh, 120px);
+
+  display: flex;
+  flex-direction: column;
+  gap: clamp(20px, 3vh, 28px);
+}
+
+.back {
+  font-family: var(--font-geist-mono), ui-monospace, monospace;
+  font-weight: var(--weight-medium);
+  font-size: var(--text-meta);
+  letter-spacing: var(--tracking-meta);
+  text-transform: uppercase;
+  color: var(--fg-muted);
+  align-self: flex-start;
+  padding-block: 4px;
+  border-block-end: 1px solid transparent;
+  transition:
+    color 180ms ease,
+    border-color 180ms ease;
+}
+
+.back:hover,
+.back:focus-visible {
+  color: var(--flame);
+  border-color: var(--flame);
+  outline: none;
+}
+
+.title {
+  font-family: var(--font-geist), ui-sans-serif, system-ui;
+  font-size: var(--text-h2);
+  font-weight: var(--weight-heavy);
+  line-height: var(--leading-display);
+  letter-spacing: var(--tracking-display);
+  color: var(--fg);
+  margin: 0;
+  max-inline-size: 20ch;
+}
+
+.body {
+  max-inline-size: clamp(20rem, 52vw, 42rem);
+  font-size: var(--text-body);
+  line-height: var(--leading-body);
+  color: var(--fg-muted);
+}
+
+.bodyWide {
+  max-inline-size: var(--max);
+  inline-size: 100%;
+  font-size: var(--text-body);
+  line-height: var(--leading-body);
+  color: var(--fg-muted);
+}
+
+.body p {
+  margin: 0 0 1em;
+}
+
+.body p:last-child {
+  margin-bottom: 0;
+}
+
+.bodyWide p:last-child {
+  margin-bottom: 0;
+}
+
+.bodyWide a {
+  color: var(--fg);
+  text-decoration: underline;
+  text-underline-offset: 4px;
+  text-decoration-color: var(--border-strong);
+  transition:
+    color 180ms ease,
+    text-decoration-color 180ms ease;
+}
+
+.bodyWide a:hover,
+.bodyWide a:focus-visible {
+  color: var(--flame);
+  text-decoration-color: var(--flame);
+  outline: none;
+}
+
+.body a {
+  color: var(--fg);
+  text-decoration: underline;
+  text-underline-offset: 4px;
+  text-decoration-color: var(--border-strong);
+  transition:
+    color 180ms ease,
+    text-decoration-color 180ms ease;
+}
+
+.body a:hover,
+.body a:focus-visible {
+  color: var(--flame);
+  text-decoration-color: var(--flame);
+  outline: none;
+}

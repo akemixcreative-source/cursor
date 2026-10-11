@@ -1,0 +1,141 @@
+.dialog {
+  inline-size: min(1180px, calc(100vw - 40px));
+  block-size: min(820px, calc(100dvh - 40px));
+  max-inline-size: none;
+  max-block-size: none;
+  margin: auto;
+  padding: 0;
+  overflow: hidden;
+  color: var(--fg);
+  background: var(--surface-1);
+  border: 1px solid var(--border-strong);
+  border-radius: 0;
+  box-shadow: 0 28px 100px rgba(0, 0, 0, 0.72);
+}
+
+.dialog::backdrop {
+  background: rgba(0, 0, 0, 0.82);
+}
+
+.panel {
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+  inline-size: 100%;
+  block-size: 100%;
+  min-block-size: 0;
+}
+
+.toolbar {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  min-block-size: 56px;
+  padding-inline: 20px 12px;
+  background: var(--surface-1);
+  border-block-end: 1px solid var(--border);
+}
+
+.title,
+.externalLink {
+  font-family: var(--font-geist-mono), ui-monospace, monospace;
+  font-size: var(--text-meta);
+  font-weight: var(--weight-medium);
+  letter-spacing: var(--tracking-meta);
+  text-transform: uppercase;
+}
+
+.title {
+  color: var(--fg);
+}
+
+.externalLink {
+  margin-inline-start: auto;
+  color: var(--fg-muted);
+  transition: color 160ms ease;
+}
+
+.externalLink:hover,
+.externalLink:focus-visible {
+  color: var(--flame);
+  outline: none;
+}
+
+.close {
+  display: inline-grid;
+  place-items: center;
+  flex: 0 0 auto;
+  inline-size: 36px;
+  block-size: 36px;
+  padding: 0;
+  color: var(--fg);
+  background: transparent;
+  border: 1px solid var(--border-strong);
+  border-radius: 0;
+  font-size: 24px;
+  font-weight: var(--weight-regular);
+  line-height: 1;
+  transition:
+    color 160ms ease,
+    border-color 160ms ease,
+    background-color 160ms ease;
+}
+
+.close:hover,
+.close:focus-visible {
+  color: var(--bg);
+  background: var(--flame);
+  border-color: var(--flame);
+  outline: none;
+}
+
+.close span {
+  transform: translateY(-1px);
+}
+
+.frameWrap {
+  position: relative;
+  min-block-size: 0;
+  background: var(--surface-1);
+}
+
+.frame {
+  position: relative;
+  z-index: 1;
+  display: block;
+  inline-size: 100%;
+  block-size: 100%;
+  border: 0;
+  background: var(--surface-1);
+}
+
+.loading {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  color: var(--fg-muted);
+  font-family: var(--font-geist-mono), ui-monospace, monospace;
+  font-size: var(--text-meta);
+  letter-spacing: var(--tracking-meta);
+  text-transform: uppercase;
+}
+
+@media (max-width: 640px) {
+  .dialog {
+    inline-size: 100vw;
+    block-size: 100dvh;
+    border: 0;
+    border-radius: 0;
+  }
+
+  .toolbar {
+    min-block-size: 52px;
+    padding-inline: 16px 10px;
+  }
+
+  .externalLink {
+    display: none;
+  }
+}

@@ -1,0 +1,57 @@
+/* ---------------------------------------------------------------------------
+   VeneraLogo
+   Light script wordmark on the dark canvas.
+   --------------------------------------------------------------------------- */
+
+.root {
+  position: relative;
+  display: inline-block;
+  line-height: 0;
+  flex-shrink: 0;
+}
+
+@keyframes veneraNavLogoIn {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* PageMeta chrome — square wordmark lockup. */
+.rootNav {
+  inline-size: 64px;
+  block-size: 64px;
+  animation: veneraNavLogoIn 0.72s cubic-bezier(0.22, 1, 0.36, 1) backwards;
+}
+
+/* Loader center — fluid height, native aspect ratio. */
+.rootLoader {
+  block-size: clamp(64px, 10vw, 140px);
+  aspect-ratio: 1;
+  inline-size: auto;
+}
+
+/* Footer — large script anchor, bottom-left of closing band. */
+.rootFooter {
+  block-size: clamp(96px, 14vw, 180px);
+  aspect-ratio: 1;
+  inline-size: auto;
+}
+
+.img {
+  object-fit: contain;
+  object-position: center;
+  user-select: none;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .rootNav {
+    animation: none;
+  }
+}

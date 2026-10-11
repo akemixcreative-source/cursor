@@ -1,0 +1,94 @@
+/* ---------------------------------------------------------------------------
+   PageMeta
+   Sticky catalog-style meta strip. Three slots: left, center, right.
+   80px tall bar (see `PAGE_META_BAR_PX` in PageMeta.tsx — keep in sync).
+   On case study pages this replaces the Nav.
+   --------------------------------------------------------------------------- */
+
+.bar {
+  position: sticky;
+  inset-block-start: 0;
+  z-index: 80;
+
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+
+  block-size: 80px;
+  inline-size: 100%;
+  padding-inline: var(--gutter);
+
+  background-color: var(--bg);
+  border-block-end: 1px solid var(--border);
+
+  font-family: var(--font-geist-mono), ui-monospace, monospace;
+  font-weight: var(--weight-medium);
+  font-size: var(--text-meta);
+  letter-spacing: var(--tracking-meta);
+  text-transform: uppercase;
+  line-height: 1;
+  color: var(--fg-muted);
+
+  opacity: 0;
+  transform: translateY(-100%);
+  pointer-events: none;
+  transition:
+    opacity 320ms ease,
+    transform 360ms cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: opacity, transform;
+}
+
+/* Below-hero mode: fix to the viewport top so the bar stays glued there
+   after it reveals (sticky can be fragile under overflow-x: hidden / very
+   tall pages). Case study pages keep the sticky default. */
+.bar[data-mode="below-hero"],
+.bar[data-mode="overlay"] {
+  position: fixed;
+  inset-block-start: 0;
+  inset-inline: 0;
+}
+
+/* Visible state: slide the strip down into place. */
+.bar[data-visible="true"] {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+.slot {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  white-space: nowrap;
+  min-inline-size: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.slotStart {
+  justify-self: start;
+  color: var(--fg);
+}
+
+.slotCenter {
+  justify-self: center;
+  /* Center stack is nudged with translate; allow first glyphs (NYC, MOTION…) to show */
+  overflow: visible;
+  position: relative;
+  z-index: 2;
+}
+
+.slotEnd {
+  justify-self: end;
+}
+
+/* mobile: hide the center slot when space is tight, keep left + right.
+   Center content can always be promoted back via a wider breakpoint per page. */
+@media (max-width: 600px) {
+  .bar {
+    grid-template-columns: 1fr auto;
+  }
+  .slotCenter {
+    display: none;
+  }
+}

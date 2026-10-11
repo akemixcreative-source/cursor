@@ -1,0 +1,68 @@
+/* Global scroll affordance — bottom-left, matches Hero mono-caps cue. */
+
+.cue {
+  position: fixed;
+  z-index: 65;
+  inset-block-end: clamp(20px, 3.5vh, 40px);
+  inset-inline-start: var(--gutter);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  pointer-events: none;
+  color: var(--fg-muted);
+  font-family: var(--font-geist-mono), ui-monospace, monospace;
+  font-weight: var(--weight-medium);
+  font-size: var(--text-meta);
+  letter-spacing: var(--tracking-meta);
+  text-transform: uppercase;
+  line-height: 1;
+  opacity: 0;
+  transform: translateY(6px);
+  transition:
+    opacity 420ms ease,
+    transform 420ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.cue[data-visible="true"] {
+  opacity: 0.58;
+  transform: translateY(0);
+}
+
+.arrow {
+  display: inline-block;
+  animation: scrollCueFloat 2.4s ease-in-out infinite;
+}
+
+@keyframes scrollCueFloat {
+  0%,
+  100% {
+    transform: translateY(0);
+    opacity: 0.65;
+  }
+  50% {
+    transform: translateY(5px);
+    opacity: 1;
+  }
+}
+
+@media (min-width: 1024px) {
+  .cue {
+    inset-block-end: clamp(24px, 4vh, 48px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cue {
+    transition: opacity 120ms ease;
+    transform: none;
+  }
+
+  .cue[data-visible="true"] {
+    transform: none;
+  }
+
+  .arrow {
+    animation: none;
+    opacity: 0.85;
+  }
+}

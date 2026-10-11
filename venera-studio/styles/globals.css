@@ -1,61 +1,11 @@
-:root {
-  --color-bg: #000000;
-  --color-text: #ffffff;
-  --color-text-muted: rgba(255, 255, 255, 0.6);
-  --color-text-faint: rgba(255, 255, 255, 0.4);
+/* ---------------------------------------------------------------------------
+   Venera Studio - globals
+   Reset, base typography, body shell. No component styles here.
+   --------------------------------------------------------------------------- */
 
-  --color-accent: #ff4500;
-  --gradient-flame: linear-gradient(135deg, #ff4500 0%, #ff8800 100%);
+@import "./tokens.css";
 
-  --border-subtle: rgba(255, 255, 255, 0.08);
-  --border-strong: rgba(255, 255, 255, 0.15);
-
-  --surface-input: rgba(255, 255, 255, 0.055);
-  --surface-input-hover: rgba(255, 255, 255, 0.07);
-  --surface-input-focus: rgba(255, 255, 255, 0.09);
-  --surface-submit: rgba(255, 255, 255, 0.09);
-  --surface-submit-hover: rgba(255, 255, 255, 0.12);
-
-  --space-1: 4px;
-  --space-2: 8px;
-  --space-3: 16px;
-  --space-4: 24px;
-  --space-5: 32px;
-  --space-6: 48px;
-  --space-7: 64px;
-  --space-8: 96px;
-  --space-9: 128px;
-  --space-10: 160px;
-
-  --radius-sm: 8px;
-  --radius-md: 12px;
-  --radius-lg: 16px;
-  /** Project tiles — matches reference card rounding (~31px) */
-  --radius-tile: 31px;
-
-  --max-width: 1280px;
-  /** Featured / work index grid — tighter rail than full site content */
-  --max-width-projects: min(1040px, 92vw);
-  --page-padding-x: clamp(16px, 4vw, 64px);
-
-  --ease-default: cubic-bezier(0.4, 0, 0.2, 1);
-
-  --font-sans: var(--font-geist-sans), system-ui, sans-serif;
-  --font-mono: var(--font-geist-mono), ui-monospace, monospace;
-  --font-logo: var(--font-geist-sans), system-ui, sans-serif;
-
-  /*
-   * Case study “work” typography — next/font sets --font-study-display / --font-study-mono on <html>.
-   * Space Grotesk (display) + Space Mono (technical body) match Jam3-style wide geometric + mono stacks.
-   */
-  --font-case-display: var(--font-study-display), system-ui, sans-serif;
-  --font-case-mono: var(--font-study-mono), ui-monospace, monospace;
-
-  --grain-opacity: 0.04;
-
-  /* Fixed header overlay — inner pages pad content below this */
-  --site-header-height: 96px;
-}
+/* reset --------------------------------------------------------------------- */
 
 *,
 *::before,
@@ -63,25 +13,51 @@
   box-sizing: border-box;
 }
 
-html {
-  background-color: var(--color-bg);
-  scroll-behavior: auto;
-}
-
-body {
+html,
+body,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+figure,
+blockquote,
+dl,
+dd,
+ul,
+ol {
   margin: 0;
-  min-height: 100vh;
-  background-color: var(--color-bg);
-  color: var(--color-text);
-  font-family: var(--font-sans);
-  font-weight: 400;
-  line-height: 1.6;
-  -webkit-font-smoothing: antialiased;
+  padding: 0;
 }
 
-:focus-visible {
-  outline: 2px solid var(--color-accent);
-  outline-offset: 3px;
+ul,
+ol {
+  list-style: none;
+}
+
+img,
+picture,
+video,
+canvas,
+svg {
+  display: block;
+  max-inline-size: 100%;
+}
+
+input,
+button,
+textarea,
+select {
+  font: inherit;
+  color: inherit;
+}
+
+button {
+  background: none;
+  border: 0;
+  cursor: pointer;
 }
 
 a {
@@ -89,41 +65,109 @@ a {
   text-decoration: none;
 }
 
-a:hover {
-  text-decoration: underline;
-  text-underline-offset: 4px;
+/* base ---------------------------------------------------------------------- */
+
+html {
+  color-scheme: dark;
+  background-color: var(--bg);
+  -webkit-text-size-adjust: 100%;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
 }
 
-img,
-video {
-  max-width: 100%;
-  height: auto;
-  display: block;
+body {
+  min-block-size: 100dvh;
+  background-color: var(--bg);
+  color: var(--fg);
+  font-family: var(--font-geist), system-ui, -apple-system, "Segoe UI", sans-serif;
+  font-size: var(--text-body);
+  font-weight: var(--weight-regular);
+  line-height: var(--leading-body);
+  overflow-x: hidden;
 }
 
-.visuallyHidden {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  padding: 0;
-  margin: -1px;
-  overflow: hidden;
-  clip: rect(0, 0, 0, 0);
-  white-space: nowrap;
-  border: 0;
+::selection {
+  background-color: var(--flame);
+  color: var(--bg);
 }
 
-.flameGrain {
-  position: relative;
+/* type utilities ------------------------------------------------------------ */
+
+.mono {
+  font-family: var(--font-geist-mono), ui-monospace, "SFMono-Regular", Menlo, monospace;
+  font-weight: var(--weight-medium);
+  font-size: var(--text-meta);
+  letter-spacing: var(--tracking-meta);
+  text-transform: uppercase;
+  line-height: 1;
 }
 
-.flameGrain::after {
-  content: "";
-  pointer-events: none;
-  position: absolute;
-  inset: 0;
-  border-radius: inherit;
-  opacity: var(--grain-opacity);
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.55'/%3E%3C/svg%3E");
-  mix-blend-mode: overlay;
+.display {
+  font-size: var(--text-display);
+  font-weight: var(--weight-heavy);
+  letter-spacing: var(--tracking-display);
+  line-height: var(--leading-display);
+}
+
+.h2 {
+  font-size: var(--text-h2);
+  font-weight: var(--weight-heavy);
+  letter-spacing: var(--tracking-display);
+  line-height: var(--leading-display);
+}
+
+.lead {
+  font-size: var(--text-lead);
+  font-weight: var(--weight-semibold);
+  line-height: 1.15;
+}
+
+.h3 {
+  font-size: var(--text-h3);
+  font-weight: var(--weight-semibold);
+  line-height: 1.25;
+}
+
+/* custom cursor ------------------------------------------------------------
+   When the Cursor component is mounted on a hover/fine-pointer device, it
+   adds .cursor-active to <body>. We then hide the system cursor on every
+   element so the brand cursor is the only pointer on screen - including over
+   links, buttons, and anything else with its own cursor: pointer default. */
+
+body.cursor-active,
+body.cursor-active * {
+  cursor: none !important;
+}
+
+/* touch / phone ------------------------------------------------------------- */
+/* GSAP scroll reveals still hide copy unless we force visibility. Animations
+   are skipped — legibility wins on small screens. */
+
+@media (hover: none), (pointer: coarse) {
+  :root {
+    --grain-opacity: 0.05;
+  }
+}
+
+/* GSAP scroll reveals start hidden; if ScrollTrigger never fires the page looks
+   blank after the hero. Failsafe keeps copy legible everywhere. */
+[data-scroll-reveal],
+[data-scroll-reveal] .srl-lineInner {
+  opacity: 1 !important;
+  transform: none !important;
+  visibility: visible !important;
+}
+
+/* reduced motion ----------------------------------------------------------- */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }

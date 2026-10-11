@@ -1,51 +1,52 @@
-import type { Metadata } from "next";
+import { Loader } from "@/components/Loader";
+import { PageMeta } from "@/components/PageMeta";
+import { PageMetaTaglineScramble } from "@/components/PageMetaTaglineScramble";
+import { Nav } from "@/components/Nav";
+import { HeroIntro } from "@/components/HeroIntro";
+import { FeaturedWork } from "@/components/FeaturedWork";
+import { Footer } from "@/components/Footer";
+import { VeneraLogo } from "@/components/VeneraLogo";
+import { getVideoAssetFallback } from "@/data/videoAssets";
 
-import { Hero } from "@/components/Hero/Hero";
-import { HeroIntro } from "@/components/Hero/HeroIntro";
-import { HomeCta } from "@/components/HomeCta/HomeCta";
-import { ProjectGrid } from "@/components/ProjectGrid/ProjectGrid";
-import { Reveal } from "@/components/Reveal/Reveal";
-import { Services } from "@/components/Services/Services";
+const HERO_INTRO_MP4 = getVideoAssetFallback("hero-intro-visual");
 
-import { getFeaturedProjects } from "@/lib/projects";
-import { SITE_NAME } from "@/lib/seo";
-
-import styles from "@/app/page.module.css";
-
-export const metadata: Metadata = {
-  alternates: {
-    canonical: "/",
-  },
-};
-
+/**
+ * Homepage composition.
+ *
+ * Document order:
+ *  1. Loader   - intro overlay on hard loads of `/` (desktop + phone).
+ *  2. PageMeta - sticky chrome (logo, live NYC + tagline, nav).
+ *  3. HeroIntro - brand statement (headline + lead + CTA + square visual).
+ *  4. FeaturedWork - FEATURED chip + project grid (two-up on wide viewports).
+ *  5. Footer — meta grid, wordmark.
+ *
+ * HeroIntro square visual uses a local MP4 (preloaded below) — not Stream.
+ */
 export default function HomePage() {
-  const featured = getFeaturedProjects();
-
   return (
     <>
-      <h1 className="visuallyHidden">{SITE_NAME}</h1>
-      <Hero />
-      <HeroIntro />
-      <Services />
-      <section className={styles.featured}>
-        <div className={styles.shell}>
-          <Reveal>
-            <p className={styles.sectionLabel}>Selected Projects</p>
-          </Reveal>
-          {featured.length > 0 ? (
-            <ProjectGrid projects={featured} />
-          ) : (
-            <Reveal>
-              <p className={styles.empty}>
-                Mark projects as featured in MDX frontmatter to show them here.
-              </p>
-            </Reveal>
-          )}
-        </div>
-      </section>
-      <Reveal delay={0.05}>
-        <HomeCta />
-      </Reveal>
+      <link
+        rel="preload"
+        href={HERO_INTRO_MP4}
+        as="video"
+        type="video/mp4"
+        fetchPriority="high"
+      />
+
+      <Loader />
+
+      <PageMeta
+        mode="always"
+        left={<VeneraLogo variant="nav" priority />}
+        center={<PageMetaTaglineScramble metaMode="always" />}
+        right={<Nav ariaLabel="Primary" />}
+      />
+
+      <main>
+        <HeroIntro />
+        <FeaturedWork />
+      </main>
+      <Footer />
     </>
   );
 }

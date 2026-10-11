@@ -1,0 +1,135 @@
+/* ---------------------------------------------------------------------------
+   CaseStudyMdx
+   Typography for MDX body inside CaseStudyLayout (token-only colors).
+   --------------------------------------------------------------------------- */
+
+.h1 {
+  font-family: var(--font-geist), ui-sans-serif, system-ui;
+  font-size: clamp(32px, 4vw, 56px);
+  font-weight: var(--weight-heavy);
+  line-height: 1.08;
+  letter-spacing: var(--tracking-display);
+  color: var(--fg);
+  margin: 0;
+  text-wrap: balance;
+}
+
+.h2 {
+  font-family: var(--font-geist), ui-sans-serif, system-ui;
+  font-size: var(--text-h2);
+  font-weight: var(--weight-heavy);
+  line-height: var(--leading-display);
+  letter-spacing: var(--tracking-display);
+  color: var(--fg);
+  margin: 0;
+  text-wrap: balance;
+}
+
+.h3 {
+  font-family: var(--font-geist), ui-sans-serif, system-ui;
+  font-size: var(--text-h3);
+  font-weight: var(--weight-semibold);
+  line-height: 1.25;
+  color: var(--fg);
+  margin: 0;
+}
+
+.p {
+  font-size: var(--text-body);
+  line-height: var(--leading-body);
+  color: var(--fg-muted);
+  margin: 0;
+}
+
+.listUl {
+  margin: 0;
+  padding-inline-start: 1.25em;
+  list-style: disc;
+  color: var(--fg-muted);
+  font-size: var(--text-body);
+  line-height: var(--leading-body);
+}
+
+.listOl {
+  margin: 0;
+  padding-inline-start: 1.25em;
+  list-style: decimal;
+  color: var(--fg-muted);
+  font-size: var(--text-body);
+  line-height: var(--leading-body);
+}
+
+.item {
+  margin-block: 0.35em;
+}
+
+.item::marker {
+  color: var(--fg-muted);
+}
+
+.strong {
+  color: var(--fg);
+  font-weight: var(--weight-semibold);
+}
+
+.link {
+  color: var(--fg);
+  text-decoration: underline;
+  text-underline-offset: 4px;
+  text-decoration-color: var(--border-strong);
+  transition:
+    color 180ms ease,
+    text-decoration-color 180ms ease;
+}
+
+.link:hover,
+.link:focus-visible {
+  color: var(--flame);
+  text-decoration-color: var(--flame);
+  outline: none;
+}
+
+.rule {
+  border: 0;
+  border-block-start: 1px solid var(--border);
+  margin-block: clamp(32px, 5vh, 48px);
+}
+
+.figure {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: clamp(8px, 1vh, 12px);
+  max-inline-size: 100%;
+}
+
+.img {
+  display: block;
+  inline-size: 100%;
+  block-size: auto;
+  border-radius: 0;
+  border: 1px solid var(--border);
+  align-self: stretch;
+}
+
+.figcaption {
+  font-family: var(--font-geist-mono), ui-monospace, monospace;
+  font-size: var(--text-meta);
+  letter-spacing: var(--tracking-meta);
+  text-transform: uppercase;
+  color: var(--fg-muted);
+  line-height: 1.35;
+  text-align: start;
+  max-inline-size: 100%;
+}
+
+.blockquote {
+  margin: 0;
+  padding-inline-start: clamp(16px, 2vw, 24px);
+  border-inline-start: 2px solid var(--flame);
+  font-size: var(--text-lead);
+  font-weight: var(--weight-semibold);
+  line-height: 1.35;
+  color: var(--fg);
+}

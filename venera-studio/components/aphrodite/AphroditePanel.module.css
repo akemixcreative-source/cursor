@@ -1,0 +1,433 @@
+/* ---------------------------------------------------------------------------
+   AphroditePanel
+   Launcher pinned to the bottom-right and a right-hand drawer built on
+   <dialog>, so focus trapping and Escape come from the platform.
+   z-index sits above GrainOverlay (100) and below Cursor (300).
+   --------------------------------------------------------------------------- */
+
+.launcher {
+  position: fixed;
+  z-index: 150;
+  inset-block-end: clamp(16px, 2.5vw, 28px);
+  inset-inline-end: clamp(16px, 2.5vw, 28px);
+
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding-block: 10px;
+  padding-inline: 14px;
+
+  color: var(--fg);
+  background: var(--surface-1);
+  border: 1px solid var(--border-strong);
+  border-radius: 0;
+  cursor: pointer;
+
+  font-family: var(--font-geist-mono), ui-monospace, monospace;
+  font-size: var(--text-meta);
+  font-weight: var(--weight-medium);
+  letter-spacing: var(--tracking-meta);
+  text-transform: uppercase;
+  line-height: 1;
+
+  transition:
+    color 160ms ease,
+    background-color 160ms ease,
+    border-color 160ms ease;
+}
+
+.launcher:hover,
+.launcher:focus-visible {
+  border-color: var(--fg);
+  outline: none;
+}
+
+.launcherDot {
+  inline-size: 6px;
+  block-size: 6px;
+  background: var(--flame);
+  border-radius: 999px;
+}
+
+/* drawer ------------------------------------------------------------------ */
+
+.dialog {
+  inline-size: min(440px, 100vw);
+  block-size: 100dvh;
+  max-inline-size: none;
+  max-block-size: none;
+  /* Pin to the right edge instead of centring. */
+  margin: 0 0 0 auto;
+  padding: 0;
+  overflow: hidden;
+
+  color: var(--fg);
+  background: var(--surface-1);
+  border: 0;
+  border-inline-start: 1px solid var(--border-strong);
+  border-radius: 0;
+  box-shadow: -28px 0 100px rgba(0, 0, 0, 0.72);
+
+  translate: 0 0;
+  transition:
+    translate 320ms cubic-bezier(0.22, 1, 0.36, 1),
+    overlay 320ms allow-discrete,
+    display 320ms allow-discrete;
+}
+
+/* Slide in from the edge on open, and back out on close. */
+@starting-style {
+  .dialog[open] {
+    translate: 100% 0;
+  }
+}
+
+.dialog:not([open]) {
+  translate: 100% 0;
+}
+
+.dialog::backdrop {
+  background: rgba(0, 0, 0, 0.72);
+}
+
+.panel {
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr) auto auto;
+  inline-size: 100%;
+  block-size: 100%;
+  min-block-size: 0;
+}
+
+/* header ------------------------------------------------------------------ */
+
+.header {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  padding: 18px 14px 18px 20px;
+  border-block-end: 1px solid var(--border);
+}
+
+.title {
+  margin: 0;
+  font-family: var(--font-geist-mono), ui-monospace, monospace;
+  font-size: var(--text-meta);
+  font-weight: var(--weight-medium);
+  letter-spacing: var(--tracking-meta);
+  text-transform: uppercase;
+  color: var(--fg);
+}
+
+.subtitle {
+  margin: 6px 0 0;
+  font-size: var(--text-meta);
+  color: var(--fg-muted);
+}
+
+.close {
+  display: inline-grid;
+  place-items: center;
+  flex: 0 0 auto;
+  margin-inline-start: auto;
+  inline-size: 34px;
+  block-size: 34px;
+  padding: 0;
+  color: var(--fg);
+  background: transparent;
+  border: 1px solid var(--border-strong);
+  border-radius: 0;
+  font-size: 22px;
+  line-height: 1;
+  cursor: pointer;
+  transition:
+    color 160ms ease,
+    background-color 160ms ease,
+    border-color 160ms ease;
+}
+
+.close:hover,
+.close:focus-visible {
+  color: var(--bg);
+  background: var(--flame);
+  border-color: var(--flame);
+  outline: none;
+}
+
+/* conversation ------------------------------------------------------------ */
+
+.log {
+  min-block-size: 0;
+  overflow-y: auto;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.intro {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.introCopy {
+  margin: 0;
+  font-size: var(--text-body);
+  line-height: var(--leading-body);
+  color: var(--fg-muted);
+}
+
+.starters {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.starter {
+  inline-size: 100%;
+  padding: 10px 12px;
+  text-align: start;
+  color: var(--fg);
+  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: 0;
+  cursor: pointer;
+  font-size: var(--text-body);
+  line-height: 1.35;
+  transition:
+    color 160ms ease,
+    border-color 160ms ease;
+}
+
+.starter:hover,
+.starter:focus-visible {
+  border-color: var(--fg);
+  outline: none;
+}
+
+.question,
+.answer {
+  margin: 0;
+  font-size: var(--text-body);
+  line-height: var(--leading-body);
+}
+
+.question {
+  padding-block-end: 2px;
+  color: var(--fg);
+  font-family: var(--font-geist-mono), ui-monospace, monospace;
+  font-size: var(--text-meta);
+  letter-spacing: var(--tracking-meta);
+  text-transform: uppercase;
+}
+
+.answer {
+  color: var(--fg-muted);
+}
+
+.answer a {
+  color: var(--fg);
+  text-decoration: underline;
+  text-underline-offset: 4px;
+  text-decoration-color: var(--border-strong);
+  transition:
+    color 160ms ease,
+    text-decoration-color 160ms ease;
+}
+
+.answer a:hover,
+.answer a:focus-visible {
+  color: var(--flame);
+  text-decoration-color: var(--flame);
+  outline: none;
+}
+
+/* Blinking block while tokens are still arriving. */
+.caret {
+  display: inline-block;
+  inline-size: 7px;
+  block-size: 14px;
+  margin-inline-start: 4px;
+  background: var(--flame);
+  vertical-align: text-bottom;
+  animation: aphroditeCaret 1s steps(2, start) infinite;
+}
+
+@keyframes aphroditeCaret {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
+}
+
+.error {
+  margin: 0;
+  padding: 10px 12px;
+  font-size: var(--text-body);
+  color: var(--fg);
+  background: color-mix(in srgb, var(--flame) 12%, var(--surface-1));
+  border: 1px solid color-mix(in srgb, var(--flame) 45%, var(--border));
+}
+
+/* composer --------------------------------------------------------------- */
+
+.composer {
+  display: flex;
+  gap: 8px;
+  padding: 14px 20px;
+  border-block-start: 1px solid var(--border);
+}
+
+.input {
+  flex: 1 1 auto;
+  min-inline-size: 0;
+  min-block-size: 40px;
+  padding: 9px 12px;
+  color: var(--fg);
+  background: var(--form-fill);
+  border: 1px solid var(--border);
+  border-radius: 0;
+  font-family: var(--font-geist), ui-sans-serif, system-ui;
+  font-size: clamp(13px, 1.05vw, 16px);
+  transition:
+    border-color 160ms ease,
+    background-color 160ms ease;
+}
+
+.input::placeholder {
+  color: var(--fg-muted);
+}
+
+.input:focus {
+  outline: none;
+  border-color: var(--fg);
+}
+
+.input:disabled {
+  opacity: 0.6;
+}
+
+.send {
+  flex: 0 0 auto;
+  min-block-size: 40px;
+  padding-inline: 14px;
+  color: var(--fg);
+  background: var(--form-fill);
+  border: 1px solid var(--border-strong);
+  border-radius: 0;
+  cursor: pointer;
+  font-family: var(--font-geist-mono), ui-monospace, monospace;
+  font-size: var(--text-meta);
+  font-weight: var(--weight-medium);
+  letter-spacing: var(--tracking-meta);
+  text-transform: uppercase;
+  transition:
+    color 160ms ease,
+    background-color 160ms ease,
+    border-color 160ms ease;
+}
+
+.send:hover:not(:disabled),
+.send:focus-visible:not(:disabled) {
+  color: var(--bg);
+  background: var(--flame);
+  border-color: var(--flame);
+  outline: none;
+}
+
+.send:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* footer ----------------------------------------------------------------- */
+
+.footer {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 20px 16px;
+  border-block-start: 1px solid var(--border);
+}
+
+.footerNote {
+  font-size: var(--text-meta);
+  line-height: 1.4;
+  color: var(--fg-muted);
+}
+
+.footerCta {
+  flex: 0 0 auto;
+  margin-inline-start: auto;
+  padding: 9px 12px;
+  color: var(--fg);
+  background: transparent;
+  border: 1px solid var(--border-strong);
+  border-radius: 0;
+  cursor: pointer;
+  font-family: var(--font-geist-mono), ui-monospace, monospace;
+  font-size: var(--text-meta);
+  font-weight: var(--weight-medium);
+  letter-spacing: var(--tracking-meta);
+  text-transform: uppercase;
+  white-space: nowrap;
+  transition:
+    color 160ms ease,
+    background-color 160ms ease,
+    border-color 160ms ease;
+}
+
+.footerCta:hover,
+.footerCta:focus-visible {
+  color: var(--bg);
+  background: var(--flame);
+  border-color: var(--flame);
+  outline: none;
+}
+
+.srOnly {
+  position: absolute;
+  inline-size: 1px;
+  block-size: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+@media (max-width: 640px) {
+  .dialog {
+    inline-size: 100vw;
+    border-inline-start: 0;
+  }
+
+  .launcher {
+    padding-inline: 12px;
+  }
+
+  .footerNote {
+    display: none;
+  }
+
+  .footerCta {
+    margin-inline: auto 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dialog {
+    transition-duration: 0.01ms;
+  }
+
+  .caret {
+    animation: none;
+  }
+}
