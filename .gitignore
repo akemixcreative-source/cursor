@@ -1,5 +1,6 @@
 node_modules/
 .env
 .venera-manifest.json
+.cursor-bridge.json
 *.log
 .DS_Store

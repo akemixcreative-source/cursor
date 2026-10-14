@@ -8,6 +8,7 @@ const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 export const paths = {
   root,
   manifest: path.join(root, '.venera-manifest.json'),
+  bridge: path.join(root, '.cursor-bridge.json'),
   icon: path.join(root, 'assets', 'icon.png'),
   banner: path.join(root, 'assets', 'banner.png'),
 };
@@ -118,6 +119,7 @@ export function emptyManifest(guildId) {
     version: 1,
     guildId,
     roles: {},
+    timezones: {},
     categories: {},
     channels: {},
     messages: {},

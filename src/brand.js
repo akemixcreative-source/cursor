@@ -67,6 +67,22 @@ export const ROLES = [
   },
 ];
 
+/**
+ * Asked when someone joins. India is first because that is the house clock.
+ * The role name is what shows on their profile and in /lounge.
+ * Offsets that move with daylight saving stay on the city, not a fixed number.
+ */
+export const TIMEZONES = [
+  { key: 'ist', name: 'ist', label: 'ist · india', hint: 'kolkata · utc+5:30' },
+  { key: 'gst', name: 'gst', label: 'gst · gulf', hint: 'dubai · utc+4' },
+  { key: 'sgt', name: 'sgt', label: 'sgt · singapore', hint: 'singapore · utc+8' },
+  { key: 'uk', name: 'uk', label: 'uk · london', hint: 'london' },
+  { key: 'cet', name: 'cet', label: 'cet · europe', hint: 'paris' },
+  { key: 'et', name: 'et', label: 'et · us east', hint: 'new york' },
+  { key: 'pt', name: 'pt', label: 'pt · us west', hint: 'los angeles' },
+  { key: 'aet', name: 'aet', label: 'aet · sydney', hint: 'sydney' },
+];
+
 const KBPS_96 = 96_000;
 const KBPS_64 = 64_000;
 
@@ -218,6 +234,14 @@ export function assertBlueprint() {
   if (!channels.focus.status) throw new Error('focus needs a join-muted note');
   if (ROLES.find((role) => role.key === 'venus').color !== COLORS.flame) {
     throw new Error('venus should be flame orange');
+  }
+  if (TIMEZONES[0]?.name !== 'ist') throw new Error('india should be the first timezone');
+  const zoneNames = new Set();
+  for (const zone of TIMEZONES) {
+    if (zoneNames.has(zone.name) || roleNames.has(zone.name)) {
+      throw new Error(`Timezone collides with another name: ${zone.name}`);
+    }
+    zoneNames.add(zone.name);
   }
 
   assertOverwrites();

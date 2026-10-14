@@ -143,8 +143,36 @@ Discord only shows the description on some servers (often once Community is on).
 - Gives `guest` to a person when they join. Bot accounts get `bots` instead, with no welcome card.
 - Posts a welcome in `#welcome` that mentions them. The mention is in the message, so it actually notifies them.
 - `/lounge` shows who is in voice right now. Empty rooms are left off the card. A muted person is marked.
+- `/cursor` sends a question to Cursor and posts the reply in the channel. Only `venus` can use it.
+- When someone joins, the bot asks what time they are on. India is `ist`. Their answer becomes a role and, when it fits, a `· ist` suffix on their name. `/lounge` shows that clock next to anyone in voice. `/timezone` asks again.
 
-The command is registered on this server only, so it appears as soon as the bot is online. Starting the bot again updates `/lounge` instead of adding a second command.
+The commands are registered on this server only, so they appear as soon as the bot is online. Starting the bot again updates them instead of adding a second copy.
+
+## Asking Cursor
+
+`/cursor` needs a Cursor API key. In the Cursor dashboard, open **API Keys**, create one, and add it to `.env`:
+
+```
+CURSOR_API_KEY=the key from the dashboard
+```
+
+Restart `npm run bot`. In Discord, as venus:
+
+```
+/cursor query: what is the rooftop channel for?
+```
+
+The bot tells the channel it sent the question, then posts Cursor's reply when the run finishes. The next `/cursor` continues that same chat. Set `fresh` to start another one.
+
+## Timezones
+
+The bot DMs a new person: “what time are you on? india is ist.” If their DMs are closed, it asks in `#general` instead. The menu starts with India, then gulf, Singapore, London, Europe, the US, and Sydney.
+
+Picking one gives them that role (`ist`, `gst`, `sgt`, `uk`, `cet`, `et`, `pt`, `aet`) and adds it to their nickname when the name is short enough, like `Venera · ist`. The server owner’s nickname cannot be changed. The role still shows on their profile. `/timezone` opens the same menu for anyone already in the server.
+
+Leave `build` off for a question. Cursor answers and does not change the project. Turn `build` on only when you want Cursor to change this repo and open a pull request. That spends usage on the Cursor account that owns the key.
+
+The repo defaults to `https://github.com/akemixcreative-source/cursor` on `main`. Override either with `CURSOR_REPOSITORY` and `CURSOR_REF` in `.env`.
 
 ## If something fails
 

@@ -14,9 +14,11 @@ import {
   AFK_TIMEOUT,
   CATEGORIES,
   MARKERS,
+  COLORS,
   ROLES,
   SERVER_NAME,
   TAGLINE,
+  TIMEZONES,
   allChannels,
   assertBlueprint,
   rulesEmbed,
@@ -121,6 +123,7 @@ async function configure(client, guildId, reset) {
   try {
     const roles = await stage('roles', () => ensureRoles(guild, manifest, built));
     await orderRoles(guild, roles);
+    await ensureTimezoneRoles(guild, manifest, built);
 
     const placed = await stage('channels', () => ensureChannels(guild, roles, manifest, built));
     await arrangeChannels(guild, placed);
@@ -232,6 +235,25 @@ async function ensureRole(guild, spec, manifest) {
   });
   noted('updated', spec.name);
   return role;
+}
+
+async function ensureTimezoneRoles(guild, manifest, built) {
+  log.step('time');
+  built.timezones = {};
+  for (const zone of TIMEZONES) {
+    const role = await ensureRole(
+      guild,
+      {
+        key: zone.key,
+        name: zone.name,
+        color: COLORS.guest,
+        hoist: false,
+        permissions: [],
+      },
+      { roles: manifest.timezones ?? {} },
+    );
+    built.timezones[zone.key] = role.id;
+  }
 }
 
 async function orderRoles(guild, roles) {
@@ -671,7 +693,10 @@ async function resetManaged(guild, manifest) {
     ...Object.values(manifest.channels ?? {}),
     ...Object.values(manifest.categories ?? {}),
   ]);
-  const roleIds = new Set(Object.values(manifest.roles ?? {}));
+  const roleIds = new Set([
+    ...Object.values(manifest.roles ?? {}),
+    ...Object.values(manifest.timezones ?? {}),
+  ]);
 
   for (const spec of allChannels()) {
     const type = spec.kind === 'voice' ? ChannelType.GuildVoice : ChannelType.GuildText;
@@ -686,7 +711,7 @@ async function resetManaged(guild, manifest) {
       }
     }
   }
-  for (const spec of ROLES) {
+  for (const spec of [...ROLES, ...TIMEZONES]) {
     for (const role of guild.roles.cache.values()) {
       if (!role.managed && role.id !== guild.id && sameName(role.name, spec.name)) roleIds.add(role.id);
     }
@@ -753,6 +778,7 @@ async function loadManifest(guildId) {
       version: 1,
       guildId,
       roles: data.roles ?? {},
+      timezones: data.timezones ?? {},
       categories: data.categories ?? {},
       channels: data.channels ?? {},
       messages: data.messages ?? {},
