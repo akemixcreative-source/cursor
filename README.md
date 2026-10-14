@@ -18,14 +18,14 @@ Still on the **Bot** page, under **Privileged Gateway Intents**, enable **Server
 
 That intent is required. The setup script uses it to give `guest` to people already in the server. The door bot uses it to give `guest` to someone the moment they join. Leave it on.
 
-Voice state, which `/lounge` uses, is not a privileged intent. There is no switch for it. Message Content is not used.
+Voice state is used by the bot. There is no switch for it. Message Content is not used.
 
 ## 3. Invite the bot
 
-Application ID is on **General Information**. Replace `YOUR_CLIENT_ID` in this URL, open it, choose **Venera's Lounge**, and authorize:
+The bot user is `venera-lounge`. Open this URL, choose **Venera's Lounge**, and authorize:
 
 ```
-https://discord.com/oauth2/authorize?client_id=YOUR_CLIENT_ID&permissions=8&scope=bot%20applications.commands
+https://discord.com/oauth2/authorize?client_id=1559775866555474002&permissions=8&scope=bot%20applications.commands
 ```
 
 `permissions=8` is Administrator. The scopes are `bot` and `applications.commands`.
@@ -66,7 +66,7 @@ npm install
 npm run setup
 ```
 
-Setup logs in, builds the server, and logs out. The bot looks offline until you start the door:
+Setup logs in, builds the server, and logs out. The bot looks offline until you start it:
 
 ```bash
 npm run bot
@@ -138,45 +138,28 @@ The server owner is given `venus`. People already in the server who have none of
 
 Discord only shows the description on some servers (often once Community is on). If it refuses, setup says so and continues.
 
-## The door bot
+## The bot
 
-`npm run bot` stays online and does three things:
+`npm run bot` runs [discord-js-bot](https://github.com/saiteja-madha/discord-js-bot) (MIT). The Discord account is `venera-lounge`. Aphrodite is gone.
 
-- Gives `guest` to a person when they join. Bot accounts get `bots` instead, with no welcome card.
-- Posts a welcome in `#welcome` that mentions them. The mention is in the message, so it actually notifies them.
-- `/lounge` shows who is in voice right now. Empty rooms are left off the card. A muted person is marked.
-- `/cursor` sends a question to Cursor. Only the server owner can use it, and only in `#cursor`.
-- The welcome card in `#welcome` asks what time they are on. India is `ist`. Their answer becomes a role. `/time` shows the current clock for everyone who picked. `/lounge` shows that clock next to anyone in voice. `/timezone` asks again.
+It is online from this machine, and it is not in the server until you open the invite in section 3 and authorize it. After that, restart `npm run bot` once so the slash commands land on the server.
 
-The commands are registered on this server only, so they appear as soon as the bot is online. Starting the bot again updates them instead of adding a second copy.
+It stays online and, on top of that bot's own slash commands:
 
-## Asking Cursor
+- Gives `guest` to a person when they join. Bot accounts get `bots`.
+- Keeps the timezone menu on the `#welcome` card. India is `ist`. `/time` shows the current clock for everyone who picked.
 
-`/cursor` needs a Cursor API key. In the Cursor dashboard, open **API Keys**, create one, and add it to `.env`:
+Music and image commands stay off. They need Lavalink and an image API this room does not have. The bot's data lives in `.mongo-data`, which is local and gitignored.
 
-```
-CURSOR_API_KEY=the key from the dashboard
-```
+The commands are registered on this server only. Starting the bot again replaces the slash-command list. `/cursor`, `/lounge`, and `/timezone` were part of the old door process and are not on this bot.
 
-Restart `npm run bot`. Open `#cursor` under **✶ cursor**. That category is hidden from guests and the inner circle. The bot only accepts `/cursor` from the server owner, and only in that channel.
-
-```
-/cursor query: what is the rooftop channel for?
-```
-
-The bot posts the reply in `#cursor`. The next `/cursor` continues that same chat. Set `fresh` to start another one.
-
-Leave `build` off for a question. Cursor answers and does not change the project. Turn `build` on only when you want Cursor to change this repo and open a pull request. That spends usage on the Cursor account that owns the key.
-
-The repo defaults to `https://github.com/akemixcreative-source/cursor` on `main`. Override either with `CURSOR_REPOSITORY` and `CURSOR_REF` in `.env`.
-
-`venus` is an admin role, so Discord will not hide this channel from a second person who has `venus`. The command still refuses them.
+Only one process can use the token. Stop the old one before `npm run bot`.
 
 ## Timezones
 
 The welcome card in `#welcome` ends with “what time are you on? india is ist.” and a menu. Anyone who can see arrivals can pick, including someone who just joined. The menu starts with India, then gulf, Singapore, London, Europe, the US, and Sydney. Their confirmation is only visible to them, and the menu stays on the card for the next person.
 
-Picking one gives them that role (`ist`, `gst`, `sgt`, `uk`, `cet`, `et`, `pt`, `aet`) and adds it to their nickname when the name is short enough, like `Venera · ist`. The server owner’s nickname cannot be changed. The role still shows on their profile. `/time` lists the current time in each zone. `/timezone` opens the same menu for anyone already in the server.
+Picking one gives them that role (`ist`, `gst`, `sgt`, `uk`, `cet`, `et`, `pt`, `aet`) and adds it to their nickname when the name is short enough, like `Venera · ist`. The server owner’s nickname cannot be changed. The role still shows on their profile. `/time` lists the current time in each zone.
 
 ## If something fails
 
@@ -186,4 +169,4 @@ Picking one gives them that role (`ist`, `gst`, `sgt`, `uk`, `cet`, `et`, `pt`, 
 - **Missing permissions.** Drag the bot role above `venus` and run `npm run setup` again.
 - **Two-factor required.** The server requires 2FA for admin actions. Enable 2FA on the owner account.
 - **Banner skipped.** The file is missing, or the server is below boost level 2.
-- **`/lounge` never appears.** Re-invite with both `bot` and `applications.commands`.
+- **`/time` never appears.** Re-invite with both `bot` and `applications.commands`, then restart `npm run bot`.
