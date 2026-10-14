@@ -146,7 +146,7 @@ Discord only shows the description on some servers (often once Community is on).
 - Posts a welcome in `#welcome` that mentions them. The mention is in the message, so it actually notifies them.
 - `/lounge` shows who is in voice right now. Empty rooms are left off the card. A muted person is marked.
 - `/cursor` sends a question to Cursor. Only the server owner can use it, and only in `#cursor`.
-- The welcome card in `#welcome` asks what time they are on. India is `ist`. Their answer becomes a role and, when it fits, a `· ist` suffix on their name. `/lounge` shows that clock next to anyone in voice. `/timezone` asks again.
+- The welcome card in `#welcome` asks what time they are on. India is `ist`. Their answer becomes a role. `/time` shows the current clock for everyone who picked. `/lounge` shows that clock next to anyone in voice. `/timezone` asks again.
 
 The commands are registered on this server only, so they appear as soon as the bot is online. Starting the bot again updates them instead of adding a second copy.
 
@@ -176,7 +176,7 @@ The repo defaults to `https://github.com/akemixcreative-source/cursor` on `main`
 
 The welcome card in `#welcome` ends with “what time are you on? india is ist.” and a menu. Anyone who can see arrivals can pick, including someone who just joined. The menu starts with India, then gulf, Singapore, London, Europe, the US, and Sydney. Their confirmation is only visible to them, and the menu stays on the card for the next person.
 
-Picking one gives them that role (`ist`, `gst`, `sgt`, `uk`, `cet`, `et`, `pt`, `aet`) and adds it to their nickname when the name is short enough, like `Venera · ist`. The server owner’s nickname cannot be changed. The role still shows on their profile. `/timezone` opens the same menu for anyone already in the server.
+Picking one gives them that role (`ist`, `gst`, `sgt`, `uk`, `cet`, `et`, `pt`, `aet`) and adds it to their nickname when the name is short enough, like `Venera · ist`. The server owner’s nickname cannot be changed. The role still shows on their profile. `/time` lists the current time in each zone. `/timezone` opens the same menu for anyone already in the server.
 
 ## If something fails
 

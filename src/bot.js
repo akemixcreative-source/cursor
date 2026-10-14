@@ -11,7 +11,15 @@ import {
 } from 'discord.js';
 import { COLORS, CURSOR_CHANNEL, doorEmbed } from './brand.js';
 import { CursorBridge, cursorSettings } from './cursor.js';
-import { isTimezoneName, timezoneMenu, withTimezone, zoneByKey, zoneOf } from './time.js';
+import {
+  isTimezoneName,
+  localTime,
+  minutesOfDay,
+  timezoneMenu,
+  withTimezone,
+  zoneByKey,
+  zoneOf,
+} from './time.js';
 import {
   DOOR_REASON,
   explain,
@@ -105,6 +113,7 @@ function commandList() {
         option.setName('fresh').setDescription('start a new cursor chat'),
       ),
     new SlashCommandBuilder().setName('timezone').setDescription('set the time you are on'),
+    new SlashCommandBuilder().setName('time').setDescription('what time it is for everyone'),
   ];
 }
 
@@ -125,7 +134,7 @@ async function onReady(client, guildId, cursorReady) {
     // Guild commands show up immediately. This replaces the bot's command
     // list in this server with /lounge, so a second start does not duplicate it.
     await guild.commands.set(commandList());
-    log.ok('registered  /lounge  /cursor  /timezone');
+    log.ok('registered  /lounge  /cursor  /timezone  /time');
     if (!cursorReady) log.warn('/cursor needs CURSOR_API_KEY in .env');
   } catch (error) {
     log.error(`could not register commands — ${explain(error)}`);
@@ -210,6 +219,10 @@ async function answer(interaction, guildId, bridge) {
   if (!interaction.isChatInputCommand()) return;
   if (interaction.commandName === 'timezone') {
     await offerTimezone(interaction, guildId);
+    return;
+  }
+  if (interaction.commandName === 'time') {
+    await showClocks(interaction, guildId);
     return;
   }
   if (interaction.commandName === 'cursor') {
@@ -381,6 +394,57 @@ function loungeEmbed(guild) {
     .setFooter({ text: 'venera studio' });
 }
 
+async function showClocks(interaction, guildId) {
+  if (interaction.guildId !== guildId) {
+    await interaction.reply({
+      content: "this command lives in venera's lounge.",
+      flags: MessageFlags.Ephemeral,
+    });
+    return;
+  }
+
+  await interaction.deferReply();
+  try {
+    const guild = interaction.guild ?? (await interaction.client.guilds.fetch(guildId));
+    await guild.members.fetch();
+    await interaction.editReply({
+      embeds: [clocksEmbed(guild)],
+      allowedMentions: { parse: [] },
+    });
+  } catch (error) {
+    log.error(explain(error));
+    const payload = { content: 'could not read the clocks just now.' };
+    if (interaction.deferred || interaction.replied) await interaction.editReply(payload);
+    else await interaction.reply({ ...payload, flags: MessageFlags.Ephemeral });
+  }
+}
+
+function clocksEmbed(guild) {
+  const now = new Date();
+  const groups = new Map();
+  for (const member of guild.members.cache.values()) {
+    if (member.user.bot) continue;
+    const zone = zoneOf(member);
+    if (!zone) continue;
+    const key = zone.key;
+    if (!groups.has(key)) groups.set(key, { zone, people: [] });
+    groups.get(key).people.push(member.displayName || member.user.username);
+  }
+
+  const lines = [...groups.values()]
+    .sort((left, right) => minutesOfDay(left.zone, now) - minutesOfDay(right.zone, now))
+    .map((group) => {
+      const names = group.people.sort((left, right) => left.localeCompare(right)).map(plain).join(' · ');
+      return `**${localTime(group.zone, now)}** · ${group.zone.name}\n${names}`;
+    });
+
+  return new EmbedBuilder()
+    .setColor(COLORS.flame)
+    .setTitle('the clocks')
+    .setDescription(lines.length > 0 ? lines.join('\n\n').slice(0, 4096) : 'nobody has picked a time yet. the menu is in #welcome.')
+    .setFooter({ text: 'venera studio' });
+}
+
 async function offerTimezone(interaction, guildId) {
   if (interaction.guildId !== guildId) {
     await interaction.reply({
@@ -429,11 +493,11 @@ async function chooseTimezone(interaction, guildId) {
     await stampTimezone(member, zone);
     log.ok(`${zone.name.padEnd(9, ' ')}${member.displayName}`);
     if (shared) {
-      await interaction.editReply({ content: `you're on ${zone.name}.` });
+      await interaction.editReply({ content: `you're on ${zone.name}. it's ${localTime(zone)}.` });
       await interaction.message.edit({ components: [timezoneMenu()] });
     } else {
       await interaction.editReply({
-        content: `you're on ${zone.name}.`,
+        content: `you're on ${zone.name}. it's ${localTime(zone)}.`,
         components: [],
       });
     }
@@ -482,7 +546,7 @@ function personLabel(member) {
   const zone = zoneOf(member);
   const shown = member.displayName || member.user?.username || 'someone';
   const base = zone ? shown.replace(new RegExp(` · ${zone.name}$`), '') : shown;
-  const name = `${plain(base)}${zone ? ` · ${zone.name}` : ''}`;
+  const name = `${plain(base)}${zone ? ` · ${localTime(zone)} ${zone.name}` : ''}`;
   const muted = Boolean(member.voice?.selfMute || member.voice?.serverMute);
   return muted ? `${name} (muted)` : name;
 }

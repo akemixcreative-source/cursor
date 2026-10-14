@@ -75,14 +75,14 @@ export const CURSOR_CHANNEL = 'cursor';
  * Offsets that move with daylight saving stay on the city, not a fixed number.
  */
 export const TIMEZONES = [
-  { key: 'ist', name: 'ist', label: 'ist · india', hint: 'kolkata · utc+5:30' },
-  { key: 'gst', name: 'gst', label: 'gst · gulf', hint: 'dubai · utc+4' },
-  { key: 'sgt', name: 'sgt', label: 'sgt · singapore', hint: 'singapore · utc+8' },
-  { key: 'uk', name: 'uk', label: 'uk · london', hint: 'london' },
-  { key: 'cet', name: 'cet', label: 'cet · europe', hint: 'paris' },
-  { key: 'et', name: 'et', label: 'et · us east', hint: 'new york' },
-  { key: 'pt', name: 'pt', label: 'pt · us west', hint: 'los angeles' },
-  { key: 'aet', name: 'aet', label: 'aet · sydney', hint: 'sydney' },
+  { key: 'ist', name: 'ist', iana: 'Asia/Kolkata', label: 'ist · india', hint: 'kolkata · utc+5:30' },
+  { key: 'gst', name: 'gst', iana: 'Asia/Dubai', label: 'gst · gulf', hint: 'dubai · utc+4' },
+  { key: 'sgt', name: 'sgt', iana: 'Asia/Singapore', label: 'sgt · singapore', hint: 'singapore · utc+8' },
+  { key: 'uk', name: 'uk', iana: 'Europe/London', label: 'uk · london', hint: 'london' },
+  { key: 'cet', name: 'cet', iana: 'Europe/Paris', label: 'cet · europe', hint: 'paris' },
+  { key: 'et', name: 'et', iana: 'America/New_York', label: 'et · us east', hint: 'new york' },
+  { key: 'pt', name: 'pt', iana: 'America/Los_Angeles', label: 'pt · us west', hint: 'los angeles' },
+  { key: 'aet', name: 'aet', iana: 'Australia/Sydney', label: 'aet · sydney', hint: 'sydney' },
 ];
 
 const KBPS_96 = 96_000;
