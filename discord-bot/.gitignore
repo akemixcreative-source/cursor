@@ -1,0 +1,8 @@
+.DS_Store
+.vscode/
+node_modules/
+*.log
+*.tar.gz
+.env
+# AdminLTE assets. The dashboard is off. Pull these from upstream if you turn it on.
+dashboard/public/

@@ -14,15 +14,18 @@ import {
   AFK_TIMEOUT,
   CATEGORIES,
   MARKERS,
+  COLORS,
   ROLES,
   SERVER_NAME,
   TAGLINE,
+  TIMEZONES,
   allChannels,
   assertBlueprint,
   rulesEmbed,
   welcomeEmbed,
 } from './brand.js';
-import { buildOverwrites } from './permissions.js';
+import { timezoneMenu } from './time.js';
+import { buildOverwrites, privateOverwrites } from './permissions.js';
 import {
   SETUP_REASON,
   emptyManifest,
@@ -121,6 +124,7 @@ async function configure(client, guildId, reset) {
   try {
     const roles = await stage('roles', () => ensureRoles(guild, manifest, built));
     await orderRoles(guild, roles);
+    await ensureTimezoneRoles(guild, manifest, built);
 
     const placed = await stage('channels', () => ensureChannels(guild, roles, manifest, built));
     await arrangeChannels(guild, placed);
@@ -234,6 +238,25 @@ async function ensureRole(guild, spec, manifest) {
   return role;
 }
 
+async function ensureTimezoneRoles(guild, manifest, built) {
+  log.step('time');
+  built.timezones = {};
+  for (const zone of TIMEZONES) {
+    const role = await ensureRole(
+      guild,
+      {
+        key: zone.key,
+        name: zone.name,
+        color: COLORS.guest,
+        hoist: false,
+        permissions: [],
+      },
+      { roles: manifest.timezones ?? {} },
+    );
+    built.timezones[zone.key] = role.id;
+  }
+}
+
 async function orderRoles(guild, roles) {
   await guild.roles.fetch();
   const me = await guild.members.fetchMe();
@@ -301,7 +324,8 @@ async function ensureChannels(guild, roles, manifest, built) {
 }
 
 async function ensureCategory(guild, spec, manifest, ids) {
-  const overwrites = buildOverwrites(spec.area, ids);
+  const overwrites =
+    spec.area === 'private' ? privateOverwrites(ids, guild.ownerId) : buildOverwrites(spec.area, ids);
   let category = findSaved(guild, manifest.categories?.[spec.key], ChannelType.GuildCategory);
   if (!category) {
     const named = [...guild.channels.cache.values()].filter(
@@ -472,6 +496,7 @@ async function ensureMessages(guild, manifest, built) {
     MARKERS.welcome,
     welcomeEmbed(),
     manifest.messages?.welcome,
+    [timezoneMenu()],
   );
   built.messages.rules = await upsertEmbed(
     guild,
@@ -482,7 +507,7 @@ async function ensureMessages(guild, manifest, built) {
   );
 }
 
-async function upsertEmbed(guild, channelId, marker, embed, knownId) {
+async function upsertEmbed(guild, channelId, marker, embed, knownId, components = []) {
   const channel = guild.channels.cache.get(channelId) ?? (await guild.channels.fetch(channelId));
   if (channel?.type !== ChannelType.GuildText) {
     throw new Error('Expected a text channel for the house message.');
@@ -490,13 +515,13 @@ async function upsertEmbed(guild, channelId, marker, embed, knownId) {
 
   const existing = await findMarked(channel, marker, knownId);
   if (existing) {
-    await existing.edit({ embeds: [embed] });
+    await existing.edit({ embeds: [embed], components });
     await pinQuietly(existing);
     noted('refreshed', `#${channel.name}`);
     return existing.id;
   }
 
-  const sent = await channel.send({ embeds: [embed] });
+  const sent = await channel.send({ embeds: [embed], components });
   await pinQuietly(sent);
   noted('posted', `#${channel.name}`);
   return sent.id;
@@ -671,7 +696,10 @@ async function resetManaged(guild, manifest) {
     ...Object.values(manifest.channels ?? {}),
     ...Object.values(manifest.categories ?? {}),
   ]);
-  const roleIds = new Set(Object.values(manifest.roles ?? {}));
+  const roleIds = new Set([
+    ...Object.values(manifest.roles ?? {}),
+    ...Object.values(manifest.timezones ?? {}),
+  ]);
 
   for (const spec of allChannels()) {
     const type = spec.kind === 'voice' ? ChannelType.GuildVoice : ChannelType.GuildText;
@@ -686,7 +714,7 @@ async function resetManaged(guild, manifest) {
       }
     }
   }
-  for (const spec of ROLES) {
+  for (const spec of [...ROLES, ...TIMEZONES]) {
     for (const role of guild.roles.cache.values()) {
       if (!role.managed && role.id !== guild.id && sameName(role.name, spec.name)) roleIds.add(role.id);
     }
@@ -753,6 +781,7 @@ async function loadManifest(guildId) {
       version: 1,
       guildId,
       roles: data.roles ?? {},
+      timezones: data.timezones ?? {},
       categories: data.categories ?? {},
       channels: data.channels ?? {},
       messages: data.messages ?? {},

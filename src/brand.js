@@ -17,7 +17,7 @@ export const COLORS = {
 };
 
 export const SERVER_NAME = "Venera's Lounge";
-export const TAGLINE = 'Launch videos that make startups look inevitable.';
+export const TAGLINE = 'Friends. Work, study, and chill.';
 
 /** 15 minutes. Discord only accepts 60, 300, 900, 1800, or 3600. */
 export const AFK_TIMEOUT = 900;
@@ -65,6 +65,24 @@ export const ROLES = [
     rank: 1,
     permissions: botPermissions,
   },
+];
+
+export const CURSOR_CHANNEL = 'cursor';
+
+/**
+ * Asked when someone joins. India is first because that is the house clock.
+ * The role name is what shows on their profile and in /lounge.
+ * Offsets that move with daylight saving stay on the city, not a fixed number.
+ */
+export const TIMEZONES = [
+  { key: 'ist', name: 'ist', iana: 'Asia/Kolkata', label: 'ist · india', hint: 'kolkata · utc+5:30' },
+  { key: 'gst', name: 'gst', iana: 'Asia/Dubai', label: 'gst · gulf', hint: 'dubai · utc+4' },
+  { key: 'sgt', name: 'sgt', iana: 'Asia/Singapore', label: 'sgt · singapore', hint: 'singapore · utc+8' },
+  { key: 'uk', name: 'uk', iana: 'Europe/London', label: 'uk · london', hint: 'london' },
+  { key: 'cet', name: 'cet', iana: 'Europe/Paris', label: 'cet · europe', hint: 'paris' },
+  { key: 'et', name: 'et', iana: 'America/New_York', label: 'et · us east', hint: 'new york' },
+  { key: 'pt', name: 'pt', iana: 'America/Los_Angeles', label: 'pt · us west', hint: 'los angeles' },
+  { key: 'aet', name: 'aet', iana: 'Australia/Sydney', label: 'aet · sydney', hint: 'sydney' },
 ];
 
 const KBPS_96 = 96_000;
@@ -123,6 +141,14 @@ export const CATEGORIES = [
       { key: 'inspo', name: 'inspo', kind: 'text', topic: 'craft, type, stills.' },
     ],
   },
+  {
+    key: 'cursor',
+    name: '✶ cursor',
+    area: 'private',
+    channels: [
+      { key: 'cursor', name: CURSOR_CHANNEL, kind: 'text', topic: 'only you. questions for cursor.' },
+    ],
+  },
 ];
 
 export function allChannels() {
@@ -137,13 +163,15 @@ export function welcomeEmbed() {
     .setTitle('venera')
     .setDescription(
       [
-        'Launch videos that make startups look inevitable.',
+        'A room for friends.',
         '',
-        'Designing brand with creative craft that founders and people love.',
+        'Work, study, and chill.',
         '',
         '— be cool',
         '— no spam',
         '— have fun',
+        '',
+        'what time are you on? india is ist.',
       ].join('\n'),
     )
     .setFooter({ text: MARKERS.welcome });
@@ -155,7 +183,7 @@ export function rulesEmbed() {
     .setTitle('house rules')
     .setDescription(
       [
-        'Motion design for founders. This room stays quiet.',
+        'Friends only. Work, study, and chill. This room stays quiet.',
         '',
         '— be cool. talk like you are in the room.',
         '— no spam. no ads, no floods, no noise for its own sake.',
@@ -176,7 +204,7 @@ export function doorEmbed(name) {
 }
 
 export function assertBlueprint() {
-  const areas = new Set(['arrivals', 'text', 'voice']);
+  const areas = new Set(['arrivals', 'text', 'voice', 'private']);
   const roleNames = new Set();
   const roleKeys = new Set();
   for (const role of ROLES) {
@@ -218,6 +246,14 @@ export function assertBlueprint() {
   if (!channels.focus.status) throw new Error('focus needs a join-muted note');
   if (ROLES.find((role) => role.key === 'venus').color !== COLORS.flame) {
     throw new Error('venus should be flame orange');
+  }
+  if (TIMEZONES[0]?.name !== 'ist') throw new Error('india should be the first timezone');
+  const zoneNames = new Set();
+  for (const zone of TIMEZONES) {
+    if (zoneNames.has(zone.name) || roleNames.has(zone.name)) {
+      throw new Error(`Timezone collides with another name: ${zone.name}`);
+    }
+    zoneNames.add(zone.name);
   }
 
   assertOverwrites();

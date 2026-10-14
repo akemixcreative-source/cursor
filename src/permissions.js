@@ -92,12 +92,34 @@ export function buildOverwrites(area, ids) {
     ];
   }
 
+  // The server owner is added separately. Venus is Administrator, so Discord
+  // still lets that role see the channel. The command itself refuses anyone
+  // who is not the owner.
+  if (area === 'private') {
+    return [
+      { id: everyone, deny: [ViewChannel] },
+      { id: guest, deny: [ViewChannel] },
+      { id: inner, deny: [ViewChannel] },
+      { id: bots, allow: [...read, SendMessages, EmbedLinks, AttachFiles] },
+    ];
+  }
+
   throw new Error(`Unknown channel area "${area}".`);
+}
+
+export function privateOverwrites(ids, ownerId) {
+  return [
+    ...buildOverwrites('private', ids),
+    {
+      id: ownerId,
+      allow: [...read, SendMessages, AddReactions, EmbedLinks, AttachFiles],
+    },
+  ];
 }
 
 export function assertOverwrites() {
   const ids = { everyone: '1', guest: '2', inner: '3', bots: '4' };
-  for (const area of ['arrivals', 'text', 'voice']) {
+  for (const area of ['arrivals', 'text', 'voice', 'private']) {
     for (const row of buildOverwrites(area, ids)) {
       const allow = new PermissionsBitField(row.allow ?? []).bitfield;
       const deny = new PermissionsBitField(row.deny ?? []).bitfield;
@@ -129,5 +151,16 @@ export function assertOverwrites() {
   const everyoneDeny = new PermissionsBitField(arrivalRows.find((row) => row.id === ids.everyone).deny);
   if (!everyoneAllow.has(ViewChannel) || !everyoneDeny.has(SendMessages)) {
     throw new Error('Arrivals should be view-only for @everyone.');
+  }
+
+  const hiddenRoom = buildOverwrites('private', ids);
+  const privateEveryone = new PermissionsBitField(hiddenRoom.find((row) => row.id === ids.everyone).deny);
+  const privateGuest = new PermissionsBitField(hiddenRoom.find((row) => row.id === ids.guest).deny);
+  const privateBot = new PermissionsBitField(hiddenRoom.find((row) => row.id === ids.bots).allow);
+  if (!privateEveryone.has(ViewChannel) || !privateGuest.has(ViewChannel)) {
+    throw new Error('The private room should be hidden from everyone except the owner.');
+  }
+  if (!privateBot.has(SendMessages)) {
+    throw new Error('The bot should be able to speak in the private room.');
   }
 }

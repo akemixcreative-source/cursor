@@ -5,15 +5,28 @@ import {
   EmbedBuilder,
   Events,
   GatewayIntentBits,
+  MessageFlags,
+  PermissionFlagsBits,
   SlashCommandBuilder,
 } from 'discord.js';
-import { COLORS, doorEmbed } from './brand.js';
+import { COLORS, CURSOR_CHANNEL, doorEmbed } from './brand.js';
+import { CursorBridge, cursorSettings } from './cursor.js';
+import {
+  isTimezoneName,
+  localTime,
+  minutesOfDay,
+  timezoneMenu,
+  withTimezone,
+  zoneByKey,
+  zoneOf,
+} from './time.js';
 import {
   DOOR_REASON,
   explain,
   isDirectRun,
   loadEnv,
   log,
+  paths,
   requireEnv,
   sameName,
 } from './util.js';
@@ -24,13 +37,15 @@ const HELP = `usage
 
 const missingRoles = new Set();
 const recentArrivals = new Set();
+let cursorBusy = false;
 
 /**
  * Always-on door for Venera's Lounge.
  *
  * Setup leaves arrivals readable by everyone and hides the rest until a
  * person has the guest role. This process hands that role out, posts a
- * short welcome, and answers /lounge with who is in voice.
+ * short welcome, asks which timezone they keep, answers /lounge with who
+ * is in voice, and sends /cursor questions to a Cursor cloud agent.
  */
 async function main() {
   if (process.argv.includes('--help') || process.argv.includes('-h')) {
@@ -40,6 +55,8 @@ async function main() {
 
   loadEnv();
   const { token, guildId } = requireEnv();
+  const cursor = cursorSettings();
+  const bridge = new CursorBridge({ ...cursor, statePath: paths.bridge });
   const client = new Client({
     intents: [
       GatewayIntentBits.Guilds,
@@ -49,7 +66,7 @@ async function main() {
   });
 
   client.on('error', (error) => log.error(explain(error)));
-  client.once(Events.ClientReady, (ready) => onReady(ready, guildId));
+  client.once(Events.ClientReady, (ready) => onReady(ready, guildId, Boolean(cursor.apiKey)));
   client.on(Events.GuildMemberAdd, (member) => {
     receive(member, guildId).catch((error) => log.error(explain(error)));
   });
@@ -59,7 +76,7 @@ async function main() {
     }
   });
   client.on(Events.InteractionCreate, (interaction) => {
-    answer(interaction, guildId).catch((error) => log.error(explain(error)));
+    answer(interaction, guildId, bridge).catch((error) => log.error(explain(error)));
   });
 
   const shutdown = () => {
@@ -79,7 +96,28 @@ async function main() {
   }
 }
 
-async function onReady(client, guildId) {
+function commandList() {
+  return [
+    new SlashCommandBuilder().setName('lounge').setDescription('who is in voice right now'),
+    new SlashCommandBuilder()
+      .setName('cursor')
+      .setDescription('send a question to cursor')
+      .setDefaultMemberPermissions(PermissionFlagsBits.Administrator)
+      .addStringOption((option) =>
+        option.setName('query').setDescription('what to ask').setRequired(true).setMaxLength(4000),
+      )
+      .addBooleanOption((option) =>
+        option.setName('build').setDescription('let cursor change the project and open a pull request'),
+      )
+      .addBooleanOption((option) =>
+        option.setName('fresh').setDescription('start a new cursor chat'),
+      ),
+    new SlashCommandBuilder().setName('timezone').setDescription('set the time you are on'),
+    new SlashCommandBuilder().setName('time').setDescription('what time it is for everyone'),
+  ];
+}
+
+async function onReady(client, guildId, cursorReady) {
   log.banner('door');
   log.ok(`signed in as ${client.user.tag}`);
   try {
@@ -95,12 +133,11 @@ async function onReady(client, guildId) {
     const guild = await client.guilds.fetch(guildId);
     // Guild commands show up immediately. This replaces the bot's command
     // list in this server with /lounge, so a second start does not duplicate it.
-    await guild.commands.set([
-      new SlashCommandBuilder().setName('lounge').setDescription('who is in voice right now'),
-    ]);
-    log.ok('registered  /lounge');
+    await guild.commands.set(commandList());
+    log.ok('registered  /lounge  /cursor  /timezone  /time');
+    if (!cursorReady) log.warn('/cursor needs CURSOR_API_KEY in .env');
   } catch (error) {
-    log.error(`could not register /lounge — ${explain(error)}`);
+    log.error(`could not register commands — ${explain(error)}`);
     if (error.code === 50001) {
       log.warn('re-invite the bot with the bot and applications.commands scopes.');
     }
@@ -128,6 +165,7 @@ async function receive(member, guildId) {
   } catch (error) {
     log.error(`welcome — ${explain(error)}`);
   }
+
 }
 
 function claim(id) {
@@ -173,13 +211,30 @@ async function announce(member) {
   log.ok(`${'welcome'.padEnd(9, ' ')}${name}`);
 }
 
-async function answer(interaction, guildId) {
-  if (!interaction.isChatInputCommand() || interaction.commandName !== 'lounge') return;
+async function answer(interaction, guildId, bridge) {
+  if (interaction.isStringSelectMenu() && (interaction.customId === 'tz' || interaction.customId.startsWith('tz:'))) {
+    await chooseTimezone(interaction, guildId);
+    return;
+  }
+  if (!interaction.isChatInputCommand()) return;
+  if (interaction.commandName === 'timezone') {
+    await offerTimezone(interaction, guildId);
+    return;
+  }
+  if (interaction.commandName === 'time') {
+    await showClocks(interaction, guildId);
+    return;
+  }
+  if (interaction.commandName === 'cursor') {
+    await askCursor(interaction, guildId, bridge);
+    return;
+  }
+  if (interaction.commandName !== 'lounge') return;
 
   if (interaction.guildId !== guildId) {
     await interaction.reply({
       content: "this command lives in venera's lounge.",
-      ephemeral: true,
+      flags: MessageFlags.Ephemeral,
     });
     return;
   }
@@ -197,8 +252,124 @@ async function answer(interaction, guildId) {
     log.error(explain(error));
     const payload = { content: 'could not look at the rooms just now.' };
     if (interaction.deferred || interaction.replied) await interaction.editReply(payload);
-    else await interaction.reply({ ...payload, ephemeral: true });
+    else await interaction.reply({ ...payload, flags: MessageFlags.Ephemeral });
   }
+}
+
+async function askCursor(interaction, guildId, bridge) {
+  if (interaction.guildId !== guildId) {
+    await interaction.reply({
+      content: "this command lives in venera's lounge.",
+      flags: MessageFlags.Ephemeral,
+    });
+    return;
+  }
+  const guild = interaction.guild ?? (await interaction.client.guilds.fetch(guildId));
+  if (interaction.user.id !== guild.ownerId) {
+    await interaction.reply({
+      content: 'only you can send questions to cursor.',
+      flags: MessageFlags.Ephemeral,
+    });
+    return;
+  }
+  if (interaction.channel?.name !== CURSOR_CHANNEL) {
+    await interaction.reply({
+      content: 'ask in #cursor.',
+      flags: MessageFlags.Ephemeral,
+    });
+    return;
+  }
+
+  const query = interaction.options.getString('query', true).trim();
+  if (!query) {
+    await interaction.reply({ content: 'write the question after the command.', flags: MessageFlags.Ephemeral });
+    return;
+  }
+  if (!bridge.apiKey) {
+    await interaction.reply({
+      content: 'add CURSOR_API_KEY to .env and restart the bot. the key is on Cursor Dashboard → API Keys.',
+      flags: MessageFlags.Ephemeral,
+    });
+    return;
+  }
+  if (cursorBusy) {
+    await interaction.reply({ content: 'cursor is still on the last question.', flags: MessageFlags.Ephemeral });
+    return;
+  }
+
+  const name = interaction.member?.displayName || interaction.user.username;
+  const build = interaction.options.getBoolean('build') ?? false;
+  const fresh = interaction.options.getBoolean('fresh') ?? false;
+  cursorBusy = true;
+  await interaction.deferReply();
+  try {
+    const sent = await bridge.send({ name, query, build, fresh });
+    log.ok(`${'cursor'.padEnd(9, ' ')}${name}`);
+    await interaction.editReply({
+      embeds: [sentEmbed(sent, query)],
+      allowedMentions: { parse: [] },
+    });
+    deliverCursor(interaction, bridge, sent).finally(() => {
+      cursorBusy = false;
+    });
+  } catch (error) {
+    cursorBusy = false;
+    log.error(explain(error));
+    const payload = { content: error.message || 'cursor could not take that question.' };
+    if (interaction.deferred || interaction.replied) await interaction.editReply(payload);
+    else await interaction.reply({ ...payload, flags: MessageFlags.Ephemeral });
+  }
+}
+
+async function deliverCursor(interaction, bridge, sent) {
+  try {
+    const run = await bridge.wait(sent.agentId, sent.runId);
+    const embeds = [resultEmbed(run, sent)];
+    const payload = {
+      content: `${interaction.user}`,
+      embeds,
+      allowedMentions: { parse: [], users: [interaction.user.id] },
+    };
+    try {
+      await interaction.followUp(payload);
+    } catch {
+      await interaction.channel?.send(payload);
+    }
+  } catch (error) {
+    log.error(explain(error));
+    const payload = {
+      content: `${interaction.user} cursor could not finish that question. ${sent.url}`,
+      allowedMentions: { parse: [], users: [interaction.user.id] },
+    };
+    await interaction.followUp(payload).catch(() => interaction.channel?.send(payload));
+  }
+}
+
+function sentEmbed(sent, query) {
+  return new EmbedBuilder()
+    .setColor(COLORS.flame)
+    .setTitle(sent.continued ? 'still with cursor' : 'sent to cursor')
+    .setURL(sent.url)
+    .setDescription(plain(query).slice(0, 500))
+    .setFooter({ text: sent.build ? 'cursor will change the project' : 'cursor is answering' });
+}
+
+function resultEmbed(run, sent) {
+  const finished = run?.status === 'FINISHED';
+  const text =
+    typeof run?.result === 'string' && run.result.trim()
+      ? run.result.trim()
+      : finished
+        ? 'cursor finished. the chat has the rest.'
+        : run
+          ? 'cursor stopped before it could answer.'
+          : 'cursor is still working. open the chat for the rest.';
+  return new EmbedBuilder()
+    .setColor(COLORS.flame)
+    .setTitle('cursor')
+    .setURL(sent.url)
+    .setDescription(text.slice(0, 4000))
+    .setFooter({ text: 'venera studio' });
 }
 
 function loungeEmbed(guild) {
@@ -223,8 +394,159 @@ function loungeEmbed(guild) {
     .setFooter({ text: 'venera studio' });
 }
 
+async function showClocks(interaction, guildId) {
+  if (interaction.guildId !== guildId) {
+    await interaction.reply({
+      content: "this command lives in venera's lounge.",
+      flags: MessageFlags.Ephemeral,
+    });
+    return;
+  }
+
+  await interaction.deferReply();
+  try {
+    const guild = interaction.guild ?? (await interaction.client.guilds.fetch(guildId));
+    await guild.members.fetch();
+    await interaction.editReply({
+      embeds: [clocksEmbed(guild)],
+      allowedMentions: { parse: [] },
+    });
+  } catch (error) {
+    log.error(explain(error));
+    const payload = { content: 'could not read the clocks just now.' };
+    if (interaction.deferred || interaction.replied) await interaction.editReply(payload);
+    else await interaction.reply({ ...payload, flags: MessageFlags.Ephemeral });
+  }
+}
+
+function clocksEmbed(guild) {
+  const now = new Date();
+  const groups = new Map();
+  for (const member of guild.members.cache.values()) {
+    if (member.user.bot) continue;
+    const zone = zoneOf(member);
+    if (!zone) continue;
+    const key = zone.key;
+    if (!groups.has(key)) groups.set(key, { zone, people: [] });
+    groups.get(key).people.push(member.displayName || member.user.username);
+  }
+
+  const lines = [...groups.values()]
+    .sort((left, right) => minutesOfDay(left.zone, now) - minutesOfDay(right.zone, now))
+    .map((group) => {
+      const names = group.people.sort((left, right) => left.localeCompare(right)).map(plain).join(' · ');
+      return `**${localTime(group.zone, now)}** · ${group.zone.name}\n${names}`;
+    });
+
+  return new EmbedBuilder()
+    .setColor(COLORS.flame)
+    .setTitle('the clocks')
+    .setDescription(lines.length > 0 ? lines.join('\n\n').slice(0, 4096) : 'nobody has picked a time yet. the menu is in #welcome.')
+    .setFooter({ text: 'venera studio' });
+}
+
+async function offerTimezone(interaction, guildId) {
+  if (interaction.guildId !== guildId) {
+    await interaction.reply({
+      content: "this command lives in venera's lounge.",
+      flags: MessageFlags.Ephemeral,
+    });
+    return;
+  }
+  await interaction.reply({
+    content: 'what time are you on? india is ist.',
+    components: [timezoneMenu(interaction.user.id)],
+    flags: MessageFlags.Ephemeral,
+  });
+}
+
+async function chooseTimezone(interaction, guildId) {
+  const shared = interaction.customId === 'tz';
+  const ownerId = shared ? interaction.user.id : interaction.customId.slice(3);
+  if (interaction.user.id !== ownerId) {
+    await interaction.reply({ content: 'that one is for someone else.', flags: MessageFlags.Ephemeral });
+    return;
+  }
+  if (interaction.guildId && interaction.guildId !== guildId) {
+    await interaction.reply({
+      content: "this menu lives in venera's lounge.",
+      flags: MessageFlags.Ephemeral,
+    });
+    return;
+  }
+
+  const zone = zoneByKey(interaction.values[0]);
+  if (!zone) {
+    await interaction.reply(quiet('that timezone is not on the list.'));
+    return;
+  }
+
+  // Discord drops the click if it is not acknowledged within three seconds.
+  // The role change can take longer than that, so answer first.
+  if (shared) await interaction.deferReply({ flags: MessageFlags.Ephemeral });
+  else await interaction.deferUpdate();
+
+  try {
+    const guild = interaction.guild ?? (await interaction.client.guilds.fetch(guildId));
+    const member = await guild.members.fetch(interaction.user.id);
+    await applyTimezone(member, zone);
+    await stampTimezone(member, zone);
+    log.ok(`${zone.name.padEnd(9, ' ')}${member.displayName}`);
+    if (shared) {
+      await interaction.editReply({ content: `you're on ${zone.name}. it's ${localTime(zone)}.` });
+      await interaction.message.edit({ components: [timezoneMenu()] });
+    } else {
+      await interaction.editReply({
+        content: `you're on ${zone.name}. it's ${localTime(zone)}.`,
+        components: [],
+      });
+    }
+  } catch (error) {
+    log.error(explain(error));
+    const payload = quiet('the timezone roles are missing. run npm run setup, then try again.');
+    if (shared) await interaction.editReply(payload);
+    else if (interaction.deferred || interaction.replied) await interaction.followUp(payload);
+    else await interaction.reply(payload);
+  }
+}
+
+function quiet(content) {
+  return { content, flags: MessageFlags.Ephemeral };
+}
+
+async function applyTimezone(member, zone) {
+  const roles = await member.guild.roles.fetch();
+  const wanted = roles.find((role) => sameName(role.name, zone.name));
+  if (!wanted) {
+    const error = new Error(`missing ${zone.name} role`);
+    error.handled = true;
+    throw error;
+  }
+
+  const extras = roles.filter(
+    (role) => role.id !== wanted.id && isTimezoneName(role.name) && member.roles.cache.has(role.id),
+  );
+  if (extras.size) await member.roles.remove([...extras.values()], DOOR_REASON);
+  if (!member.roles.cache.has(wanted.id)) await member.roles.add(wanted, DOOR_REASON);
+}
+
+async function stampTimezone(member, zone) {
+  if (member.user.bot || member.id === member.guild.ownerId) return;
+  const current = member.nickname || member.user.username;
+  const next = withTimezone(current, zone.name);
+  if (!next || next === member.nickname) return;
+  try {
+    await member.setNickname(next, DOOR_REASON);
+  } catch (error) {
+    log.warn(`nickname — ${explain(error)}`);
+  }
+}
+
 function personLabel(member) {
-  const name = plain(member.displayName || member.user?.username || 'someone');
+  const zone = zoneOf(member);
+  const shown = member.displayName || member.user?.username || 'someone';
+  const base = zone ? shown.replace(new RegExp(` · ${zone.name}$`), '') : shown;
+  const name = `${plain(base)}${zone ? ` · ${localTime(zone)} ${zone.name}` : ''}`;
   const muted = Boolean(member.voice?.selfMute || member.voice?.serverMute);
   return muted ? `${name} (muted)` : name;
 }
