@@ -7,16 +7,17 @@ import {
   venusPermissions,
 } from './permissions.js';
 
+// Tokens from venerastudio.com: --bg, --fg, --fg-muted, --flame, --surface-2.
 export const COLORS = {
   black: 0x000000, // #000000
   offWhite: 0xf5f0e8, // #F5F0E8
   flame: 0xff4500, // #FF4500
-  guest: 0x8a8a8a, // #8A8A8A
-  bots: 0x3a3a3a, // #3A3A3A
+  guest: 0x8a8580, // #8A8580
+  bots: 0x242424, // #242424
 };
 
 export const SERVER_NAME = "Venera's Lounge";
-export const TAGLINE = 'a private room for familiar voices.';
+export const TAGLINE = 'Launch videos that make startups look inevitable.';
 
 /** 15 minutes. Discord only accepts 60, 300, 900, 1800, or 3600. */
 export const AFK_TIMEOUT = 900;
@@ -85,8 +86,8 @@ export const CATEGORIES = [
     area: 'text',
     channels: [
       { key: 'general', name: 'general', kind: 'text', topic: 'the room.' },
-      { key: 'links', name: 'links-and-finds', kind: 'text', topic: 'links worth keeping.' },
-      { key: 'clips', name: 'clips-and-media', kind: 'text', topic: 'clips, stills, things worth seeing.' },
+      { key: 'links', name: 'links-and-finds', kind: 'text', topic: 'references worth keeping.' },
+      { key: 'clips', name: 'clips-and-media', kind: 'text', topic: 'films, stills, product motion.' },
       { key: 'music', name: 'music', kind: 'text', topic: 'what the room is playing.' },
       { key: 'late', name: 'late-night', kind: 'text', topic: 'no rules vibe. still sfw.' },
     ],
@@ -119,7 +120,7 @@ export const CATEGORIES = [
     area: 'text',
     channels: [
       { key: 'wip', name: 'wip', kind: 'text', topic: 'works in progress.' },
-      { key: 'inspo', name: 'inspo', kind: 'text', topic: 'references, stills, moods.' },
+      { key: 'inspo', name: 'inspo', kind: 'text', topic: 'craft, type, stills.' },
     ],
   },
 ];
@@ -133,12 +134,12 @@ export function allChannels() {
 export function welcomeEmbed() {
   return new EmbedBuilder()
     .setColor(COLORS.flame)
-    .setTitle("venera's lounge")
+    .setTitle('venera')
     .setDescription(
       [
-        'the evening is open.',
+        'Launch videos that make startups look inevitable.',
         '',
-        'a private room — video, a screen, familiar voices.',
+        'Designing brand with creative craft that founders and people love.',
         '',
         '— be cool',
         '— no spam',
@@ -154,6 +155,8 @@ export function rulesEmbed() {
     .setTitle('house rules')
     .setDescription(
       [
+        'Motion design for founders. This room stays quiet.',
+        '',
         '— be cool. talk like you are in the room.',
         '— no spam. no ads, no floods, no noise for its own sake.',
         '— have fun. the night is the point.',

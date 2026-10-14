@@ -92,8 +92,8 @@ Roles, top to bottom:
 | --- | --- | --- |
 | `venus` | `#FF4500` | Server owner. Administrator, hoisted. |
 | `inner circle` | `#F5F0E8` | Close friends. Hoisted. Can move and mute in voice. |
-| `guest` | `#8A8A8A` | Everyone else. Can talk and join voice. |
-| `bots` | `#3A3A3A` | Bot accounts. |
+| `guest` | `#8A8580` | Everyone else. Can talk and join voice. |
+| `bots` | `#242424` | Bot accounts. |
 
 `@everyone` can read **✦ arrivals** and nothing else. `guest` opens the rest of the server. `venus` can still write in the read-only channels, because Administrator bypasses channel overwrites. That is Discord, not a setting this script can turn off.
 
@@ -125,7 +125,7 @@ An existing `#general` is moved under **◐ the lounge** instead of duplicated. 
 Server settings:
 
 - Name: `Venera's Lounge`
-- Description: `a private room for familiar voices.`
+- Description: `Launch videos that make startups look inevitable.`
 - System messages: `#welcome`
 - Verification: low (verified email)
 - Notifications: mentions only
