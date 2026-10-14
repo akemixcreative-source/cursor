@@ -24,7 +24,7 @@ import {
   rulesEmbed,
   welcomeEmbed,
 } from './brand.js';
-import { buildOverwrites } from './permissions.js';
+import { buildOverwrites, privateOverwrites } from './permissions.js';
 import {
   SETUP_REASON,
   emptyManifest,
@@ -323,7 +323,8 @@ async function ensureChannels(guild, roles, manifest, built) {
 }
 
 async function ensureCategory(guild, spec, manifest, ids) {
-  const overwrites = buildOverwrites(spec.area, ids);
+  const overwrites =
+    spec.area === 'private' ? privateOverwrites(ids, guild.ownerId) : buildOverwrites(spec.area, ids);
   let category = findSaved(guild, manifest.categories?.[spec.key], ChannelType.GuildCategory);
   if (!category) {
     const named = [...guild.channels.cache.values()].filter(

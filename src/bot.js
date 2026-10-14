@@ -8,7 +8,7 @@ import {
   PermissionFlagsBits,
   SlashCommandBuilder,
 } from 'discord.js';
-import { COLORS, doorEmbed } from './brand.js';
+import { COLORS, CURSOR_CHANNEL, doorEmbed } from './brand.js';
 import { CursorBridge, cursorSettings } from './cursor.js';
 import { isTimezoneName, timezoneMenu, withTimezone, zoneByKey, zoneOf } from './time.js';
 import {
@@ -255,9 +255,17 @@ async function askCursor(interaction, guildId, bridge) {
     });
     return;
   }
-  if (!interaction.memberPermissions?.has(PermissionFlagsBits.Administrator)) {
+  const guild = interaction.guild ?? (await interaction.client.guilds.fetch(guildId));
+  if (interaction.user.id !== guild.ownerId) {
     await interaction.reply({
-      content: 'only venus can send questions to cursor.',
+      content: 'only you can send questions to cursor.',
+      ephemeral: true,
+    });
+    return;
+  }
+  if (interaction.channel?.name !== CURSOR_CHANNEL) {
+    await interaction.reply({
+      content: 'ask in #cursor.',
       ephemeral: true,
     });
     return;

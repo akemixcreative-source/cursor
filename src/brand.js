@@ -67,6 +67,8 @@ export const ROLES = [
   },
 ];
 
+export const CURSOR_CHANNEL = 'cursor';
+
 /**
  * Asked when someone joins. India is first because that is the house clock.
  * The role name is what shows on their profile and in /lounge.
@@ -139,6 +141,14 @@ export const CATEGORIES = [
       { key: 'inspo', name: 'inspo', kind: 'text', topic: 'craft, type, stills.' },
     ],
   },
+  {
+    key: 'cursor',
+    name: '✶ cursor',
+    area: 'private',
+    channels: [
+      { key: 'cursor', name: CURSOR_CHANNEL, kind: 'text', topic: 'only you. questions for cursor.' },
+    ],
+  },
 ];
 
 export function allChannels() {
@@ -192,7 +202,7 @@ export function doorEmbed(name) {
 }
 
 export function assertBlueprint() {
-  const areas = new Set(['arrivals', 'text', 'voice']);
+  const areas = new Set(['arrivals', 'text', 'voice', 'private']);
   const roleNames = new Set();
   const roleKeys = new Set();
   for (const role of ROLES) {
