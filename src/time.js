@@ -6,7 +6,7 @@ const MARK = ' · ';
 export function timezoneMenu(userId) {
   return new ActionRowBuilder().addComponents(
     new StringSelectMenuBuilder()
-      .setCustomId(`tz:${userId}`)
+      .setCustomId(userId ? `tz:${userId}` : 'tz')
       .setPlaceholder('what time are you on?')
       .addOptions(
         TIMEZONES.map((zone) => ({

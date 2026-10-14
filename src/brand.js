@@ -170,6 +170,8 @@ export function welcomeEmbed() {
         '— be cool',
         '— no spam',
         '— have fun',
+        '',
+        'what time are you on? india is ist.',
       ].join('\n'),
     )
     .setFooter({ text: MARKERS.welcome });

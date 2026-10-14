@@ -156,11 +156,6 @@ async function receive(member, guildId) {
     log.error(`welcome — ${explain(error)}`);
   }
 
-  try {
-    await askTimezone(member);
-  } catch (error) {
-    log.error(`timezone — ${explain(error)}`);
-  }
 }
 
 function claim(id) {
@@ -385,36 +380,6 @@ function loungeEmbed(guild) {
     .setFooter({ text: 'venera studio' });
 }
 
-async function askTimezone(member) {
-  if (zoneOf(member)) return;
-  const prompt = 'what time are you on? india is ist.';
-  try {
-    await member.send({
-      content: prompt,
-      components: [timezoneMenu(member.id)],
-      allowedMentions: { parse: [] },
-    });
-    log.ok(`${'time'.padEnd(9, ' ')}asked ${member.displayName}`);
-    return;
-  } catch {
-    log.warn(`dms are closed for ${member.displayName}. asking in #general.`);
-  }
-
-  const channel = member.guild.channels.cache.find(
-    (item) => item.type === ChannelType.GuildText && item.name === 'general',
-  );
-  if (!channel) {
-    log.warn('missing #general. run npm run setup.');
-    return;
-  }
-  await channel.send({
-    content: `${member} ${prompt}`,
-    components: [timezoneMenu(member.id)],
-    allowedMentions: { parse: [], users: [member.id] },
-  });
-  log.ok(`${'time'.padEnd(9, ' ')}asked ${member.displayName}`);
-}
-
 async function offerTimezone(interaction, guildId) {
   if (interaction.guildId !== guildId) {
     await interaction.reply({
@@ -431,7 +396,8 @@ async function offerTimezone(interaction, guildId) {
 }
 
 async function chooseTimezone(interaction, guildId) {
-  const ownerId = interaction.customId.slice(3);
+  const shared = interaction.customId === 'tz';
+  const ownerId = shared ? interaction.user.id : interaction.customId.slice(3);
   if (interaction.user.id !== ownerId) {
     await interaction.reply({ content: 'that one is for someone else.', ephemeral: true });
     return;
@@ -456,6 +422,11 @@ async function chooseTimezone(interaction, guildId) {
     await applyTimezone(member, zone);
     await stampTimezone(member, zone);
     log.ok(`${zone.name.padEnd(9, ' ')}${member.displayName}`);
+    if (shared) {
+      await interaction.reply({ content: `you're on ${zone.name}.`, ephemeral: true });
+      await interaction.message.edit({ components: [timezoneMenu()] });
+      return;
+    }
     await interaction.update({
       content: `you're on ${zone.name}.`,
       components: [],

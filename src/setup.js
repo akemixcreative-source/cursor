@@ -24,6 +24,7 @@ import {
   rulesEmbed,
   welcomeEmbed,
 } from './brand.js';
+import { timezoneMenu } from './time.js';
 import { buildOverwrites, privateOverwrites } from './permissions.js';
 import {
   SETUP_REASON,
@@ -495,6 +496,7 @@ async function ensureMessages(guild, manifest, built) {
     MARKERS.welcome,
     welcomeEmbed(),
     manifest.messages?.welcome,
+    [timezoneMenu()],
   );
   built.messages.rules = await upsertEmbed(
     guild,
@@ -505,7 +507,7 @@ async function ensureMessages(guild, manifest, built) {
   );
 }
 
-async function upsertEmbed(guild, channelId, marker, embed, knownId) {
+async function upsertEmbed(guild, channelId, marker, embed, knownId, components = []) {
   const channel = guild.channels.cache.get(channelId) ?? (await guild.channels.fetch(channelId));
   if (channel?.type !== ChannelType.GuildText) {
     throw new Error('Expected a text channel for the house message.');
@@ -513,13 +515,13 @@ async function upsertEmbed(guild, channelId, marker, embed, knownId) {
 
   const existing = await findMarked(channel, marker, knownId);
   if (existing) {
-    await existing.edit({ embeds: [embed] });
+    await existing.edit({ embeds: [embed], components });
     await pinQuietly(existing);
     noted('refreshed', `#${channel.name}`);
     return existing.id;
   }
 
-  const sent = await channel.send({ embeds: [embed] });
+  const sent = await channel.send({ embeds: [embed], components });
   await pinQuietly(sent);
   noted('posted', `#${channel.name}`);
   return sent.id;

@@ -5,6 +5,7 @@ import { timezoneMenu, withTimezone, zoneByKey, zoneOf } from '../src/time.js';
 test('india is the first choice on the menu', () => {
   const menu = timezoneMenu('42').toJSON().components[0];
   assert.equal(menu.custom_id, 'tz:42');
+  assert.equal(timezoneMenu().toJSON().components[0].custom_id, 'tz');
   assert.equal(menu.options[0].value, 'ist');
   assert.match(menu.options[0].label, /india/);
   assert.equal(zoneByKey('ist').name, 'ist');
