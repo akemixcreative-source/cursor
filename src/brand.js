@@ -17,7 +17,7 @@ export const COLORS = {
 };
 
 export const SERVER_NAME = "Venera's Lounge";
-export const TAGLINE = 'Launch videos that make startups look inevitable.';
+export const TAGLINE = 'Friends. Work, study, and chill.';
 
 /** 15 minutes. Discord only accepts 60, 300, 900, 1800, or 3600. */
 export const AFK_TIMEOUT = 900;
@@ -163,9 +163,9 @@ export function welcomeEmbed() {
     .setTitle('venera')
     .setDescription(
       [
-        'Launch videos that make startups look inevitable.',
+        'A room for friends.',
         '',
-        'Designing brand with creative craft that founders and people love.',
+        'Work, study, and chill.',
         '',
         '— be cool',
         '— no spam',
@@ -183,7 +183,7 @@ export function rulesEmbed() {
     .setTitle('house rules')
     .setDescription(
       [
-        'Motion design for founders. This room stays quiet.',
+        'Friends only. Work, study, and chill. This room stays quiet.',
         '',
         '— be cool. talk like you are in the room.',
         '— no spam. no ads, no floods, no noise for its own sake.',

@@ -127,7 +127,7 @@ An existing `#general` is moved under **◐ the lounge** instead of duplicated. 
 Server settings:
 
 - Name: `Venera's Lounge`
-- Description: `Launch videos that make startups look inevitable.`
+- Description: `Friends. Work, study, and chill.`
 - System messages: `#welcome`
 - Verification: low (verified email)
 - Notifications: mentions only
