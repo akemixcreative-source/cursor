@@ -203,7 +203,7 @@ async function announce(member) {
 }
 
 async function answer(interaction, guildId, bridge) {
-  if (interaction.isStringSelectMenu() && interaction.customId.startsWith('tz:')) {
+  if (interaction.isStringSelectMenu() && (interaction.customId === 'tz' || interaction.customId.startsWith('tz:'))) {
     await chooseTimezone(interaction, guildId);
     return;
   }
