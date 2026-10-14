@@ -5,6 +5,7 @@ import {
   EmbedBuilder,
   Events,
   GatewayIntentBits,
+  MessageFlags,
   PermissionFlagsBits,
   SlashCommandBuilder,
 } from 'discord.js';
@@ -220,7 +221,7 @@ async function answer(interaction, guildId, bridge) {
   if (interaction.guildId !== guildId) {
     await interaction.reply({
       content: "this command lives in venera's lounge.",
-      ephemeral: true,
+      flags: MessageFlags.Ephemeral,
     });
     return;
   }
@@ -238,7 +239,7 @@ async function answer(interaction, guildId, bridge) {
     log.error(explain(error));
     const payload = { content: 'could not look at the rooms just now.' };
     if (interaction.deferred || interaction.replied) await interaction.editReply(payload);
-    else await interaction.reply({ ...payload, ephemeral: true });
+    else await interaction.reply({ ...payload, flags: MessageFlags.Ephemeral });
   }
 }
 
@@ -246,7 +247,7 @@ async function askCursor(interaction, guildId, bridge) {
   if (interaction.guildId !== guildId) {
     await interaction.reply({
       content: "this command lives in venera's lounge.",
-      ephemeral: true,
+      flags: MessageFlags.Ephemeral,
     });
     return;
   }
@@ -254,32 +255,32 @@ async function askCursor(interaction, guildId, bridge) {
   if (interaction.user.id !== guild.ownerId) {
     await interaction.reply({
       content: 'only you can send questions to cursor.',
-      ephemeral: true,
+      flags: MessageFlags.Ephemeral,
     });
     return;
   }
   if (interaction.channel?.name !== CURSOR_CHANNEL) {
     await interaction.reply({
       content: 'ask in #cursor.',
-      ephemeral: true,
+      flags: MessageFlags.Ephemeral,
     });
     return;
   }
 
   const query = interaction.options.getString('query', true).trim();
   if (!query) {
-    await interaction.reply({ content: 'write the question after the command.', ephemeral: true });
+    await interaction.reply({ content: 'write the question after the command.', flags: MessageFlags.Ephemeral });
     return;
   }
   if (!bridge.apiKey) {
     await interaction.reply({
       content: 'add CURSOR_API_KEY to .env and restart the bot. the key is on Cursor Dashboard → API Keys.',
-      ephemeral: true,
+      flags: MessageFlags.Ephemeral,
     });
     return;
   }
   if (cursorBusy) {
-    await interaction.reply({ content: 'cursor is still on the last question.', ephemeral: true });
+    await interaction.reply({ content: 'cursor is still on the last question.', flags: MessageFlags.Ephemeral });
     return;
   }
 
@@ -303,7 +304,7 @@ async function askCursor(interaction, guildId, bridge) {
     log.error(explain(error));
     const payload = { content: error.message || 'cursor could not take that question.' };
     if (interaction.deferred || interaction.replied) await interaction.editReply(payload);
-    else await interaction.reply({ ...payload, ephemeral: true });
+    else await interaction.reply({ ...payload, flags: MessageFlags.Ephemeral });
   }
 }
 
@@ -384,14 +385,14 @@ async function offerTimezone(interaction, guildId) {
   if (interaction.guildId !== guildId) {
     await interaction.reply({
       content: "this command lives in venera's lounge.",
-      ephemeral: true,
+      flags: MessageFlags.Ephemeral,
     });
     return;
   }
   await interaction.reply({
     content: 'what time are you on? india is ist.',
     components: [timezoneMenu(interaction.user.id)],
-    ephemeral: true,
+    flags: MessageFlags.Ephemeral,
   });
 }
 
@@ -399,22 +400,27 @@ async function chooseTimezone(interaction, guildId) {
   const shared = interaction.customId === 'tz';
   const ownerId = shared ? interaction.user.id : interaction.customId.slice(3);
   if (interaction.user.id !== ownerId) {
-    await interaction.reply({ content: 'that one is for someone else.', ephemeral: true });
+    await interaction.reply({ content: 'that one is for someone else.', flags: MessageFlags.Ephemeral });
     return;
   }
   if (interaction.guildId && interaction.guildId !== guildId) {
     await interaction.reply({
       content: "this menu lives in venera's lounge.",
-      ephemeral: true,
+      flags: MessageFlags.Ephemeral,
     });
     return;
   }
 
   const zone = zoneByKey(interaction.values[0]);
   if (!zone) {
-    await interaction.reply({ content: 'that timezone is not on the list.', ephemeral: true });
+    await interaction.reply(quiet('that timezone is not on the list.'));
     return;
   }
+
+  // Discord drops the click if it is not acknowledged within three seconds.
+  // The role change can take longer than that, so answer first.
+  if (shared) await interaction.deferReply({ flags: MessageFlags.Ephemeral });
+  else await interaction.deferUpdate();
 
   try {
     const guild = interaction.guild ?? (await interaction.client.guilds.fetch(guildId));
@@ -423,24 +429,25 @@ async function chooseTimezone(interaction, guildId) {
     await stampTimezone(member, zone);
     log.ok(`${zone.name.padEnd(9, ' ')}${member.displayName}`);
     if (shared) {
-      await interaction.reply({ content: `you're on ${zone.name}.`, ephemeral: true });
+      await interaction.editReply({ content: `you're on ${zone.name}.` });
       await interaction.message.edit({ components: [timezoneMenu()] });
-      return;
+    } else {
+      await interaction.editReply({
+        content: `you're on ${zone.name}.`,
+        components: [],
+      });
     }
-    await interaction.update({
-      content: `you're on ${zone.name}.`,
-      components: [],
-      allowedMentions: { parse: [] },
-    });
   } catch (error) {
     log.error(explain(error));
-    const payload = {
-      content: 'the timezone roles are missing. run npm run setup, then try again.',
-      ephemeral: true,
-    };
-    if (interaction.deferred || interaction.replied) await interaction.followUp(payload);
+    const payload = quiet('the timezone roles are missing. run npm run setup, then try again.');
+    if (shared) await interaction.editReply(payload);
+    else if (interaction.deferred || interaction.replied) await interaction.followUp(payload);
     else await interaction.reply(payload);
   }
+}
+
+function quiet(content) {
+  return { content, flags: MessageFlags.Ephemeral };
 }
 
 async function applyTimezone(member, zone) {
