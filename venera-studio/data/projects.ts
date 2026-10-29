@@ -157,8 +157,8 @@ const projectCatalog: readonly Project[] = [
     caseStudyLede:
       "A self-initiated concept film for the Meta × Ray-Ban × Oakley eyewear collaboration, built to test how far hand-crafted 3D and subtle motion could push a product story without using a single frame of generative AI.",
     heroVideoKey: "meta-rayban-hero",
-    heroPosterUrl: "/images/posters/meta-rayban-hero.jpg",
-    mediaPosterUrl: "/images/posters/meta-rayban-hero.jpg",
+    heroPosterUrl: "/images/posters/meta-oakley-final.jpg",
+    mediaPosterUrl: "/images/posters/meta-oakley-final.jpg",
     styleframes: [
       {
         src: "/images/styleframes/meta-rayban-oakley/01-lockup.jpg",
@@ -346,11 +346,11 @@ const projectCatalog: readonly Project[] = [
 ];
 
 const FEATURED_PROJECT_ORDER = [
-  "appstack",
+  "meta-rayban-oakley",
   "google-gemini",
+  "appstack",
   "nexus",
   "capsa-ai-series-a-announcement-film",
-  "meta-rayban-oakley",
   "typography",
 ] as const;
 

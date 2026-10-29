@@ -83,7 +83,7 @@
   min-block-size: 44px;
   padding-inline: clamp(20px, 2.5vw, 28px);
   padding-block: 10px;
-  border-radius: 0;
+  border-radius: 9999px;
   background-color: var(--flame);
   border: 1px solid var(--flame);
   color: var(--bg);

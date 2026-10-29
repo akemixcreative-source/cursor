@@ -4,7 +4,7 @@
  */
 export const VIDEO_ASSETS = {
   "capsa-announcement": {
-    fallback: "/videos/capsa-ai-series-a-announcement-film-web.mp4",
+    fallback: "/videos/capsa-hq.mp4",
     poster: "/images/posters/capsa-announcement.jpg",
   },
   "capsa-behind-the-scenes": {
@@ -16,15 +16,15 @@ export const VIDEO_ASSETS = {
     poster: "/images/posters/capsa-product-film.jpg",
   },
   "meta-rayban-hero": {
-    fallback: "/images/mockups/Header-Video-web.mp4",
-    poster: "/images/posters/meta-rayban-hero.jpg",
+    fallback: "/images/mockups/meta-oakley-hq.mp4",
+    poster: "/images/posters/meta-oakley-final.jpg",
   },
   "gemini-hero": {
-    fallback: "/images/mockups/Gemini(2)-web.mp4",
+    fallback: "/images/mockups/gemini-hq.mp4",
     poster: "/images/posters/gemini-hero.jpg",
   },
   "appstack-hero": {
-    fallback: "/images/mockups/Appstack-X-web.mp4",
+    fallback: "/images/mockups/appstack-hq.mp4",
     poster: "/images/posters/appstack-hero.jpg",
   },
   "appstack-fundraise": {
@@ -36,15 +36,15 @@ export const VIDEO_ASSETS = {
     poster: "/images/posters/appstack-website-hero.jpg",
   },
   "nexus-seed": {
-    fallback: "/images/mockups/Nexus-1-web.mp4",
+    fallback: "/images/mockups/nexus-hq.mp4",
     poster: "/images/posters/nexus-seed.jpg",
   },
   "nexus-cue": {
-    fallback: "/images/mockups/CUE-V2-web.mp4",
+    fallback: "/images/mockups/cue-hq.mp4",
     poster: "/images/posters/nexus-cue.jpg",
   },
   "typography-hero": {
-    fallback: "/videos/comp-1-1-web.mp4",
+    fallback: "/videos/comp-1-1-hq.mp4",
     poster: "/images/posters/typography-hero.jpg",
   },
   "hero-intro-visual": {
@@ -57,7 +57,7 @@ export const VIDEO_ASSETS = {
     poster: "/images/posters/home-hero.jpg",
   },
   "draft-02": {
-    fallback: "/images/mockups/draft_02-web.mp4",
+    fallback: "/images/mockups/draft-02-hq.mp4",
     poster: "/images/posters/draft-02.jpg",
   },
   "home-hero-alt-1": {
@@ -65,7 +65,7 @@ export const VIDEO_ASSETS = {
     poster: "/images/posters/home-hero-alt-1.jpg",
   },
   "home-hero-alt-2": {
-    fallback: "/images/mockups/Header-Video-web.mp4",
+    fallback: "/images/mockups/meta-oakley-hq.mp4",
     poster: "/images/posters/home-hero-alt-2.jpg",
   },
 } as const;
@@ -78,6 +78,10 @@ const VIDEO_ASSETS_WITH_AUDIO = new Set<VideoAssetKey>([
   "capsa-behind-the-scenes",
   "capsa-product-film",
   "meta-rayban-hero",
+  "gemini-hero",
+  "appstack-hero",
+  "typography-hero",
+  "draft-02",
   "appstack-fundraise",
   "appstack-website-hero",
   "nexus-seed",
