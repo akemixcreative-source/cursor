@@ -7,6 +7,10 @@ coverage/
 .env*
 !.env.example
 
+# Film files are hosted outside git (Cloudflare Stream); keep local copies out.
+/public/**/*.mp4
+/public/**/*.MP4
+
 *.log
 *.tsbuildinfo
 .DS_Store
