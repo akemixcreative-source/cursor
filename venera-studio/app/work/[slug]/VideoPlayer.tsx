@@ -102,10 +102,84 @@ function IconClose({ className }: { className?: string }) {
   );
 }
 
+function IconEnterFullscreen({ className }: { className?: string }) {
+  return (
+    <svg className={className} viewBox="0 0 24 24" aria-hidden fill="none">
+      <path
+        d="M8 4H4v4M16 4h4v4M8 20H4v-4M16 20h4v-4"
+        stroke="currentColor"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
+
+function IconExitFullscreen({ className }: { className?: string }) {
+  return (
+    <svg className={className} viewBox="0 0 24 24" aria-hidden fill="none">
+      <path
+        d="M9 4v5H4M15 4v5h5M9 20v-5H4M15 20v-5h5"
+        stroke="currentColor"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
+
+type FullscreenElement = Element & {
+  webkitRequestFullscreen?: () => Promise<void> | void;
+  webkitRequestFullScreen?: () => Promise<void> | void;
+};
+
+type FullscreenDocument = Document & {
+  webkitFullscreenElement?: Element | null;
+  webkitExitFullscreen?: () => Promise<void> | void;
+  webkitCancelFullScreen?: () => Promise<void> | void;
+};
+
+function getFullscreenElement(): Element | null {
+  const doc = document as FullscreenDocument;
+  return document.fullscreenElement ?? doc.webkitFullscreenElement ?? null;
+}
+
+async function requestFullscreenEl(el: Element): Promise<void> {
+  const node = el as FullscreenElement;
+  if (node.requestFullscreen) {
+    await node.requestFullscreen();
+    return;
+  }
+  if (node.webkitRequestFullscreen) {
+    await node.webkitRequestFullscreen();
+    return;
+  }
+  if (node.webkitRequestFullScreen) {
+    await node.webkitRequestFullScreen();
+  }
+}
+
+async function exitFullscreenEl(): Promise<void> {
+  const doc = document as FullscreenDocument;
+  if (document.exitFullscreen) {
+    await document.exitFullscreen();
+    return;
+  }
+  if (doc.webkitExitFullscreen) {
+    await doc.webkitExitFullscreen();
+    return;
+  }
+  if (doc.webkitCancelFullScreen) {
+    await doc.webkitCancelFullScreen();
+  }
+}
+
 /**
  * Case-study film player: muted looping preview until opened, then a
- * controlled session with play/pause, mute, volume, scrub, and close.
- * Volume routes through Web Audio so the 35% default works on iOS.
+ * controlled session with play/pause, mute, volume, scrub, fullscreen,
+ * and close. Volume routes through Web Audio so the 35% default works on iOS.
  */
 export function VideoPlayer({ videoKey, poster }: VideoPlayerProps) {
   const rootRef = useRef<HTMLDivElement>(null);
@@ -118,6 +192,7 @@ export function VideoPlayer({ videoKey, poster }: VideoPlayerProps) {
 
   const [nearViewport, setNearViewport] = useState(false);
   const [active, setActive] = useState(false);
+  const [isFullscreen, setIsFullscreen] = useState(false);
   const [playing, setPlaying] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
@@ -190,11 +265,38 @@ export function VideoPlayer({ videoKey, poster }: VideoPlayerProps) {
     setNeedsTapForSound(false);
     setChromeVisible(true);
     clearHideTimer();
+    if (getFullscreenElement()) {
+      void exitFullscreenEl().catch(() => {
+        /* ignore */
+      });
+    }
+    setIsFullscreen(false);
   }, [clearHideTimer]);
 
   const stopSelf = useCallback(() => {
     stopSession();
   }, [stopSession]);
+
+  const syncFullscreenState = useCallback(() => {
+    const root = rootRef.current;
+    setIsFullscreen(Boolean(root && getFullscreenElement() === root));
+  }, []);
+
+  const toggleFullscreen = useCallback(async () => {
+    const root = rootRef.current;
+    if (!root || !active) return;
+    revealChrome();
+    try {
+      if (getFullscreenElement() === root) {
+        await exitFullscreenEl();
+      } else {
+        await requestFullscreenEl(root);
+      }
+    } catch {
+      /* Fullscreen can be blocked by the browser; leave state alone. */
+    }
+    syncFullscreenState();
+  }, [active, revealChrome, syncFullscreenState]);
 
   const openPlayer = useCallback(async () => {
     const video = videoRef.current;
@@ -416,13 +518,25 @@ export function VideoPlayer({ videoKey, poster }: VideoPlayerProps) {
     };
   }, [clearHideTimer, stopSelf]);
 
-  // Leave viewport while active → close (stops audio).
+  // Leave viewport while active → close (stops audio). Stay open in fullscreen.
   useEffect(() => {
-    if (!active || nearViewport) return;
+    if (!active || nearViewport || isFullscreen) return;
     closePlayer();
-  }, [active, closePlayer, nearViewport]);
+  }, [active, closePlayer, isFullscreen, nearViewport]);
+
+  // Keep isFullscreen in sync with the Fullscreen API (Esc, browser UI, etc.).
+  useEffect(() => {
+    const onChange = () => syncFullscreenState();
+    document.addEventListener("fullscreenchange", onChange);
+    document.addEventListener("webkitfullscreenchange", onChange);
+    return () => {
+      document.removeEventListener("fullscreenchange", onChange);
+      document.removeEventListener("webkitfullscreenchange", onChange);
+    };
+  }, [syncFullscreenState]);
 
   // Keyboard: Space / M / Esc when this player is active (or focused).
+  // Esc exits fullscreen first, then closes the player.
   useEffect(() => {
     if (!active) return;
 
@@ -447,15 +561,43 @@ export function VideoPlayer({ videoKey, poster }: VideoPlayerProps) {
         toggleMute();
         return;
       }
+      if (event.key === "f" || event.key === "F") {
+        event.preventDefault();
+        void toggleFullscreen();
+        return;
+      }
       if (event.key === "Escape") {
         event.preventDefault();
+        // One Esc exits fullscreen; a later Esc closes. If the browser already
+        // left fullscreen on this keypress, sync state and do not close yet.
+        const fsEl = getFullscreenElement();
+        if (fsEl === rootRef.current) {
+          void exitFullscreenEl()
+            .catch(() => {
+              /* ignore */
+            })
+            .finally(() => syncFullscreenState());
+          return;
+        }
+        if (isFullscreen) {
+          syncFullscreenState();
+          return;
+        }
         closePlayer();
       }
     };
 
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [active, closePlayer, toggleMute, togglePlayPause]);
+  }, [
+    active,
+    closePlayer,
+    isFullscreen,
+    syncFullscreenState,
+    toggleFullscreen,
+    toggleMute,
+    togglePlayPause,
+  ]);
 
   const onPointerMove = (event: ReactPointerEvent) => {
     if (!active) return;
@@ -470,6 +612,7 @@ export function VideoPlayer({ videoKey, poster }: VideoPlayerProps) {
       ref={rootRef}
       className={styles.frame}
       data-player-active={active ? "true" : "false"}
+      data-fullscreen={isFullscreen ? "true" : "false"}
       onPointerMove={onPointerMove}
     >
       <div className={styles.inner}>
@@ -582,6 +725,22 @@ export function VideoPlayer({ videoKey, poster }: VideoPlayerProps) {
               <span className={styles.time} aria-hidden>
                 {formatTime(currentTime)} / {formatTime(duration)}
               </span>
+
+              <button
+                type="button"
+                className={styles.controlBtn}
+                aria-label={isFullscreen ? "Exit fullscreen" : "Enter fullscreen"}
+                aria-pressed={isFullscreen}
+                onClick={() => {
+                  void toggleFullscreen();
+                }}
+              >
+                {isFullscreen ? (
+                  <IconExitFullscreen className={styles.icon} />
+                ) : (
+                  <IconEnterFullscreen className={styles.icon} />
+                )}
+              </button>
 
               <button
                 type="button"

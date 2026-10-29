@@ -7,6 +7,35 @@
   isolation: isolate;
 }
 
+.frame:fullscreen,
+.frame:-webkit-full-screen {
+  inline-size: 100%;
+  block-size: 100%;
+  background: #000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.frame:fullscreen .inner,
+.frame:-webkit-full-screen .inner {
+  inline-size: 100%;
+  block-size: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #000;
+}
+
+.frame:fullscreen .video,
+.frame:-webkit-full-screen .video {
+  inline-size: 100%;
+  block-size: 100%;
+  max-inline-size: none;
+  max-block-size: 100%;
+  object-fit: contain;
+}
+
 .inner {
   position: relative;
   z-index: 1;
