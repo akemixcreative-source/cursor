@@ -212,6 +212,7 @@ export function SecureVideo({
       className={className}
       controlsList="nodownload noplaybackrate"
       disablePictureInPicture
+      playsInline
       onLoadedData={onLoadedData}
       onCanPlay={onCanPlay}
       onPlaying={onPlaying}
