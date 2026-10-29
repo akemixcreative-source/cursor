@@ -1,58 +1,101 @@
-/* Case-study film player chrome — minimal dark bar, 44px+ targets. */
+/* Case-study film player — minimal overlay chrome on a box that always matches
+   the film's real aspect ratio, so the video is never cropped and the
+   controls sit on the picture in both windowed and fullscreen mode. */
 
 .frame {
+  --player-fg: rgba(255, 255, 255, 0.85);
+  --player-fg-strong: #fff;
+  --player-ease: cubic-bezier(0.22, 1, 0.36, 1);
+
   position: relative;
+  display: flex;
+  justify-content: center;
   inline-size: 100%;
-  overflow: hidden;
   isolation: isolate;
 }
 
-.frame:fullscreen,
-.frame:-webkit-full-screen {
-  inline-size: 100%;
-  block-size: 100%;
-  background: #000;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.frame:fullscreen .inner,
-.frame:-webkit-full-screen .inner {
-  inline-size: 100%;
-  block-size: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: #000;
-}
-
-.frame:fullscreen .video,
-.frame:-webkit-full-screen .video {
-  inline-size: 100%;
-  block-size: 100%;
-  max-inline-size: none;
-  max-block-size: 100%;
-  object-fit: contain;
-}
-
-.inner {
+.stage {
   position: relative;
-  z-index: 1;
-  inline-size: 100%;
-  border-radius: 0;
+  inline-size: min(100%, calc(85vh * var(--video-aspect, 1.7778)));
+  aspect-ratio: var(--video-aspect, 1.7778);
   overflow: hidden;
-  background: #0a0a0a;
+  background: #000;
 }
 
 .video {
+  position: absolute;
+  inset: 0;
   display: block;
   inline-size: 100%;
-  block-size: auto;
-  max-inline-size: 100%;
-  border-radius: 0;
+  block-size: 100%;
+  object-fit: contain;
+  background: #000;
   cursor: pointer;
 }
+
+/* Fullscreen: black canvas, picture centred and contained. Separate rules so
+   a browser that rejects one prefixed selector still applies the other. */
+
+.frame:fullscreen {
+  inline-size: 100vw;
+  block-size: 100vh;
+  align-items: center;
+  justify-content: center;
+  background: #000;
+}
+
+.frame:-webkit-full-screen {
+  inline-size: 100vw;
+  block-size: 100vh;
+  align-items: center;
+  justify-content: center;
+  background: #000;
+}
+
+.frame:fullscreen .stage {
+  inline-size: min(100vw, calc(100vh * var(--video-aspect, 1.7778)));
+}
+
+.frame:-webkit-full-screen .stage {
+  inline-size: min(100vw, calc(100vh * var(--video-aspect, 1.7778)));
+}
+
+/* The site swaps the system cursor for a brand cursor that lives outside the
+   fullscreen layer, so fullscreen must bring the system cursor back. */
+
+.frame:fullscreen,
+.frame:fullscreen * {
+  cursor: default !important;
+}
+
+.frame:fullscreen button,
+.frame:fullscreen .progress,
+.frame:fullscreen .volumeTrack {
+  cursor: pointer !important;
+}
+
+.frame:fullscreen[data-chrome="hidden"],
+.frame:fullscreen[data-chrome="hidden"] * {
+  cursor: none !important;
+}
+
+.frame:-webkit-full-screen,
+.frame:-webkit-full-screen * {
+  cursor: default !important;
+}
+
+.frame:-webkit-full-screen button,
+.frame:-webkit-full-screen .progress,
+.frame:-webkit-full-screen .volumeTrack {
+  cursor: pointer !important;
+}
+
+.frame:-webkit-full-screen[data-chrome="hidden"],
+.frame:-webkit-full-screen[data-chrome="hidden"] * {
+  cursor: none !important;
+}
+
+/* Preview state ----------------------------------------------------------- */
 
 .hitLayer {
   position: absolute;
@@ -66,9 +109,43 @@
   touch-action: manipulation;
 }
 
+.hitLayer:focus {
+  outline: none;
+}
+
 .hitLayer:focus-visible {
-  outline: 2px solid var(--flame);
+  outline: 2px solid var(--player-fg-strong);
   outline-offset: -4px;
+}
+
+/* Overlay chrome ---------------------------------------------------------- */
+
+.shade,
+.chrome,
+.closeBtn {
+  transition: opacity 250ms var(--player-ease);
+}
+
+.frame[data-chrome="hidden"] .shade,
+.frame[data-chrome="hidden"] .chrome,
+.frame[data-chrome="hidden"] .closeBtn {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.shade {
+  position: absolute;
+  inset-inline: 0;
+  inset-block-end: 0;
+  z-index: 2;
+  block-size: max(25%, 96px);
+  background: linear-gradient(
+    to top,
+    rgba(0, 0, 0, 0.6) 0%,
+    rgba(0, 0, 0, 0.32) 50%,
+    rgba(0, 0, 0, 0) 100%
+  );
+  pointer-events: none;
 }
 
 .chrome {
@@ -78,214 +155,328 @@
   z-index: 3;
   display: flex;
   flex-direction: column;
-  gap: 8px;
-  padding: 12px 12px calc(12px + env(safe-area-inset-bottom, 0px));
-  background: linear-gradient(
-    to top,
-    rgba(0, 0, 0, 0.82) 0%,
-    rgba(0, 0, 0, 0.45) 55%,
-    rgba(0, 0, 0, 0) 100%
-  );
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 220ms ease;
-}
-
-.chromeVisible {
-  opacity: 1;
-  pointer-events: auto;
-}
-
-.progressRow {
-  display: flex;
-  align-items: center;
-  inline-size: 100%;
-  min-block-size: 44px;
-}
-
-.progress {
-  -webkit-appearance: none;
-  appearance: none;
-  inline-size: 100%;
-  block-size: 44px;
-  margin: 0;
-  background: transparent;
-  cursor: pointer;
-  touch-action: manipulation;
-}
-
-.progress::-webkit-slider-runnable-track {
-  block-size: 3px;
-  border-radius: 0;
-  background: rgba(245, 240, 232, 0.22);
-}
-
-.progress::-webkit-slider-thumb {
-  -webkit-appearance: none;
-  appearance: none;
-  inline-size: 14px;
-  block-size: 14px;
-  margin-block-start: -5.5px;
-  border-radius: 0;
-  background: var(--fg);
-  border: none;
-  box-shadow: none;
-}
-
-.progress::-moz-range-track {
-  block-size: 3px;
-  border-radius: 0;
-  background: rgba(245, 240, 232, 0.22);
-}
-
-.progress::-moz-range-thumb {
-  inline-size: 14px;
-  block-size: 14px;
-  border-radius: 0;
-  background: var(--fg);
-  border: none;
+  padding-block-end: calc(12px + env(safe-area-inset-bottom, 0px));
 }
 
 .controlsRow {
   display: flex;
   align-items: center;
-  gap: 4px;
-  min-block-size: 44px;
+  justify-content: space-between;
+  gap: 8px;
+  /* 44px targets carry 12px of their own padding around a 20px icon, so a
+     4px row inset puts the icons 16px from the picture edge. */
+  padding-inline: max(4px, env(safe-area-inset-left, 0px))
+    max(4px, env(safe-area-inset-right, 0px));
+}
+
+.group {
+  display: flex;
+  align-items: center;
+  min-inline-size: 0;
 }
 
 .controlBtn {
   display: inline-flex;
+  flex: none;
   align-items: center;
   justify-content: center;
-  min-inline-size: 44px;
-  min-block-size: 44px;
+  inline-size: 44px;
+  block-size: 44px;
   padding: 0;
   border: none;
-  border-radius: 0;
+  border-radius: 999px;
   background: transparent;
-  color: var(--fg);
+  color: var(--player-fg);
   cursor: pointer;
   touch-action: manipulation;
-  transition: color 160ms ease;
+  -webkit-tap-highlight-color: transparent;
+  transition: color 150ms ease;
 }
 
-.controlBtn:hover,
-.controlBtn:focus-visible {
-  color: var(--flame-hover);
+.controlBtn:hover {
+  color: var(--player-fg-strong);
+}
+
+.controlBtn:focus {
   outline: none;
 }
 
 .controlBtn:focus-visible {
-  box-shadow: inset 0 0 0 2px var(--flame);
+  color: var(--player-fg-strong);
+  outline: 2px solid var(--player-fg-strong);
+  outline-offset: -6px;
 }
 
 .icon {
-  inline-size: 22px;
-  block-size: 22px;
   display: block;
+  inline-size: 20px;
+  block-size: 20px;
 }
+
+.closeBtn {
+  position: absolute;
+  inset-block-start: max(8px, env(safe-area-inset-top, 0px));
+  inset-inline-end: max(8px, env(safe-area-inset-right, 0px));
+  z-index: 4;
+  filter: drop-shadow(0 1px 6px rgba(0, 0, 0, 0.45));
+}
+
+.time {
+  padding-inline-start: 4px;
+  font-family: var(--font-geist-mono), ui-monospace, SFMono-Regular, Menlo,
+    monospace;
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.02em;
+  line-height: 1;
+  color: var(--player-fg);
+  white-space: nowrap;
+  user-select: none;
+}
+
+/* Progress bar ------------------------------------------------------------ */
+
+.progress {
+  position: relative;
+  inline-size: 100%;
+  block-size: 16px;
+  cursor: pointer;
+  touch-action: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.progress:focus {
+  outline: none;
+}
+
+.rail {
+  position: absolute;
+  inset-inline: 0;
+  inset-block-start: 50%;
+  block-size: 4px;
+  margin-block-start: -2px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.12);
+  transform: scaleY(0.5);
+  transition: transform 150ms ease;
+}
+
+.buffered,
+.played {
+  position: absolute;
+  inset: 0;
+  transform: scaleX(0);
+  transform-origin: left center;
+  will-change: transform;
+}
+
+.buffered {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.played {
+  background: var(--player-fg-strong);
+}
+
+.thumbTrack {
+  position: absolute;
+  inset-inline: 0;
+  inset-block-start: 50%;
+  block-size: 0;
+  transform: translateX(-100%);
+  will-change: transform;
+  pointer-events: none;
+}
+
+.thumb {
+  position: absolute;
+  inset-inline-end: -5px;
+  inset-block-start: -5px;
+  inline-size: 10px;
+  block-size: 10px;
+  border-radius: 50%;
+  background: var(--player-fg-strong);
+  box-shadow: 0 0 6px rgba(0, 0, 0, 0.35);
+  transform: scale(0);
+  transition: transform 150ms ease;
+}
+
+.progress:hover .rail,
+.progress:focus-visible .rail,
+.progress[data-scrubbing="true"] .rail {
+  transform: scaleY(1);
+}
+
+.progress:hover .thumb,
+.progress:focus-visible .thumb,
+.progress[data-scrubbing="true"] .thumb {
+  transform: scale(1);
+}
+
+.progress:focus-visible .thumb {
+  box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.35);
+}
+
+/* Volume ------------------------------------------------------------------ */
 
 .volumeGroup {
   display: flex;
   align-items: center;
-  gap: 2px;
-  min-block-size: 44px;
-  flex: 1 1 auto;
-  max-inline-size: 220px;
 }
 
-.volume {
-  -webkit-appearance: none;
-  appearance: none;
-  flex: 1 1 auto;
-  min-inline-size: 72px;
+.volumeTrack {
+  position: relative;
+  inline-size: 0;
   block-size: 44px;
-  margin: 0;
-  background: transparent;
+  margin-inline-end: 0;
+  opacity: 0;
+  visibility: hidden;
   cursor: pointer;
-  touch-action: manipulation;
+  touch-action: none;
+  -webkit-tap-highlight-color: transparent;
+  transition:
+    inline-size 200ms var(--player-ease),
+    margin 200ms var(--player-ease),
+    opacity 150ms ease,
+    visibility 0s linear 200ms;
 }
 
-.volume::-webkit-slider-runnable-track {
-  block-size: 3px;
-  background: rgba(245, 240, 232, 0.22);
+.volumeGroup[data-open="true"] .volumeTrack,
+.volumeGroup:focus-within .volumeTrack {
+  inline-size: 72px;
+  margin-inline-end: 4px;
+  opacity: 1;
+  visibility: visible;
+  transition:
+    inline-size 200ms var(--player-ease),
+    margin 200ms var(--player-ease),
+    opacity 150ms ease,
+    visibility 0s;
 }
 
-.volume::-webkit-slider-thumb {
-  -webkit-appearance: none;
-  appearance: none;
-  inline-size: 14px;
-  block-size: 14px;
-  margin-block-start: -5.5px;
-  border-radius: 0;
-  background: var(--fg);
-  border: none;
+.volumeTrack:focus {
+  outline: none;
 }
 
-.volume::-moz-range-track {
-  block-size: 3px;
-  background: rgba(245, 240, 232, 0.22);
+.volumeRail {
+  position: absolute;
+  inset-inline: 0;
+  inset-block-start: 50%;
+  block-size: 2px;
+  margin-block-start: -1px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.2);
 }
 
-.volume::-moz-range-thumb {
-  inline-size: 14px;
-  block-size: 14px;
-  border-radius: 0;
-  background: var(--fg);
-  border: none;
+.volumeFill {
+  position: absolute;
+  inset: 0;
+  background: var(--player-fg-strong);
+  transform-origin: left center;
 }
 
-.spacer {
-  flex: 1 1 auto;
+.volumeThumb {
+  position: absolute;
+  inset-block-start: 50%;
+  inline-size: 10px;
+  block-size: 10px;
+  border-radius: 50%;
+  background: var(--player-fg-strong);
+  transform: translate(-50%, -50%);
+  pointer-events: none;
 }
 
-.time {
-  font-family: var(--font-geist-mono), ui-monospace, monospace;
-  font-size: var(--text-meta);
-  letter-spacing: var(--tracking-meta);
-  color: var(--fg-muted);
-  white-space: nowrap;
-  padding-inline: 8px;
-  user-select: none;
+.volumeTrack:focus-visible .volumeThumb {
+  box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.35);
+}
+
+/* Centre states ----------------------------------------------------------- */
+
+.centerPlay {
+  position: absolute;
+  inset-block-start: 50%;
+  inset-inline-start: 50%;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  inline-size: 64px;
+  block-size: 64px;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.32);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  color: var(--player-fg-strong);
+  opacity: 0;
+  transform: translate(-50%, -50%) scale(0.92);
+  transition:
+    opacity 200ms ease,
+    transform 200ms var(--player-ease);
+  pointer-events: none;
+}
+
+.centerPlay .icon {
+  inline-size: 24px;
+  block-size: 24px;
+  margin-inline-start: 2px;
+}
+
+.centerPlay[data-show="true"] {
+  opacity: 1;
+  transform: translate(-50%, -50%) scale(1);
 }
 
 .tapForSound {
   position: absolute;
-  inset-inline: 50%;
   inset-block-start: 50%;
-  translate: -50% -50%;
+  inset-inline-start: 50%;
   z-index: 4;
   display: inline-flex;
   align-items: center;
-  justify-content: center;
-  min-inline-size: 44px;
+  gap: 8px;
   min-block-size: 44px;
-  padding: 12px 18px;
-  border: 1px solid var(--border-strong);
-  border-radius: 0;
-  background: rgba(0, 0, 0, 0.72);
-  color: var(--fg);
+  padding: 0 18px 0 14px;
+  border: none;
+  border-radius: 999px;
+  background: rgba(0, 0, 0, 0.55);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  color: var(--player-fg-strong);
   font-family: var(--font-geist-mono), ui-monospace, monospace;
-  font-size: var(--text-meta);
-  letter-spacing: var(--tracking-meta);
+  font-size: 12px;
+  letter-spacing: 0.04em;
   text-transform: uppercase;
+  transform: translate(-50%, -50%);
   cursor: pointer;
   touch-action: manipulation;
 }
 
-.tapForSound:hover,
-.tapForSound:focus-visible {
-  color: var(--flame-hover);
-  border-color: var(--flame);
+.tapForSound:focus {
   outline: none;
 }
 
-@media (max-width: 640px) {
-  .volumeGroup {
-    max-inline-size: 140px;
+.tapForSound:focus-visible {
+  outline: 2px solid var(--player-fg-strong);
+  outline-offset: 2px;
+}
+
+/* Touch: there is no hover, so the bar stays at full weight while dragging
+   and gets a taller hit area. */
+@media (hover: none) {
+  .progress {
+    block-size: 24px;
+  }
+}
+
+@media (max-width: 480px) {
+  .time {
+    font-size: 11px;
   }
 
-  .time {
-    display: none;
+  .centerPlay {
+    inline-size: 52px;
+    block-size: 52px;
   }
 }
