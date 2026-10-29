@@ -36,12 +36,31 @@ function kickPlayback(video: HTMLVideoElement): void {
 
 type ReadyPlayback = Extract<PlaybackState, { status: "ready" }>["playback"];
 
+function applyCrossOriginForUrl(
+  video: HTMLVideoElement,
+  url: string,
+): void {
+  // Remote Stream/CDN URLs need CORS for Web Audio gain control on iOS.
+  // Same-origin fallbacks should not force a CORS fetch.
+  try {
+    const absolute = new URL(url, window.location.href);
+    if (absolute.origin !== window.location.origin) {
+      video.crossOrigin = "anonymous";
+    } else {
+      video.removeAttribute("crossorigin");
+    }
+  } catch {
+    video.removeAttribute("crossorigin");
+  }
+}
+
 function attachPlayback(
   video: HTMLVideoElement,
   playback: ReadyPlayback,
   onError: (() => void) | undefined,
 ): () => void {
   const { url, format } = playback;
+  applyCrossOriginForUrl(video, url);
 
   if (format === "hls") {
     if (video.canPlayType("application/vnd.apple.mpegurl")) {
@@ -212,6 +231,7 @@ export function SecureVideo({
       className={className}
       controlsList="nodownload noplaybackrate"
       disablePictureInPicture
+      playsInline
       onLoadedData={onLoadedData}
       onCanPlay={onCanPlay}
       onPlaying={onPlaying}
