@@ -478,7 +478,6 @@ export function VideoPlayer({ videoKey, poster }: VideoPlayerProps) {
           videoRef={videoRef}
           className={styles.video}
           {...(poster ? { poster } : {})}
-          crossOrigin="anonymous"
           autoPlay={previewAutoplay}
           muted={!active || !hasAudio || needsTapForSound}
           loop={!active}
